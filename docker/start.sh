@@ -6,6 +6,7 @@ cd /var/www/html
 # Ensure required folders exist
 mkdir -p storage/framework/{sessions,views,cache}
 mkdir -p storage/logs/supervisor bootstrap/cache
+touch storage/logs/laravel.log
 
 # Permissions for Laravel
 chown -R www-data:www-data storage bootstrap/cache
