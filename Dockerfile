@@ -9,6 +9,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
+COPY docker/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/local.ini
 COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/start.sh /usr/local/bin/start.sh
