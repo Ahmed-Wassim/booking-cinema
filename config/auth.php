@@ -67,7 +67,7 @@ return [
     'providers' => [
         'central_users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Central\User::class,
+            'model' => App\Models\User::class,
         ],
 
         'tenant_users' => [
