@@ -6,6 +6,7 @@ use App\Http\Controllers\Landlord\Auth\NewPasswordController;
 use App\Http\Controllers\Landlord\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Landlord\Auth\RegisteredUserController;
 use App\Http\Controllers\Landlord\Auth\VerifyEmailController;
+use App\Http\Controllers\Landlord\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::domain(env('LANDLORD_DOMAIN'))->group(function () {
@@ -44,4 +45,6 @@ Route::domain(env('LANDLORD_DOMAIN'))->group(function () {
     Route::get('/dashboard', function () {
         return view('landlord.dashboard.index');
     })->middleware('auth:web')->name('dashboard');
+
+    Route::resource('users', UserController::class);
 });

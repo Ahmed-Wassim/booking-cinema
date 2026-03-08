@@ -1,42 +1,37 @@
 services:
   app:
     build: .
-    container_name: laravel_app
+    container_name: cinema_app
     restart: unless-stopped
     volumes:
       - .:/var/www/html
+      - vendor_data:/var/www/html/vendor # Fast native volume — avoids slow Windows FS for vendor/
     depends_on:
-      - redis
-      - meilisearch
-      - postgres
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
-      - laravel
+      - cinema
 
   nginx:
     image: nginx:alpine
-    container_name: laravel_nginx
+    container_name: cinema_nginx
     restart: unless-stopped
     ports:
       - "80:80"
     volumes:
       - .:/var/www/html
-      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - vendor_data:/var/www/html/vendor # Nginx needs vendor/ too (for public assets resolution)
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
     depends_on:
       - app
     networks:
-      - laravel
-
-  redis:
-    image: redis:alpine
-    container_name: laravel_redis
-    restart: unless-stopped
-    networks:
-      - laravel
+      - cinema
 
   postgres:
     image: postgres:16-alpine
-    container_name: laravel_postgres
+    container_name: cinema_postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: cinema
@@ -45,24 +40,31 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
-      - laravel
+      - cinema
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U root -d cinema" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
-  meilisearch:
-    image: getmeili/meilisearch:v1.7
-    container_name: laravel_meilisearch
+  redis:
+    image: redis:alpine
+    container_name: cinema_redis
     restart: unless-stopped
-    environment:
-      MEILI_NO_ANALYTICS: "true"
-    ports:
-      - "7700:7700"
     networks:
-      - laravel
+      - cinema
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 networks:
-  laravel:
+  cinema:
     driver: bridge
 
 volumes:
   postgres_data:
+  vendor_data:
