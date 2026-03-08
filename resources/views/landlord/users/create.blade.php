@@ -1,0 +1,29 @@
+@extends('landlord.layouts.app')
+
+@section('title', 'Create User')
+
+@section('page-title', 'Create User')
+@section('page-subtitle', 'Add new user to the system')
+
+@section('content')
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+
+            <form action="{{ route('users.store') }}" method="POST">
+                @csrf
+
+                @include('users.partials.form')
+
+                <div class="mt-3">
+                    <button class="btn btn-primary">
+                        <i class="bi bi-check-lg me-1"></i> Save
+                    </button>
+                    <a href="{{ route('users.index') }}" class="btn btn-light">Cancel</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+@endsection

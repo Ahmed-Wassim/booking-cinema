@@ -53,7 +53,7 @@
 
                     <div class="collapse {{ request()->routeIs('users.*') ? 'show' : '' }}" id="usersMenu">
                         <ul class="submenu">
-                            <li><a href="#">List Users</a></li>
+                            <li><a href="{{ route('landlord.users.index') }}">List Users</a></li>
                             <li><a href="#">Create User</a></li>
                         </ul>
                     </div>
