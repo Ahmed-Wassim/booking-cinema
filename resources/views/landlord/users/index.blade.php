@@ -9,7 +9,7 @@
 @section('page-subtitle', 'Manage system users')
 
 @section('page-actions')
-    <a href="{{ route('users.create') }}" class="btn btn-primary">
+    <a href="{{ route('landlord.users.create') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Add User
     </a>
 @endsection
@@ -51,12 +51,12 @@
                                 <td>{{ $user->created_at->format('Y-m-d') }}</td>
                                 <td class="text-end">
 
-                                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-warning">
+                                    <a href="{{ route('landlord.users.edit', $user->id) }}" class="btn btn-sm btn-warning">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
 
-                                    <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline"
-                                        onsubmit="return confirm('Are you sure?')">
+                                    <form action="{{ route('landlord.users.destroy', $user->id) }}" method="POST"
+                                        class="d-inline" onsubmit="return confirm('Are you sure?')">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-danger">

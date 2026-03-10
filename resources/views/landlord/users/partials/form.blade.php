@@ -29,4 +29,14 @@
         </label>
         <input type="password" name="password" class="form-control">
     </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">
+            Confirm Password
+            @isset($user)
+                <small class="text-muted">(Leave blank to keep current)</small>
+            @endisset
+        </label>
+        <input type="password" name="password_confirmation" class="form-control">
+    </div>
 </div>
