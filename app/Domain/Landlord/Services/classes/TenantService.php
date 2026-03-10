@@ -13,15 +13,17 @@ class TenantService implements ITenantService
 {
     public function __construct(
         protected ITenantRepository $tenantRepository
-    ) {}
+    ) {
+    }
 
     public function listAllTenants()
     {
-        return $this->tenantRepository->retrieve(relations: ['domains']);
+        return $this->tenantRepository->retrieve(relations: ['domains', 'subscriptions.plan']);
     }
 
     public function storeTenant(array $data)
     {
+        DB::beginTransaction();
         try {
             $tenant = $this->tenantRepository->create([
                 'id' => $data['id'],
@@ -31,15 +33,26 @@ class TenantService implements ITenantService
                 'domain' => $data['domain'],
             ]);
 
+            if (isset($data['plan_id'])) {
+                $tenant->subscriptions()->create([
+                    'plan_id' => $data['plan_id'],
+                    'start_date' => now(),
+                    'status' => 'active',
+                ]);
+            }
+
+            DB::commit();
+
             return $tenant;
         } catch (Exception $e) {
+            DB::rollBack();
             throw $e;
         }
     }
 
     public function editTenant(string $id)
     {
-        return $this->tenantRepository->firstOrFail(['id' => $id], ['domains']);
+        return $this->tenantRepository->firstOrFail(['id' => $id], ['domains', 'subscriptions']);
     }
 
     public function updateTenant(array $data, string $id)
@@ -53,6 +66,19 @@ class TenantService implements ITenantService
             $tenant->domains()->update([
                 'domain' => $data['domain'],
             ]);
+
+            if (isset($data['plan_id'])) {
+                $activeSubscription = $tenant->subscriptions()->where('status', 'active')->first();
+                if ($activeSubscription) {
+                    $activeSubscription->update(['plan_id' => $data['plan_id']]);
+                } else {
+                    $tenant->subscriptions()->create([
+                        'plan_id' => $data['plan_id'],
+                        'start_date' => now(),
+                        'status' => 'active',
+                    ]);
+                }
+            }
 
             DB::commit();
 

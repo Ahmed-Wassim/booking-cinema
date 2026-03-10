@@ -60,6 +60,27 @@
                 </ul>
             </div>
         </li>
+
+        <li class="nav-item">
+            <a href="#plansMenu"
+                class="nav-link has-submenu {{ request()->routeIs('landlord.plans.*') ? 'active' : '' }}"
+                data-bs-toggle="collapse">
+                <i class="bi bi-tags-fill nav-icon"></i>
+                <span>Plans</span>
+                <i class="bi bi-chevron-down nav-arrow"></i>
+            </a>
+
+            <div class="collapse {{ request()->routeIs('landlord.plans.*') ? 'show' : '' }}" id="plansMenu">
+                <ul class="submenu">
+                    <li><a href="{{ route('landlord.plans.index') }}"
+                            class="{{ request()->routeIs('landlord.plans.index') ? 'active' : '' }}">List Plans</a>
+                    </li>
+                    <li><a href="{{ route('landlord.plans.create') }}"
+                            class="{{ request()->routeIs('landlord.plans.create') ? 'active' : '' }}">Create
+                            Plan</a></li>
+                </ul>
+            </div>
+        </li>
     </ul>
 </nav>
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Landlord\Auth\NewPasswordController;
 use App\Http\Controllers\Landlord\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Landlord\Auth\RegisteredUserController;
 use App\Http\Controllers\Landlord\Auth\VerifyEmailController;
+use App\Http\Controllers\Landlord\PlanController;
 use App\Http\Controllers\Landlord\TenantController;
 use App\Http\Controllers\Landlord\UserController;
 use Illuminate\Support\Facades\Route;
@@ -49,4 +50,5 @@ Route::domain(env('LANDLORD_DOMAIN'))->group(function () {
 
     Route::resource('users', UserController::class)->middleware('auth:web');
     Route::resource('tenants', TenantController::class)->middleware('auth:web');
+    Route::resource('plans', PlanController::class)->middleware('auth:web');
 });

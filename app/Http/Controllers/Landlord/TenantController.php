@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Landlord;
 
 use App\Domain\Landlord\DTO\TenantDTO;
+use App\Domain\Landlord\Services\Interfaces\IPlanService;
 use App\Domain\Landlord\Services\Interfaces\ITenantService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Landlord\StoreTenantRequest;
@@ -11,7 +12,8 @@ use App\Http\Requests\Landlord\UpdateTenantRequest;
 class TenantController extends Controller
 {
     public function __construct(
-        protected ITenantService $tenantService
+        protected ITenantService $tenantService,
+        protected IPlanService $planService
     ) {
     }
 
@@ -30,7 +32,9 @@ class TenantController extends Controller
      */
     public function create()
     {
-        return view('landlord.tenants.create');
+        $plans = $this->planService->listAllPlans();
+
+        return view('landlord.tenants.create', compact('plans'));
     }
 
     /**
@@ -49,8 +53,9 @@ class TenantController extends Controller
     public function edit(string $id)
     {
         $tenant = $this->tenantService->editTenant($id);
+        $plans = $this->planService->listAllPlans();
 
-        return view('landlord.tenants.edit', compact('tenant'));
+        return view('landlord.tenants.edit', compact('tenant', 'plans'));
     }
 
     /**
