@@ -10,16 +10,16 @@
     <div class="card shadow-sm border-0">
         <div class="card-body">
 
-            <form action="{{ route('users.store') }}" method="POST">
+            <form action="{{ route('landlord.users.store') }}" method="POST">
                 @csrf
 
-                @include('users.partials.form')
+                @include('landlord.users.partials.form')
 
                 <div class="mt-3">
                     <button class="btn btn-primary">
                         <i class="bi bi-check-lg me-1"></i> Save
                     </button>
-                    <a href="{{ route('users.index') }}" class="btn btn-light">Cancel</a>
+                    <a href="{{ route('landlord.users.index') }}" class="btn btn-light">Cancel</a>
                 </div>
             </form>
 

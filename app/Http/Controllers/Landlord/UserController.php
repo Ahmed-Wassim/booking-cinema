@@ -2,18 +2,27 @@
 
 namespace App\Http\Controllers\Landlord;
 
+use App\Domain\Landlord\DTO\UserDTO;
+use App\Domain\Landlord\Services\Interfaces\IUserService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Landlord\StoreUserRequest;
+use App\Http\Requests\Landlord\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function __construct(
+        protected IUserService $userService
+    ) {
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = User::latest()->paginate(15);
+        $users = $this->userService->listAllUsers();
 
         return view('landlord.users.index', compact('users'));
     }
@@ -29,17 +38,11 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //
-    }
+        $this->userService->storeUser((array) UserDTO::fromRequest($request->validated()));
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        return redirect()->route('landlord.users.index')->with('success', 'User created successfully');
     }
 
     /**
@@ -47,15 +50,19 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        return view('landlord.users.edit');
+        $user = User::findOrFail($id);
+
+        return view('landlord.users.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, string $id)
     {
-        //
+        $this->userService->updateUser((array) UserDTO::fromRequest($request->validated()), (int) $id);
+
+        return redirect()->route('landlord.users.index')->with('success', 'User updated successfully');
     }
 
     /**
@@ -63,6 +70,8 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $this->userService->deleteUser((int) $id);
+
+        return redirect()->route('landlord.users.index')->with('success', 'User deleted successfully');
     }
 }
