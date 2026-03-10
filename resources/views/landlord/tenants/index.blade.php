@@ -36,9 +36,9 @@
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>ID (Subdomain prefix)</th>
+                            <th>Tenant ID</th>
                             <th>Domain</th>
-                            <th>Created</th>
+                            <th>Subscription Plan</th>
                             <th class="text-end">Actions</th>
                         </tr>
                     </thead>
@@ -46,9 +46,19 @@
                         @forelse($tenants as $tenant)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $tenant->id }}</td>
-                                <td>{{ $tenant->domains->first()->domain ?? 'N/A' }}</td>
-                                <td>{{ $tenant->created_at->format('Y-m-d') }}</td>
+                                <td><span class="fw-semibold">{{ $tenant->id }}</span></td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        {{ $tenant->domains->first()->domain ?? 'N/A' }}.{{ request()->getHost() }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($activeSub = $tenant->subscriptions->firstWhere('status', 'active'))
+                                        <span class="badge bg-primary">{{ $activeSub->plan->name ?? 'Unknown Plan' }}</span>
+                                    @else
+                                        <span class="badge bg-danger">None</span>
+                                    @endif
+                                </td>
                                 <td class="text-end">
 
                                     <a href="{{ route('landlord.tenants.edit', $tenant->id) }}" class="btn btn-sm btn-warning">
