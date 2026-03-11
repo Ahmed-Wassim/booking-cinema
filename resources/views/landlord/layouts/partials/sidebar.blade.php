@@ -41,6 +41,13 @@
         </li>
 
         <li class="nav-item">
+            <a href="{{ route('landlord.registration-requests.index') }}" class="nav-link {{ request()->routeIs('landlord.registration-requests.*') ? 'active' : '' }}">
+                <i class="bi bi-person-lines-fill nav-icon"></i>
+                <span>Registration Requests</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
             <a href="#tenantsMenu"
                 class="nav-link has-submenu {{ request()->routeIs('landlord.tenants.*') ? 'active' : '' }}"
                 data-bs-toggle="collapse">
@@ -60,6 +67,7 @@
                 </ul>
             </div>
         </li>
+
 
         <li class="nav-item">
             <a href="#plansMenu"
