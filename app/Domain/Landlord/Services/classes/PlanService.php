@@ -13,12 +13,11 @@ class PlanService implements IPlanService
 {
     public function __construct(
         protected IPlanRepository $planRepository
-    ) {
-    }
+    ) {}
 
     public function listAllPlans(): Collection|array
     {
-        return $this->planRepository->listAllBy();
+        return $this->planRepository->listAllBy(relations: ['features']);
     }
 
     public function storePlan(array $data): Model
@@ -80,6 +79,7 @@ class PlanService implements IPlanService
     {
         return DB::transaction(function () use ($id) {
             $this->planRepository->delete(['id' => $id]);
+
             return true;
         });
     }

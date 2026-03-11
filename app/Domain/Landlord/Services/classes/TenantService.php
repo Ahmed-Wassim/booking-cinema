@@ -23,7 +23,6 @@ class TenantService implements ITenantService
 
     public function storeTenant(array $data)
     {
-        DB::beginTransaction();
         try {
             $tenant = $this->tenantRepository->create([
                 'id' => $data['id'],
@@ -41,11 +40,8 @@ class TenantService implements ITenantService
                 ]);
             }
 
-            DB::commit();
-
             return $tenant;
         } catch (Exception $e) {
-            DB::rollBack();
             throw $e;
         }
     }
@@ -57,7 +53,6 @@ class TenantService implements ITenantService
 
     public function updateTenant(array $data, string $id)
     {
-        DB::beginTransaction();
         try {
             $tenant = $this->tenantRepository->update([
                 'id' => $data['id'],
@@ -80,11 +75,8 @@ class TenantService implements ITenantService
                 }
             }
 
-            DB::commit();
-
             return $tenant;
         } catch (Exception $e) {
-            DB::rollBack();
             throw $e;
         }
     }
