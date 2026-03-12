@@ -12,9 +12,7 @@ use Illuminate\Http\Request;
 
 class LandingRegisterController extends Controller
 {
-    public function __construct(protected
-        IRegistrationRequestService $registrationRequestService, protected
-        IPlanService $planService
+    public function __construct(protected IRegistrationRequestService $registrationRequestService, protected IPlanService $planService
         )
     {
     }
@@ -24,10 +22,7 @@ class LandingRegisterController extends Controller
      */
     public function create(Request $request)
     {
-        $plans = $this->planService->listAllPlans();
-        $selectedPlanId = $request->query('plan_id');
-
-        return view('auth.register', compact('plans', 'selectedPlanId'));
+        return view('auth.register');
     }
 
     /**
@@ -35,8 +30,13 @@ class LandingRegisterController extends Controller
      */
     public function store(StoreRegistrationRequest $request)
     {
-        $this->registrationRequestService->storeRequest((array)RegistrationRequestDTO::fromRequest($request->validated()));
+        $data = $request->validated();
+        $registrationRequest = $this->registrationRequestService->storeRequest((array)RegistrationRequestDTO::fromRequest($data));
 
-        return redirect()->route('landing')->with('success', 'Your registration request has been submitted. Our team will review it and get back to you shortly!');
+        // Store info in session for payment flow
+        $request->session()->put('pending_registration_id', $registrationRequest->id);
+
+        // Instead of home, redirect to payment/plan selection
+        return redirect()->route('landlord.payment.plans')->with('success', 'Registration submitted. Please select a plan and complete payment to activate your cinema!');
     }
 }

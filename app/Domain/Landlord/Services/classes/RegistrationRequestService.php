@@ -27,7 +27,6 @@ class RegistrationRequestService implements IRegistrationRequestService
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
-                'plan_id' => $data['plan_id'],
                 'status' => RegistrationRequestStatusEnum::PENDING,
             ]);
 

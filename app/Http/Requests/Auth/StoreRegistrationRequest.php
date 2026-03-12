@@ -39,7 +39,6 @@ class StoreRegistrationRequest extends FormRequest
                 'unique:registration_requests,email'
             ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'plan_id' => ['required', 'exists:plans,id'],
         ];
     }
 }

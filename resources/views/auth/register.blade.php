@@ -218,18 +218,7 @@
                         required placeholder="••••••••">
                 </div>
 
-                <div class="form-group">
-                    <label for="plan_id" class="form-label">Subscription Plan</label>
-                    <select id="plan_id" name="plan_id" class="form-control" required>
-                        <option value="" disabled {{ !isset($selectedPlanId) ? 'selected' : '' }}>Select a plan...
-                        </option>
-                        @foreach($plans as $plan)
-                            <option value="{{ $plan->id }}" {{ (old('plan_id') == $plan->id || (isset($selectedPlanId) && $selectedPlanId == $plan->id)) ? 'selected' : '' }}>
-                                {{ $plan->name }} (${{ number_format($plan->price) }})
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+
 
                 <button type="submit" class="btn btn-primary btn-block btn-large" style="margin-top: 8px;">Submit
                     Registration Request</button>

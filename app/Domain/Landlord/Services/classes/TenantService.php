@@ -33,11 +33,17 @@ class TenantService implements ITenantService
             ]);
 
             if (isset($data['plan_id'])) {
-                $tenant->subscriptions()->create([
+                $subscriptionData = [
                     'plan_id' => $data['plan_id'],
                     'start_date' => now(),
                     'status' => 'active',
-                ]);
+                ];
+                
+                if (isset($data['payment_id'])) {
+                    $subscriptionData['payment_id'] = $data['payment_id'];
+                }
+
+                $tenant->subscriptions()->create($subscriptionData);
             }
 
             return $tenant;

@@ -6,8 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
 {
+    const STATUS_PENDING  = 'pending';
+    const STATUS_ACTIVE   = 'active';
+    const STATUS_CANCELED = 'canceled';
+    const STATUS_EXPIRED  = 'expired';
+    const STATUS_TRIAL    = 'trial';
+
     protected $fillable = [
         'tenant_id',
+        'payment_id',
         'plan_id',
         'status',
         'start_date',
@@ -16,8 +23,8 @@ class Subscription extends Model
     ];
 
     protected $casts = [
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
+        'start_date'     => 'datetime',
+        'end_date'       => 'datetime',
         'trial_end_date' => 'datetime',
     ];
 
@@ -29,5 +36,10 @@ class Subscription extends Model
     public function tenant()
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
     }
 }

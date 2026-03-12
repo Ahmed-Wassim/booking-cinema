@@ -89,6 +89,13 @@
                 </ul>
             </div>
         </li>
+
+        <li class="nav-item">
+            <a href="{{ route('landlord.payments.index') }}" class="nav-link {{ request()->routeIs('landlord.payments.*') ? 'active' : '' }}">
+                <i class="bi bi-wallet2 nav-icon"></i>
+                <span>Payments</span>
+            </a>
+        </li>
     </ul>
 </nav>
 

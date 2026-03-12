@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Landlord;
 
 use App\Domain\Landlord\DTO\TenantDTO;
+use App\Domain\Landlord\Repositories\Interfaces\IPaymentRepository;
 use App\Domain\Landlord\Services\Interfaces\IPlanService;
 use App\Domain\Landlord\Services\Interfaces\ITenantService;
 use App\Http\Controllers\Controller;
@@ -13,7 +14,8 @@ class TenantController extends Controller
 {
     public function __construct(
         protected ITenantService $tenantService,
-        protected IPlanService $planService
+        protected IPlanService $planService,
+        protected IPaymentRepository $paymentRepository
     ) {
     }
 
@@ -54,8 +56,9 @@ class TenantController extends Controller
     {
         $tenant = $this->tenantService->editTenant($id);
         $plans = $this->planService->listAllPlans();
+        $payments = $this->paymentRepository->getByTenant($id);
 
-        return view('landlord.tenants.edit', compact('tenant', 'plans'));
+        return view('landlord.tenants.edit', compact('tenant', 'plans', 'payments'));
     }
 
     /**

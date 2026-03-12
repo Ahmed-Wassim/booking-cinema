@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Domain\Landlord\Providers\Injectors;
 
+use App\Domain\Landlord\Services\Classes\PaymentService;
 use App\Domain\Landlord\Services\Classes\PlanService;
 use App\Domain\Landlord\Services\Classes\RegistrationRequestService;
 use App\Domain\Landlord\Services\Classes\TenantService;
 use App\Domain\Landlord\Services\Classes\UserService;
+use App\Domain\Landlord\Services\Interfaces\IPaymentService;
 use App\Domain\Landlord\Services\Interfaces\IPlanService;
 use App\Domain\Landlord\Services\Interfaces\IRegistrationRequestService;
 use App\Domain\Landlord\Services\Interfaces\ITenantService;
@@ -22,6 +24,7 @@ class ServicesInjector extends AppServiceProvider
         $this->app->scoped(ITenantService::class, TenantService::class);
         $this->app->scoped(IPlanService::class, PlanService::class);
         $this->app->scoped(IRegistrationRequestService::class, RegistrationRequestService::class);
+        $this->app->scoped(IPaymentService::class, PaymentService::class);
 
     }
 }

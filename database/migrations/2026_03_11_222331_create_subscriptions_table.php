@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -15,6 +16,7 @@ return new class extends Migration {
             $table->string('tenant_id');
             $table->foreign('tenant_id')->references('id')->on('tenants')->cascadeOnDelete();
             $table->foreignId('plan_id')->constrained('plans')->cascadeOnDelete();
+            $table->foreignId('payment_id')->nullable()->constrained('payments')->nullOnDelete();
             $table->string('status')->default('active'); // active, canceled, expired, trial
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
