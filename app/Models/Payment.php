@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Domain\Landlord\Enums\PaymentStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
     protected $fillable = [
-        'tenant_id',
+        'registration_request_id',
         'plan_id',
         'transaction_ref',
         'payment_token',
@@ -20,6 +21,7 @@ class Payment extends Model
     protected $casts = [
         'callback_data' => 'array',
         'amount' => 'decimal:2',
+        'status' => PaymentStatusEnum::class,
     ];
 
     public function tenant()
@@ -34,17 +36,17 @@ class Payment extends Model
 
     public function subscription()
     {
-        return $this->hasOne(Subscription::class , 'payment_id');
+        return $this->hasOne(Subscription::class, 'payment_id');
     }
 
     // Scopes
     public function scopePaid($query)
     {
-        return $query->where('status', 'paid');
+        return $query->where('status', PaymentStatusEnum::PAID);
     }
 
     public function scopePending($query)
     {
-        return $query->where('status', 'pending');
+        return $query->where('status', PaymentStatusEnum::PENDING);
     }
 }

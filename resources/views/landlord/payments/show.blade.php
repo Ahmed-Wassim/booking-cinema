@@ -18,12 +18,12 @@
                         <li class="list-group-item d-flex justify-content-between px-0">
                             <span class="text-muted">Status</span>
                             <span>
-                                @if($payment->status === 'paid')
+                                @if($payment->status === \App\Domain\Landlord\Enums\PaymentStatusEnum::PAID)
                                     <span class="badge bg-success">Paid</span>
-                                @elseif($payment->status === 'pending')
+                                @elseif($payment->status === \App\Domain\Landlord\Enums\PaymentStatusEnum::PENDING)
                                     <span class="badge bg-warning">Pending</span>
                                 @else
-                                    <span class="badge bg-danger">{{ ucfirst($payment->status) }}</span>
+                                    <span class="badge bg-danger">{{ ucfirst($payment->status->value) }}</span>
                                 @endif
                             </span>
                         </li>

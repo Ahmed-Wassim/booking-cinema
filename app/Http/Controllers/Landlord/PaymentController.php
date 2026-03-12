@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Landlord;
 
 use App\Domain\Landlord\DTO\PaymentDTO;
+use App\Domain\Landlord\Repositories\Interfaces\IRegistrationRequestRepository;
 use App\Domain\Landlord\Services\Interfaces\IPaymentService;
 use App\Domain\Landlord\Services\Interfaces\IPlanService;
 use App\Http\Controllers\Controller;
@@ -11,23 +12,21 @@ use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
-    public function __construct(
-        protected IPlanService $planService,
-        protected IPaymentService $paymentService,
+    public function __construct(protected IPlanService $planService, protected IPaymentService $paymentService, protected IRegistrationRequestRepository $registrationRequestRepository,
     ) {}
 
     /**
      * Show the plan selection page.
-     * The tenant_id is stored in session by the registration flow.
+     * The registration_id is stored in session by the registration flow.
      */
     public function plans(Request $request)
     {
         $plans = $this->planService->listAllPlans();
-        $tenantId = $request->session()->get('pending_tenant_id');
+        $registrationId = $request->session()->get('pending_registration_id');
 
-        // If no pending tenant in session, redirect to registration
-        if (! $tenantId) {
-            return redirect()->route('landlord.register')
+        // If no pending registration in session, redirect to registration
+        if (! $registrationId) {
+            return redirect()->route('register')
                 ->with('error', 'Please complete your registration first.');
         }
 
@@ -40,22 +39,21 @@ class PaymentController extends Controller
      */
     public function pay(Request $request, Plan $plan)
     {
-        $tenantId = $request->session()->get('pending_tenant_id');
-        $tenantName = $request->session()->get('pending_tenant_name', 'Cinema Owner');
-        $tenantEmail = $request->session()->get('pending_tenant_email', 'user@example.com');
+        $registrationId = $request->session()->get('pending_registration_id');
 
-        if (! $tenantId) {
+        if (! $registrationId) {
             return redirect()->route('landlord.register')
                 ->with('error', 'Please complete your registration first.');
         }
 
+        $registrationRequest = $this->registrationRequestRepository->findOrFail($registrationId);
+
         try {
             $result = $this->paymentService->initiatePayment(
                 (array) PaymentDTO::fromRequest([
-                    'registration_id' => $request->session()->get('pending_registration_id'),
-                    'tenant_id' => $tenantId,
-                    'tenant_name' => $tenantName,
-                    'tenant_email' => $tenantEmail,
+                    'registration_id' => $registrationId,
+                    'tenant_name' => $registrationRequest->name,
+                    'tenant_email' => $registrationRequest->email,
                     'plan_id' => $plan->id,
                     'amount' => $plan->price,
                     'currency' => config('paytabs.currency', 'EGP'),

@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Domain\Landlord\Enums\PaymentStatusEnum;
+use App\Domain\Landlord\Enums\RegistrationRequestStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Payment;
 
 class RegistrationRequest extends Model
 {
@@ -24,10 +25,10 @@ class RegistrationRequest extends Model
     protected $hidden = [
         'password',
     ];
-    
+
     protected $casts = [
         'password' => 'hashed',
-        'status' => \App\Domain\Landlord\Enums\RegistrationRequestStatusEnum::class,
+        'status' => RegistrationRequestStatusEnum::class,
     ];
 
     public function plan(): BelongsTo
@@ -35,9 +36,16 @@ class RegistrationRequest extends Model
         return $this->belongsTo(Plan::class);
     }
 
-    public function getLatestPayment()
+    public function payments()
     {
-        $slug = explode('.', $this->domain)[0];
-        return Payment::where('tenant_id', $slug)->latest()->first();
+        return $this->hasMany(Payment::class);
+    }
+
+    public function getPaidPayment()
+    {
+        return $this->payments()
+            ->where('status', PaymentStatusEnum::PAID)
+            ->latest()
+            ->first();
     }
 }

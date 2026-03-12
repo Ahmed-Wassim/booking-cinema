@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace App\Domain\Landlord\Services\Classes;
 
+use App\Domain\Landlord\Enums\PaymentStatusEnum;
 use App\Domain\Landlord\Repositories\Interfaces\IPaymentRepository;
 use App\Domain\Landlord\Repositories\Interfaces\ISubscriptionRepository;
 use App\Domain\Landlord\Services\Interfaces\IPaymentService;
 use App\Models\Plan;
 use App\Models\RegistrationRequest;
-use App\Models\Subscription;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Paytabscom\Laravel_paytabs\paypage as PaytabsPaypage;
 
 class PaymentService implements IPaymentService
 {
-    public function __construct(
-        protected IPaymentRepository $paymentRepository,
-        protected ISubscriptionRepository $subscriptionRepository,
+    public function __construct(protected IPaymentRepository $paymentRepository, protected ISubscriptionRepository $subscriptionRepository,
     ) {}
 
     /**
@@ -28,7 +26,6 @@ class PaymentService implements IPaymentService
      */
     public function initiatePayment(array $data): array
     {
-        $tenantId = $data['tenantId'];
         $plan = Plan::findOrFail($data['planId']);
         $tenantName = $data['tenantName'] ?? 'Cinema Owner';
         $tenantEmail = $data['tenantEmail'] ?? 'user@example.com';
@@ -41,23 +38,15 @@ class PaymentService implements IPaymentService
 
         // 1. Create pending Payment record
         $payment = $this->paymentRepository->create([
-            'tenant_id' => $tenantId,
+            'registration_request_id' => $data['registrationId'],
             'plan_id' => $plan->id,
             'payment_token' => $cartId,
-            'status' => 'paid', // Defaulting back to 'paid' based on previous revert
+            'status' => PaymentStatusEnum::PENDING->value,
             'amount' => $data['amount'] ?? $plan->price,
             'currency' => $data['currency'] ?? config('paytabs.currency', 'AED'),
         ]);
 
-        // 2. Create pending Subscription linked to this payment
-        $this->subscriptionRepository->create([
-            'tenant_id' => $tenantId,
-            'plan_id' => $plan->id,
-            'payment_id' => $payment->id,
-            'status' => Subscription::STATUS_PENDING,
-        ]);
-
-        // 3. Build PayTabs payment page request
+        // 2. Build PayTabs payment page request
         $returnUrl = $data['returnUrl'] ?? route('landlord.payment.success');
         $callbackUrl = $data['callbackUrl'] ?? route('landlord.payment.callback');
 
@@ -130,23 +119,12 @@ class PaymentService implements IPaymentService
         $responseStatus = $data['payment_result']['response_status'] ?? null;
         $isSuccess = ($responseStatus === 'A');
 
-        $newStatus = $isSuccess ? 'paid' : 'failed';
+        $newStatus = $isSuccess ? PaymentStatusEnum::PAID->value : PaymentStatusEnum::FAILED->value;
 
         $this->paymentRepository->updateStatus($payment->id, $newStatus, [
             'transaction_ref' => $tranRef,
             'callback_data' => $data,
         ]);
-
-        if ($isSuccess) {
-            $subscription = $this->subscriptionRepository->findPendingByTenantAndPlan(
-                $payment->tenant_id,
-                $payment->plan_id
-            );
-
-            if ($subscription) {
-                $this->subscriptionRepository->activate($subscription->id, $payment->id);
-            }
-        }
 
         return $isSuccess;
     }

@@ -44,10 +44,13 @@ class RegistrationRequestController extends Controller
             $tenantId = $tenantId.'-'.Str::random(4);
         }
 
+        $latestPayment = $registrationRequest->getPaidPayment();
+
         $tenantData = [
             'id' => $tenantId,
             'domain' => $registrationRequest->domain,
             'plan_id' => $registrationRequest->plan_id,
+            'payment_id' => $latestPayment ? $latestPayment->id : null,
         ];
 
         $tenant = $this->tenantService->storeTenant($tenantData);
