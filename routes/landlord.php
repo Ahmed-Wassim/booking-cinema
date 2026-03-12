@@ -7,6 +7,8 @@ use App\Http\Controllers\Landlord\Auth\NewPasswordController;
 use App\Http\Controllers\Landlord\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Landlord\Auth\RegisteredUserController;
 use App\Http\Controllers\Landlord\Auth\VerifyEmailController;
+use App\Http\Controllers\Landlord\AdminPaymentController;
+use App\Http\Controllers\Landlord\PaymentController;
 use App\Http\Controllers\Landlord\PlanController;
 use App\Http\Controllers\Landlord\RegistrationRequestController;
 use App\Http\Controllers\Landlord\TenantController;
@@ -59,6 +61,7 @@ Route::domain(env('LANDLORD_DOMAIN'))->group(function () {
     Route::resource('users', UserController::class)->middleware('auth:web');
     Route::resource('tenants', TenantController::class)->middleware('auth:web');
     Route::resource('plans', PlanController::class)->middleware('auth:web');
+    Route::resource('payments', AdminPaymentController::class)->only(['index', 'show'])->middleware('auth:web');
 
     Route::get('registration-requests', [RegistrationRequestController::class, 'index'])
         ->middleware('auth:web')
@@ -69,4 +72,13 @@ Route::domain(env('LANDLORD_DOMAIN'))->group(function () {
     Route::post('registration-requests/{registrationRequest}/reject', [RegistrationRequestController::class, 'reject'])
         ->middleware('auth:web')
         ->name('registration-requests.reject');
+
+    // Payment flow
+    Route::get('/payment/plans', [PaymentController::class, 'plans'])->name('payment.plans');
+    Route::post('/payment/pay/{plan}', [PaymentController::class, 'pay'])->name('payment.pay');
+    Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/payment/failure', [PaymentController::class, 'failure'])->name('payment.failure');
+
+    // Payment callback (no CSRF handling needed if configured in VerifyCsrfToken)
+    Route::post('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
 });

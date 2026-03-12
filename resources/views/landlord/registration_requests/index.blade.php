@@ -34,6 +34,7 @@
                             <th>Contact Name</th>
                             <th>Email</th>
                             <th>Plan</th>
+                            <th>Payment</th>
                             <th>Status</th>
                             <th>Submitted Date</th>
                             <th class="text-center">Actions</th>
@@ -41,12 +42,28 @@
                     </thead>
                     <tbody>
                         @forelse($requests as $request)
+                            @php
+                                $payment = $request->getLatestPayment();
+                            @endphp
                             <tr>
                                 <td>{{ $request->company_name }}</td>
                                 <td><code>{{ $request->domain }}</code></td>
                                 <td>{{ $request->name }}</td>
                                 <td><a href="mailto:{{ $request->email }}">{{ $request->email }}</a></td>
                                 <td>{{ $request->plan->name ?? 'N/A' }}</td>
+                                <td>
+                                    @if($payment)
+                                        @if($payment->status === 'paid')
+                                            <span class="badge bg-success">Paid</span>
+                                        @elseif($payment->status === 'pending')
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        @else
+                                            <span class="badge bg-danger">{{ ucfirst($payment->status) }}</span>
+                                        @endif
+                                    @else
+                                        <span class="text-muted small">N/A</span>
+                                    @endif
+                                </td>
                                 <td>
                                     @if($request->status === \App\Domain\Landlord\Enums\RegistrationRequestStatusEnum::PENDING)
                                         <span class="badge bg-warning text-dark">Pending</span>

@@ -13,7 +13,6 @@ class RegistrationRequestDTO extends DataTransferObject
     public ?string $name;
     public ?string $email;
     public ?string $password;
-    public ?string $plan_id;
 
     public static function fromRequest(array $data): self
     {
@@ -23,7 +22,6 @@ class RegistrationRequestDTO extends DataTransferObject
             'name' => $data['name'] ?? null,
             'email' => $data['email'] ?? null,
             'password' => $data['password'] ?? null,
-            'plan_id' => (string) ($data['plan_id'] ?? null),
         ]);
     }
 }

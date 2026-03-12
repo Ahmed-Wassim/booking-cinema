@@ -20,4 +20,9 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     {
         return $this->hasMany(Subscription::class);
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 }
