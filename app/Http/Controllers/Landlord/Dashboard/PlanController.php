@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Landlord;
+namespace App\Http\Controllers\Landlord\Dashboard;
 
 use App\Domain\Landlord\DTO\PlanDTO;
 use App\Domain\Landlord\Services\Interfaces\IPlanService;

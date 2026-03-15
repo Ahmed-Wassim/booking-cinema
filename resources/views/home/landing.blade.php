@@ -34,8 +34,12 @@
                 <a href="#pricing">Pricing</a>
             </div>
             <div class="nav-actions">
-                <a href="{{ route('landlord.login') }}" class="btn btn-outline">Log in</a>
-                <a href="{{ route('landlord.register') }}" class="btn btn-primary">Get Started</a>
+                @auth('web')
+                    <a href="{{ route('landlord.dashboard') }}" class="btn btn-primary">Dashboard</a>
+                @else
+                    <a href="{{ route('landlord.login') }}" class="btn btn-outline">Log in</a>
+                    <a href="{{ route('landlord.register') }}" class="btn btn-primary">Get Started</a>
+                @endauth
             </div>
         </div>
     </nav>
@@ -240,9 +244,15 @@
                                     class="period">/{{ $plan->billing_interval === 'month' ? 'mo' : ($plan->billing_interval === 'year' ? 'yr' : $plan->billing_interval) }}</span>
                             </div>
                             <ul class="plan-features">
-                                @if($plan->features->count() > 0)
+                                @if(isset($plan->features) && $plan->features->count() > 0)
                                     @foreach($plan->features as $feature)
-                                        <li><span class="check">✓</span> {{ $feature->name }}</li>
+                                        <li><span class="check">✓</span>
+                                            @if($feature->feature_key ?? null)
+                                                {{ Str::title(str_replace('_', ' ', $feature->feature_key->value)) }}: {{ $feature->feature_value }}
+                                            @else
+                                                {{ $feature->feature_value }}
+                                            @endif
+                                        </li>
                                     @endforeach
                                 @else
                                     <li><span class="check">✓</span> Core ticketing features</li>
