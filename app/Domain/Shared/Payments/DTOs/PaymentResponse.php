@@ -15,12 +15,26 @@ class PaymentResponse extends DataTransferObject
 
     public static function success(array $data = []): self
     {
-        return new self(array_merge(['isSuccessful' => true], $data));
+        $defaults = [
+            'isSuccessful' => true,
+            'redirectUrl' => null,
+            'transactionRef' => null,
+            'raw' => null,
+        ];
+
+        return new self(array_merge($defaults, $data));
     }
 
     public static function failure(array $data = []): self
     {
-        return new self(array_merge(['isSuccessful' => false], $data));
+        $defaults = [
+            'isSuccessful' => false,
+            'redirectUrl' => null,
+            'transactionRef' => null,
+            'raw' => null,
+        ];
+
+        return new self(array_merge($defaults, $data));
     }
 
     public function getRedirectUrl(): ?string
