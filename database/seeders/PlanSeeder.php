@@ -21,8 +21,8 @@ class PlanSeeder extends Seeder
                 'billing_interval' => 'monthly',
                 'features' => [
                     FeatureKeyEnum::MAX_CINEMAS->value => '1',
-                    FeatureKeyEnum::MAX_BOOKINGS->value => '500',
                     FeatureKeyEnum::MAX_HALLS->value => '3',
+                    FeatureKeyEnum::MAX_BOOKINGS->value => '500',
                 ],
             ],
             [
@@ -57,8 +57,8 @@ class PlanSeeder extends Seeder
 
             foreach ($features as $key => $value) {
                 $plan->features()->updateOrCreate(
-                    ['feature_key' => $key],
-                    ['feature_value' => $value]
+                ['feature_key' => $key],
+                ['feature_value' => $value]
                 );
             }
         }
