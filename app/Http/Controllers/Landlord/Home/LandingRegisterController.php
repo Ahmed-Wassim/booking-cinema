@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Landlord\Home;
 
 use App\Domain\Landlord\DTO\RegistrationRequestDTO;
 use App\Domain\Landlord\Services\Interfaces\IPlanService;
 use App\Domain\Landlord\Services\Interfaces\IRegistrationRequestService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\StoreRegistrationRequest;
-use App\Models\Plan;
 use Illuminate\Http\Request;
 
 class LandingRegisterController extends Controller
 {
-    public function __construct(protected IRegistrationRequestService $registrationRequestService, protected IPlanService $planService
-        )
-    {
-    }
+    public function __construct(
+        protected IRegistrationRequestService $registrationRequestService,
+        protected IPlanService $planService
+    ) {}
 
     /**
      * Display the registration form.
@@ -31,7 +30,7 @@ class LandingRegisterController extends Controller
     public function store(StoreRegistrationRequest $request)
     {
         $data = $request->validated();
-        $registrationRequest = $this->registrationRequestService->storeRequest((array)RegistrationRequestDTO::fromRequest($data));
+        $registrationRequest = $this->registrationRequestService->storeRequest((array) RegistrationRequestDTO::fromRequest($data));
 
         // Store info in session for payment flow
         $request->session()->put('pending_registration_id', $registrationRequest->id);

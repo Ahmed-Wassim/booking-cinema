@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Home;
+namespace App\Http\Controllers\Landlord\Home;
 
 use App\Domain\Landlord\Services\Interfaces\IPlanService;
 use App\Http\Controllers\Controller;

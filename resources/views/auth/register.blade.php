@@ -225,7 +225,11 @@
             </form>
 
             <div class="auth-footer">
-                Already have an account? <a href="{{ route('landlord.login') }}">Log in</a>
+                @auth('web')
+                    You are already logged in. <a href="{{ route('landlord.dashboard') }}">Go to dashboard</a>
+                @else
+                    Already have an account? <a href="{{ route('landlord.login') }}">Log in</a>
+                @endauth
             </div>
         </div>
     </div>
