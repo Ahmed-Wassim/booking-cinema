@@ -127,6 +127,12 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'PayTabs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/PayTabs.log'),
+            'level' => 'info',
+        ],
+
     ],
 
 ];
