@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace App\Domain\Shared\Repositories\Classes;
 
-use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\LazyCollection;
 
 abstract class AbstractRepository
 {
     public function __construct(
         protected Model $model
-    ) {
-    }
+    ) {}
 
     public function create(array $data): mixed
     {
@@ -53,19 +50,19 @@ abstract class AbstractRepository
         if (in_array('status', $this->model->getFillable(), true)) {
             $model = $model->active();
         }
-        if (!empty($whereHasConditions)) {
+        if (! empty($whereHasConditions)) {
             foreach ($whereHasConditions as $relation => $callback) {
                 $model = $model->whereHas($relation, $callback);
             }
         }
-        if (!empty($whereDoesntHaveConditions)) {
+        if (! empty($whereDoesntHaveConditions)) {
             foreach ($whereDoesntHaveConditions as $relation => $callback) {
                 $model = $model->whereDoesntHave($relation, $callback);
             }
         }
 
         $query = $model->with($relations)->select($select);
-        if (!empty($conditions)) {
+        if (! empty($conditions)) {
             foreach ($conditions as $key => $value) {
                 if (is_array($value)) {
                     $query->whereIn($key, $value);
@@ -76,11 +73,11 @@ abstract class AbstractRepository
                 }
             }
         }
-        if (!empty($orConditions)) {
+        if (! empty($orConditions)) {
             $query->orWhere($orConditions);
         }
         if (isset($location['radius'])) {
-            $query->selectRaw("
+            $query->selectRaw('
         *,
         (6371 * acos(
             cos(radians(?)) *
@@ -89,8 +86,8 @@ abstract class AbstractRepository
             sin(radians(?)) *
             sin(radians(latitude))
         )) AS distance
-        ", [$location['latitude'], $location['longitude'], $location['latitude']])
-                ->whereRaw("
+        ', [$location['latitude'], $location['longitude'], $location['latitude']])
+                ->whereRaw('
             (6371 * acos(
                 cos(radians(?)) *
                 cos(radians(latitude)) *
@@ -98,7 +95,7 @@ abstract class AbstractRepository
                 sin(radians(?)) *
                 sin(radians(latitude))
             )) <= ?
-        ", [
+        ', [
                     $location['latitude'],
                     $location['longitude'],
                     $location['latitude'],
@@ -108,6 +105,7 @@ abstract class AbstractRepository
         } else {
             $query->orderBy($orderBy, $orderType);
         }
+
         return $query->get();
     }
 
@@ -156,7 +154,7 @@ abstract class AbstractRepository
             $model = $model->active();
         }
 
-        if (!empty($whereHasConditions)) {
+        if (! empty($whereHasConditions)) {
             $model = $model->whereHas(
                 $whereHasConditions[0],
                 $whereHasConditions[1] ?? null
@@ -185,6 +183,7 @@ abstract class AbstractRepository
     {
         $model = $this->model->where($conditions)->select($select)->firstOrFail();
         $model->update($data);
+
         return $model;
     }
 
@@ -252,7 +251,6 @@ abstract class AbstractRepository
         $this->model->where($conditions)->whereIn($key, $listIds)->delete();
     }
 
-
     public function updateWhereIn(array $data, array $ids = [], string $selectedColumn = 'id', array $conditions = []): void
     {
         $this->prepareWhereIn(selectedColumn: $selectedColumn, ids: $ids, conditions: $conditions)->update($data);
@@ -299,6 +297,7 @@ abstract class AbstractRepository
                 'id' => $model?->id,
             ]
         );
+
         return $newRecord;
     }
 
@@ -306,6 +305,7 @@ abstract class AbstractRepository
     {
         $duplicatedRecord = $model->replicate()->fill($data);
         $duplicatedRecord->save();
+
         return $duplicatedRecord;
     }
 
@@ -338,12 +338,10 @@ abstract class AbstractRepository
     {
         $query = $this->model;
 
-        if (!empty($conditions)) {
+        if (! empty($conditions)) {
             $query = $query->where($conditions);
         }
 
         return $query->count();
     }
-
-
 }

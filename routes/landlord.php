@@ -8,6 +8,7 @@ use App\Http\Controllers\Landlord\Auth\VerifyEmailController;
 use App\Http\Controllers\Landlord\Dashboard\AdminPaymentController;
 use App\Http\Controllers\Landlord\Dashboard\PlanController;
 use App\Http\Controllers\Landlord\Dashboard\RegistrationRequestController;
+use App\Http\Controllers\Landlord\Dashboard\SupplierController;
 use App\Http\Controllers\Landlord\Dashboard\TenantController;
 use App\Http\Controllers\Landlord\Dashboard\UserController;
 use App\Http\Controllers\Landlord\Home\LandingRegisterController;
@@ -61,6 +62,7 @@ Route::domain(env('LANDLORD_DOMAIN'))->group(function () {
     Route::resource('tenants', TenantController::class)->middleware('auth:web');
     Route::resource('plans', PlanController::class)->middleware('auth:web');
     Route::resource('payments', AdminPaymentController::class)->only(['index', 'show'])->middleware('auth:web');
+    Route::get('suppliers', [SupplierController::class, 'index'])->middleware('auth:web')->name('suppliers.index');
 
     Route::get('registration-requests', [RegistrationRequestController::class, 'index'])
         ->middleware('auth:web')
