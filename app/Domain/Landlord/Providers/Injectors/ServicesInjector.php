@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace App\Domain\Landlord\Providers\Injectors;
 
 use App\Domain\Landlord\Billing\Payment\Services\SubscriptionPaymentService;
+use App\Domain\Landlord\MovieSync\Contracts\IGenreSyncService;
+use App\Domain\Landlord\MovieSync\Contracts\IMovieImageService;
+use App\Domain\Landlord\MovieSync\Services\GenreSyncService;
+use App\Domain\Landlord\MovieSync\Services\MovieImageService;
+use App\Domain\Landlord\Services\Classes\MovieSyncService;
 use App\Domain\Landlord\Services\Classes\PlanService;
 use App\Domain\Landlord\Services\Classes\RegistrationRequestService;
 use App\Domain\Landlord\Services\Classes\TenantService;
 use App\Domain\Landlord\Services\Classes\UserService;
+use App\Domain\Landlord\Services\Interfaces\IMovieSyncService;
 use App\Domain\Landlord\Services\Interfaces\IPaymentService;
 use App\Domain\Landlord\Services\Interfaces\IPlanService;
 use App\Domain\Landlord\Services\Interfaces\IRegistrationRequestService;
@@ -26,6 +32,8 @@ class ServicesInjector extends AppServiceProvider
         $this->app->scoped(IRegistrationRequestService::class, RegistrationRequestService::class);
         // bind the new subscription payment service in place of the old one
         $this->app->scoped(IPaymentService::class, SubscriptionPaymentService::class);
-
+        $this->app->scoped(IGenreSyncService::class, GenreSyncService::class);
+        $this->app->scoped(IMovieImageService::class, MovieImageService::class);
+        $this->app->scoped(IMovieSyncService::class, MovieSyncService::class);
     }
 }

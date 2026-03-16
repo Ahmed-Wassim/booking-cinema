@@ -5,19 +5,31 @@ declare(strict_types = 1)
 
 namespace App\Domain\Landlord\Providers\Injectors;
 
+use App\Domain\Landlord\Repositories\Classes\GenreRepository;
+use App\Domain\Landlord\Repositories\Classes\MovieRepository;
 use App\Domain\Landlord\Repositories\Classes\PaymentRepository;
 use App\Domain\Landlord\Repositories\Classes\RegistrationRequestRepository;
+use App\Domain\Landlord\Repositories\Classes\SupplierRepository;
+use App\Domain\Landlord\Repositories\Classes\SupplierSettingRepository;
 use App\Domain\Landlord\Repositories\Classes\SubscriptionRepository;
 use App\Domain\Landlord\Repositories\Classes\TenantRepository;
 use App\Domain\Landlord\Repositories\Classes\UserRepository;
+use App\Domain\Landlord\Repositories\Interfaces\IGenreRepository;
+use App\Domain\Landlord\Repositories\Interfaces\IMovieRepository;
 use App\Domain\Landlord\Repositories\Interfaces\IPaymentRepository;
 use App\Domain\Landlord\Repositories\Interfaces\IPlanRepository;
 use App\Domain\Landlord\Repositories\Interfaces\IRegistrationRequestRepository;
+use App\Domain\Landlord\Repositories\Interfaces\ISupplierRepository;
+use App\Domain\Landlord\Repositories\Interfaces\ISupplierSettingRepository;
 use App\Domain\Landlord\Repositories\Interfaces\ISubscriptionRepository;
 use App\Domain\Landlord\Repositories\Interfaces\ITenantRepository;
 use App\Domain\Landlord\Repositories\Interfaces\IUserRepository;
+use App\Models\Genre;
+use App\Models\Movie;
 use App\Models\Payment;
 use App\Models\Plan;
+use App\Models\Supplier;
+use App\Models\SupplierSetting;
 use App\Models\RegistrationRequest;
 use App\Models\Subscription;
 use App\Models\Tenant;
@@ -50,6 +62,22 @@ class RepositoriesInjector extends AppServiceProvider
 
         $this->app->scoped(ISubscriptionRepository::class, function () {
             return new SubscriptionRepository(new Subscription());
+        });
+
+        $this->app->scoped(ISupplierRepository::class, function () {
+            return new SupplierRepository(new Supplier());
+        });
+
+        $this->app->scoped(ISupplierSettingRepository::class, function () {
+            return new SupplierSettingRepository();
+        });
+
+        $this->app->scoped(IGenreRepository::class, function () {
+            return new GenreRepository(new Genre());
+        });
+
+        $this->app->scoped(IMovieRepository::class, function () {
+            return new MovieRepository(new Movie());
         });
     }
 
