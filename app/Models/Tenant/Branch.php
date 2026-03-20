@@ -2,11 +2,18 @@
 
 namespace App\Models\Tenant;
 
+use App\Traits\Shared\ActiveTrait;
+use App\Traits\Shared\CreatedAtRangeTrait;
+use App\Traits\Shared\FilterTrait;
+use App\Traits\Shared\SearchTrait;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Branch extends Model
 {
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
+
     protected $fillable = [
         'name',
         'city',

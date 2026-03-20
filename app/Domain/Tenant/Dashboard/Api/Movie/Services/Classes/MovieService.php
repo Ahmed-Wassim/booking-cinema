@@ -3,10 +3,12 @@
 namespace App\Domain\Tenant\Dashboard\Api\Movie\Services\Classes;
 
 use App\Domain\Landlord\Dashboard\Web\Movie\Repositories\Interfaces\IMovieRepository as ILandlordMovieRepository;
+use App\Domain\Shared\Suppliers\Providers\TMDB\TmdbImageUrl;
 use App\Domain\Tenant\Dashboard\Api\Movie\Repositories\Interfaces\IMovieRepository;
 use App\Domain\Tenant\Dashboard\Api\Movie\Services\Interfaces\IMovieService;
 use App\Models\Tenant\Movie;
 use Exception;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class MovieService implements IMovieService
 {
@@ -30,20 +32,24 @@ class MovieService implements IMovieService
         return $this->movieRepository->create([
             'movie_id' => $landlordMovie->id,
             'title' => $landlordMovie->title,
-            'poster' => $landlordMovie->poster_path ?? $landlordMovie->local_poster_path,
+            'poster' => TmdbImageUrl::poster($landlordMovie->poster_path),
             'runtime' => $landlordMovie->runtime,
             'status' => 'active',
         ]);
     }
 
-    public function listAllMovies()
+    public function listAllMovies(): LengthAwarePaginator
     {
-        return $this->movieRepository->listAllBy();
+        return $this->movieRepository->retrieve();
     }
 
-    public function getLandlordMovies()
+    public function getLandlordMovies(): LengthAwarePaginator
     {
-        return $this->landlordMovieRepository->listAllBy();
+        return $this->landlordMovieRepository->retrieve(
+            relations: ['genres'],
+            orderBy: 'release_date',
+            order: 'DESC'
+        );
     }
 
     public function updateMovie(int $id, array $data): Movie

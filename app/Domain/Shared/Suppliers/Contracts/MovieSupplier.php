@@ -5,26 +5,21 @@ declare(strict_types=1);
 namespace App\Domain\Shared\Suppliers\Contracts;
 
 use App\Domain\Shared\Suppliers\DTOs\GenreDTO;
-use App\Domain\Shared\Suppliers\DTOs\MovieDetailsDTO;
 use App\Domain\Shared\Suppliers\DTOs\MovieDTO;
 
 interface MovieSupplier
 {
     /**
-     * @return array<int, MovieDTO>
+     * Fetch one page of movies from a specific endpoint.
+     *
+     * @return MovieDTO[]
      */
-    public function fetchMovies(int $page = 1): array;
+    public function fetchMovies(string $endpoint, int $page = 1): array;
 
     /**
-     * @return array<int, GenreDTO>
+     * Fetch all genres from the supplier.
+     *
+     * @return GenreDTO[]
      */
     public function fetchGenres(): array;
-
-    public function fetchMovieDetails(string $externalId): ?MovieDetailsDTO;
-
-    /** Full URL for poster image (supplier-specific). */
-    public function posterUrl(?string $posterPath): ?string;
-
-    /** Full URL for backdrop image (supplier-specific). */
-    public function backdropUrl(?string $backdropPath): ?string;
 }

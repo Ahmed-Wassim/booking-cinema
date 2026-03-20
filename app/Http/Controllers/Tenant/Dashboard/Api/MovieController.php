@@ -8,6 +8,7 @@ use App\Models\Tenant\Movie;
 use App\Http\Requests\Tenant\Dashboard\Api\StoreMovieRequest;
 use App\Http\Requests\Tenant\Dashboard\Api\UpdateMovieRequest;
 use App\Http\Resources\Tenant\Dashboard\Api\MovieResource;
+use App\Http\Resources\Tenant\Dashboard\Api\LandlordMovieResource;
 use App\Domain\Tenant\Dashboard\Api\Movie\DTO\MovieDTO;
 
 class MovieController extends Controller
@@ -46,7 +47,8 @@ class MovieController extends Controller
     public function landlordMovies()
     {
         $movies = $this->movieService->getLandlordMovies();
-        return response()->json(['data' => $movies]);
+        
+        return LandlordMovieResource::collection($movies);
     }
 
     public function show(string $id)

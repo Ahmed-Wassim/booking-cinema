@@ -21,10 +21,9 @@ class MovieSupplierFactory
         $key = strtolower($supplierKey);
         $apiKey = $settings['api_key'] ?? '';
         $apiUrl = $settings['api_url'] ?? config('tmdb.base_url', 'https://api.themoviedb.org/3');
-        $imageBaseUrl = $settings['image_base_url'] ?? config('tmdb.image_base_url', 'https://image.tmdb.org/t/p');
 
         return match ($key) {
-            'tmdb' => new TMDBMovieSupplier($apiKey, $apiUrl, $imageBaseUrl),
+            'tmdb' => new TMDBMovieSupplier($apiKey, $apiUrl),
             'imdb' => new IMDbMovieSupplier($settings),
             default => throw new InvalidArgumentException("Movie supplier [{$supplierKey}] is not supported."),
         };

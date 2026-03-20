@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Domain\Tenant\Dashboard\Api\User\Services\Interfaces;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 interface IUserService
 {
-    public function listAllUsers(): Collection;
+    public function listAllUsers(): LengthAwarePaginator;
 
     public function storeUser(array $data): Model;
 

@@ -2,11 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\Shared\ActiveTrait;
+use App\Traits\Shared\CreatedAtRangeTrait;
+use App\Traits\Shared\FilterTrait;
+use App\Traits\Shared\SearchTrait;
+
 use App\Domain\Landlord\Enums\PaymentStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
+
     protected $fillable = [
         'registration_request_id',
         'plan_id',

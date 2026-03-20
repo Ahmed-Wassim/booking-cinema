@@ -3,15 +3,13 @@
 namespace App\Domain\Tenant\Dashboard\Api\Showtime\Services\Interfaces;
 
 use App\Models\Tenant\Showtime;
-use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface IShowtimeService
 {
     /**
      * Create a new Showtime for a specific Tenant Movie.
      *
-     * @param array $data
-     * @return Showtime
      * @throws \Exception
      */
     public function createShowtime(array $data): Showtime;
@@ -19,7 +17,7 @@ interface IShowtimeService
     /**
      * Get all showtimes.
      */
-    public function listAllShowtimes();
+    public function listAllShowtimes(): LengthAwarePaginator;
 
     /**
      * Update an existing Showtime.

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Domain\Tenant\Dashboard\Api\Branch\Services\Interfaces;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 interface IBranchService
 {
-    public function listAllBranches(): Collection|array;
+    public function listAllBranches(): LengthAwarePaginator;
 
     public function storeBranch(array $data): Model;
 

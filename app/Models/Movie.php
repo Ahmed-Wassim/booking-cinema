@@ -2,10 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\Shared\ActiveTrait;
+use App\Traits\Shared\CreatedAtRangeTrait;
+use App\Traits\Shared\FilterTrait;
+use App\Traits\Shared\SearchTrait;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Movie extends Model
 {
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
+
     protected $connection = 'central';
 
     protected $fillable = [
@@ -15,11 +22,10 @@ class Movie extends Model
         'overview',
         'poster_path',
         'backdrop_path',
-        'local_poster_path',
-        'local_backdrop_path',
         'release_date',
         'runtime',
         'language',
+        'popularity',
     ];
 
     protected $casts = [

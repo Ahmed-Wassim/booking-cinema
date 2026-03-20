@@ -6,7 +6,7 @@ namespace App\Domain\Tenant\Dashboard\Api\PriceTier\Services\Classes;
 
 use App\Domain\Tenant\Dashboard\Api\PriceTier\Repositories\Interfaces\IPriceTierRepository;
 use App\Domain\Tenant\Dashboard\Api\PriceTier\Services\Interfaces\IPriceTierService;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 class PriceTierService implements IPriceTierService
@@ -15,9 +15,9 @@ class PriceTierService implements IPriceTierService
         protected IPriceTierRepository $priceTierRepository
     ) {}
 
-    public function listAllPriceTiers(): Collection|array
+    public function listAllPriceTiers(): LengthAwarePaginator
     {
-        return $this->priceTierRepository->listAllBy(relations: ['hall']);
+        return $this->priceTierRepository->retrieve();
     }
 
     public function storePriceTier(array $data): Model

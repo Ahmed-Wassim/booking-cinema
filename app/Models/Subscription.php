@@ -2,10 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\Shared\ActiveTrait;
+use App\Traits\Shared\CreatedAtRangeTrait;
+use App\Traits\Shared\FilterTrait;
+use App\Traits\Shared\SearchTrait;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
 {
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
+
     const STATUS_PENDING  = 'pending';
     const STATUS_ACTIVE   = 'active';
     const STATUS_CANCELED = 'canceled';
