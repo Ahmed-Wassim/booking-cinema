@@ -7,7 +7,7 @@ use App\Domain\Tenant\Dashboard\Api\Branch\Services\Interfaces\IBranchService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Dashboard\Api\StoreBranchRequest;
 use App\Http\Requests\Tenant\Dashboard\Api\UpdateBranchRequest;
-use Illuminate\Http\JsonResponse;
+use App\Http\Resources\Tenant\Dashboard\Api\BranchResource;
 
 class BranchController extends Controller
 {
@@ -15,33 +15,29 @@ class BranchController extends Controller
         protected IBranchService $branchService
     ) {}
 
-    public function index(): JsonResponse
+    public function index()
     {
-        return response()->json([
-            'data' => $this->branchService->listAllBranches()
-        ]);
+        return BranchResource::collection($this->branchService->listAllBranches());
     }
 
-    public function store(StoreBranchRequest $request): JsonResponse
+    public function store(StoreBranchRequest $request)
     {
         $branch = $this->branchService->storeBranch((array) BranchDTO::fromRequest($request->validated()));
-        return response()->json(['data' => $branch], 201);
+        return new BranchResource($branch);
     }
 
-    public function show(string $id): JsonResponse
+    public function show(string $id)
     {
-        return response()->json([
-            'data' => $this->branchService->editBranch($id)
-        ]);
+        return new BranchResource($this->branchService->editBranch($id));
     }
 
-    public function update(UpdateBranchRequest $request, string $id): JsonResponse
+    public function update(UpdateBranchRequest $request, string $id)
     {
         $branch = $this->branchService->updateBranch((array) BranchDTO::fromRequest($request->validated()), $id);
-        return response()->json(['data' => $branch]);
+        return new BranchResource($branch);
     }
 
-    public function destroy(string $id): JsonResponse
+    public function destroy(string $id)
     {
         $this->branchService->deleteBranch($id);
         return response()->json(null, 204);

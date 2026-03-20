@@ -15,30 +15,26 @@ class HallController extends Controller
         protected IHallService $hallService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return response()->json([
-            'data' => $this->hallService->listAllHalls()
-        ]);
+        return \App\Http\Resources\Tenant\Dashboard\Api\HallResource::collection($this->hallService->listAllHalls());
     }
 
-    public function store(StoreHallRequest $request): JsonResponse
+    public function store(StoreHallRequest $request): \App\Http\Resources\Tenant\Dashboard\Api\HallResource
     {
         $hall = $this->hallService->storeHall((array) HallDTO::fromRequest($request->validated()));
-        return response()->json(['data' => $hall], 201);
+        return new \App\Http\Resources\Tenant\Dashboard\Api\HallResource($hall);
     }
 
-    public function show(string $id): JsonResponse
+    public function show(string $id): \App\Http\Resources\Tenant\Dashboard\Api\HallResource
     {
-        return response()->json([
-            'data' => $this->hallService->editHall($id)
-        ]);
+        return new \App\Http\Resources\Tenant\Dashboard\Api\HallResource($this->hallService->editHall($id));
     }
 
-    public function update(UpdateHallRequest $request, string $id): JsonResponse
+    public function update(UpdateHallRequest $request, string $id): \App\Http\Resources\Tenant\Dashboard\Api\HallResource
     {
         $hall = $this->hallService->updateHall((array) HallDTO::fromRequest($request->validated()), $id);
-        return response()->json(['data' => $hall]);
+        return new \App\Http\Resources\Tenant\Dashboard\Api\HallResource($hall);
     }
 
     public function destroy(string $id): JsonResponse

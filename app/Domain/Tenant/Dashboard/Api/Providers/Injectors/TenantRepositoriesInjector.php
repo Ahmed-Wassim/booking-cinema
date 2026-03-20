@@ -14,6 +14,8 @@ use App\Domain\Tenant\Dashboard\Api\PriceTier\Repositories\Classes\PriceTierRepo
 use App\Domain\Tenant\Dashboard\Api\PriceTier\Repositories\Interfaces\IPriceTierRepository;
 use App\Domain\Tenant\Dashboard\Api\Seat\Repositories\Classes\SeatRepository;
 use App\Domain\Tenant\Dashboard\Api\Seat\Repositories\Interfaces\ISeatRepository;
+use App\Domain\Tenant\Dashboard\Api\User\Repositories\Classes\UserRepository;
+use App\Domain\Tenant\Dashboard\Api\User\Repositories\Interfaces\IUserRepository;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Hall;
 use App\Models\Tenant\HallSection;
@@ -43,6 +45,10 @@ class TenantRepositoriesInjector extends AppServiceProvider
 
         $this->app->scoped(ISeatRepository::class, function () {
             return new SeatRepository(new Seat());
+        });
+
+        $this->app->scoped(IUserRepository::class, function () {
+            return new UserRepository(new \App\Models\Tenant\User());
         });
     }
 }

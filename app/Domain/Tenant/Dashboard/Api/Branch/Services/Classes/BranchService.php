@@ -8,7 +8,6 @@ use App\Domain\Tenant\Dashboard\Api\Branch\Repositories\Interfaces\IBranchReposi
 use App\Domain\Tenant\Dashboard\Api\Branch\Services\Interfaces\IBranchService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class BranchService implements IBranchService
 {
@@ -23,28 +22,23 @@ class BranchService implements IBranchService
 
     public function storeBranch(array $data): Model
     {
-        return DB::transaction(function () use ($data) {
-            return $this->branchRepository->create($data);
-        });
+        return $this->branchRepository->create($data);
     }
 
     public function editBranch(string|int $id): Model
     {
-        return $this->branchRepository->findOrFail((int)$id);
+        return $this->branchRepository->findOrFail((int) $id);
     }
 
     public function updateBranch(array $data, string|int $id): Model
     {
-        return DB::transaction(function () use ($data, $id) {
-            return $this->branchRepository->update($data, ['id' => $id]);
-        });
+        return $this->branchRepository->update($data, ['id' => $id]);
     }
 
     public function deleteBranch(string|int $id): bool
     {
-        return DB::transaction(function () use ($id) {
-            $this->branchRepository->delete(['id' => $id]);
-            return true;
-        });
+        $this->branchRepository->delete(['id' => $id]);
+
+        return true;
     }
 }

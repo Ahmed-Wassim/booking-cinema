@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Domain\Landlord\Billing\Payment\Services;
 
 use App\Domain\Landlord\Enums\PaymentStatusEnum;
-use App\Domain\Landlord\Repositories\Interfaces\IPaymentRepository;
-use App\Domain\Landlord\Repositories\Interfaces\ISubscriptionRepository;
-use App\Domain\Landlord\Services\Interfaces\IPaymentService;
+use App\Domain\Landlord\Dashboard\Web\Payment\Repositories\Interfaces\IPaymentRepository;
+use App\Domain\Landlord\Dashboard\Web\Subscription\Repositories\Interfaces\ISubscriptionRepository;
+use App\Domain\Landlord\Dashboard\Web\Payment\Services\Interfaces\IPaymentService;
 use App\Domain\Shared\Payments\Manager\PaymentManager;
 use App\Models\Plan;
 use App\Models\RegistrationRequest;

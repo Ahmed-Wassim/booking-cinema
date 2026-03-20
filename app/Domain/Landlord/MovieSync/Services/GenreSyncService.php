@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Landlord\MovieSync\Services;
 
 use App\Domain\Landlord\MovieSync\Contracts\IGenreSyncService;
-use App\Domain\Landlord\Repositories\Interfaces\IGenreRepository;
+use App\Domain\Landlord\Dashboard\Web\Genre\Repositories\Interfaces\IGenreRepository;
 use App\Domain\Shared\Suppliers\Contracts\MovieSupplier;
 use App\Models\Supplier;
 use Illuminate\Support\Facades\Cache;

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Landlord;
 
-use App\Domain\Landlord\DTO\PaymentDTO;
-use App\Domain\Landlord\Repositories\Interfaces\IRegistrationRequestRepository;
-use App\Domain\Landlord\Services\Interfaces\IPaymentService;
-use App\Domain\Landlord\Services\Interfaces\IPlanService;
+use App\Domain\Landlord\Dashboard\Web\Payment\DTO\PaymentDTO;
+use App\Domain\Landlord\Dashboard\Web\RegistrationRequest\Repositories\Interfaces\IRegistrationRequestRepository;
+use App\Domain\Landlord\Dashboard\Web\Payment\Services\Interfaces\IPaymentService;
+use App\Domain\Landlord\Dashboard\Web\Plan\Services\Interfaces\IPlanService;
 use App\Http\Controllers\Controller;
 use App\Models\Plan;
 use Illuminate\Http\Request;

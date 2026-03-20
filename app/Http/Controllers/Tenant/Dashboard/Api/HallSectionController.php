@@ -15,30 +15,26 @@ class HallSectionController extends Controller
         protected IHallSectionService $hallSectionService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return response()->json([
-            'data' => $this->hallSectionService->listAllHallSections()
-        ]);
+        return \App\Http\Resources\Tenant\Dashboard\Api\HallSectionResource::collection($this->hallSectionService->listAllHallSections());
     }
 
-    public function store(StoreHallSectionRequest $request): JsonResponse
+    public function store(StoreHallSectionRequest $request): \App\Http\Resources\Tenant\Dashboard\Api\HallSectionResource
     {
         $hallSection = $this->hallSectionService->storeHallSection((array) HallSectionDTO::fromRequest($request->validated()));
-        return response()->json(['data' => $hallSection], 201);
+        return new \App\Http\Resources\Tenant\Dashboard\Api\HallSectionResource($hallSection);
     }
 
-    public function show(string $id): JsonResponse
+    public function show(string $id): \App\Http\Resources\Tenant\Dashboard\Api\HallSectionResource
     {
-        return response()->json([
-            'data' => $this->hallSectionService->editHallSection($id)
-        ]);
+        return new \App\Http\Resources\Tenant\Dashboard\Api\HallSectionResource($this->hallSectionService->editHallSection($id));
     }
 
-    public function update(UpdateHallSectionRequest $request, string $id): JsonResponse
+    public function update(UpdateHallSectionRequest $request, string $id): \App\Http\Resources\Tenant\Dashboard\Api\HallSectionResource
     {
         $hallSection = $this->hallSectionService->updateHallSection((array) HallSectionDTO::fromRequest($request->validated()), $id);
-        return response()->json(['data' => $hallSection]);
+        return new \App\Http\Resources\Tenant\Dashboard\Api\HallSectionResource($hallSection);
     }
 
     public function destroy(string $id): JsonResponse

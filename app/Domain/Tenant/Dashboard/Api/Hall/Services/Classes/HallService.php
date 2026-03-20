@@ -8,7 +8,6 @@ use App\Domain\Tenant\Dashboard\Api\Hall\Repositories\Interfaces\IHallRepository
 use App\Domain\Tenant\Dashboard\Api\Hall\Services\Interfaces\IHallService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class HallService implements IHallService
 {
@@ -23,28 +22,23 @@ class HallService implements IHallService
 
     public function storeHall(array $data): Model
     {
-        return DB::transaction(function () use ($data) {
-            return $this->hallRepository->create($data);
-        });
+        return $this->hallRepository->create($data);
     }
 
     public function editHall(string|int $id): Model
     {
-        return $this->hallRepository->findOrFail((int)$id);
+        return $this->hallRepository->findOrFail((int) $id);
     }
 
     public function updateHall(array $data, string|int $id): Model
     {
-        return DB::transaction(function () use ($data, $id) {
-            return $this->hallRepository->update($data, ['id' => $id]);
-        });
+        return $this->hallRepository->update($data, ['id' => $id]);
     }
 
     public function deleteHall(string|int $id): bool
     {
-        return DB::transaction(function () use ($id) {
-            $this->hallRepository->delete(['id' => $id]);
-            return true;
-        });
+        $this->hallRepository->delete(['id' => $id]);
+
+        return true;
     }
 }

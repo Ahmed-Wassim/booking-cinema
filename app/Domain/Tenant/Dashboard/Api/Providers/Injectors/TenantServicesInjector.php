@@ -25,5 +25,6 @@ class TenantServicesInjector extends AppServiceProvider
         $this->app->scoped(IPriceTierService::class, PriceTierService::class);
         $this->app->scoped(IHallSectionService::class, HallSectionService::class);
         $this->app->scoped(ISeatService::class, SeatService::class);
+        $this->app->scoped(\App\Domain\Tenant\Dashboard\Api\User\Services\Interfaces\IUserService::class, \App\Domain\Tenant\Dashboard\Api\User\Services\Classes\UserService::class);
     }
 }

@@ -15,30 +15,26 @@ class PriceTierController extends Controller
         protected IPriceTierService $priceTierService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return response()->json([
-            'data' => $this->priceTierService->listAllPriceTiers()
-        ]);
+        return \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource::collection($this->priceTierService->listAllPriceTiers());
     }
 
-    public function store(StorePriceTierRequest $request): JsonResponse
+    public function store(StorePriceTierRequest $request): \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource
     {
         $priceTier = $this->priceTierService->storePriceTier((array) PriceTierDTO::fromRequest($request->validated()));
-        return response()->json(['data' => $priceTier], 201);
+        return new \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource($priceTier);
     }
 
-    public function show(string $id): JsonResponse
+    public function show(string $id): \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource
     {
-        return response()->json([
-            'data' => $this->priceTierService->editPriceTier($id)
-        ]);
+        return new \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource($this->priceTierService->editPriceTier($id));
     }
 
-    public function update(UpdatePriceTierRequest $request, string $id): JsonResponse
+    public function update(UpdatePriceTierRequest $request, string $id): \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource
     {
         $priceTier = $this->priceTierService->updatePriceTier((array) PriceTierDTO::fromRequest($request->validated()), $id);
-        return response()->json(['data' => $priceTier]);
+        return new \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource($priceTier);
     }
 
     public function destroy(string $id): JsonResponse

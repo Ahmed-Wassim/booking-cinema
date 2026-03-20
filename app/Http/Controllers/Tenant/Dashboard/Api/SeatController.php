@@ -15,30 +15,26 @@ class SeatController extends Controller
         protected ISeatService $seatService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return response()->json([
-            'data' => $this->seatService->listAllSeats()
-        ]);
+        return \App\Http\Resources\Tenant\Dashboard\Api\SeatResource::collection($this->seatService->listAllSeats());
     }
 
-    public function store(StoreSeatRequest $request): JsonResponse
+    public function store(StoreSeatRequest $request): \App\Http\Resources\Tenant\Dashboard\Api\SeatResource
     {
         $seat = $this->seatService->storeSeat((array) SeatDTO::fromRequest($request->validated()));
-        return response()->json(['data' => $seat], 201);
+        return new \App\Http\Resources\Tenant\Dashboard\Api\SeatResource($seat);
     }
 
-    public function show(string $id): JsonResponse
+    public function show(string $id): \App\Http\Resources\Tenant\Dashboard\Api\SeatResource
     {
-        return response()->json([
-            'data' => $this->seatService->editSeat($id)
-        ]);
+        return new \App\Http\Resources\Tenant\Dashboard\Api\SeatResource($this->seatService->editSeat($id));
     }
 
-    public function update(UpdateSeatRequest $request, string $id): JsonResponse
+    public function update(UpdateSeatRequest $request, string $id): \App\Http\Resources\Tenant\Dashboard\Api\SeatResource
     {
         $seat = $this->seatService->updateSeat((array) SeatDTO::fromRequest($request->validated()), $id);
-        return response()->json(['data' => $seat]);
+        return new \App\Http\Resources\Tenant\Dashboard\Api\SeatResource($seat);
     }
 
     public function destroy(string $id): JsonResponse
