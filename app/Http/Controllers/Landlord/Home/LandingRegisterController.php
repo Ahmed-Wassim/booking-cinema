@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Landlord\Home;
 
-use App\Domain\Landlord\DTO\RegistrationRequestDTO;
-use App\Domain\Landlord\Services\Interfaces\IPlanService;
-use App\Domain\Landlord\Services\Interfaces\IRegistrationRequestService;
+use App\Domain\Landlord\Dashboard\Web\RegistrationRequest\DTO\RegistrationRequestDTO;
+use App\Domain\Landlord\Dashboard\Web\Plan\Services\Interfaces\IPlanService;
+use App\Domain\Landlord\Dashboard\Web\RegistrationRequest\Services\Interfaces\IRegistrationRequestService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\StoreRegistrationRequest;
 use Illuminate\Http\Request;

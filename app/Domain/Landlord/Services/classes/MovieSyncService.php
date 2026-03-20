@@ -6,9 +6,9 @@ namespace App\Domain\Landlord\Services\Classes;
 
 use App\Domain\Landlord\MovieSync\Contracts\IGenreSyncService;
 use App\Domain\Landlord\MovieSync\Contracts\IMovieImageService;
-use App\Domain\Landlord\Repositories\Interfaces\IMovieRepository;
-use App\Domain\Landlord\Repositories\Interfaces\ISupplierRepository;
-use App\Domain\Landlord\Repositories\Interfaces\ISupplierSettingRepository;
+use App\Domain\Landlord\Dashboard\Web\Movie\Repositories\Interfaces\IMovieRepository;
+use App\Domain\Landlord\Dashboard\Web\Supplier\Repositories\Interfaces\ISupplierRepository;
+use App\Domain\Landlord\Dashboard\Web\SupplierSetting\Repositories\Interfaces\ISupplierSettingRepository;
 use App\Domain\Landlord\Services\Interfaces\IMovieSyncService;
 use App\Domain\Shared\Suppliers\Contracts\MovieSupplier;
 use App\Domain\Shared\Suppliers\Factory\MovieSupplierFactory;

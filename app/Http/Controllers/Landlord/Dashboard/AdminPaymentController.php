@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Landlord\Dashboard;
 
-use App\Domain\Landlord\Repositories\Interfaces\IPaymentRepository;
+use App\Domain\Landlord\Dashboard\Web\Payment\Repositories\Interfaces\IPaymentRepository;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use Illuminate\Http\Request;

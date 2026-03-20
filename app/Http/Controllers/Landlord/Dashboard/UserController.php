@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Landlord\Dashboard;
 
-use App\Domain\Landlord\DTO\UserDTO;
-use App\Domain\Landlord\Services\Interfaces\IUserService;
+use App\Domain\Landlord\Dashboard\Web\User\DTO\UserDTO;
+use App\Domain\Landlord\Dashboard\Web\User\Services\Interfaces\IUserService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Landlord\StoreUserRequest;
 use App\Http\Requests\Landlord\UpdateUserRequest;

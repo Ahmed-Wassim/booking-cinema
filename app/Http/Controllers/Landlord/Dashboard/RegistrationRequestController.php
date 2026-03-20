@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Landlord\Dashboard;
 
 use App\Domain\Landlord\Enums\RegistrationRequestStatusEnum;
-use App\Domain\Landlord\Services\Interfaces\ITenantService;
+use App\Domain\Landlord\Dashboard\Web\Tenant\Services\Interfaces\ITenantService;
 use App\Http\Controllers\Controller;
 use App\Models\RegistrationRequest;
 use App\Models\Tenant;

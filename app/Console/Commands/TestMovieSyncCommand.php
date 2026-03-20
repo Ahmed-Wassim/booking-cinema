@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Domain\Landlord\Repositories\Interfaces\ISupplierRepository;
+use App\Domain\Landlord\Dashboard\Web\Supplier\Repositories\Interfaces\ISupplierRepository;
 use App\Domain\Landlord\Services\Interfaces\IMovieSyncService;
 use App\Models\Genre;
 use App\Models\Movie;

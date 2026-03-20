@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Landlord\Dashboard;
 
-use App\Domain\Landlord\Repositories\Interfaces\ISupplierRepository;
+use App\Domain\Landlord\Dashboard\Web\Supplier\Repositories\Interfaces\ISupplierRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 

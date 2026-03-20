@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Landlord\Dashboard;
 
-use App\Domain\Landlord\DTO\TenantDTO;
-use App\Domain\Landlord\Repositories\Interfaces\IPaymentRepository;
-use App\Domain\Landlord\Services\Interfaces\IPlanService;
-use App\Domain\Landlord\Services\Interfaces\ITenantService;
+use App\Domain\Landlord\Dashboard\Web\Tenant\DTO\TenantDTO;
+use App\Domain\Landlord\Dashboard\Web\Payment\Repositories\Interfaces\IPaymentRepository;
+use App\Domain\Landlord\Dashboard\Web\Plan\Services\Interfaces\IPlanService;
+use App\Domain\Landlord\Dashboard\Web\Tenant\Services\Interfaces\ITenantService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Landlord\StoreTenantRequest;
 use App\Http\Requests\Landlord\UpdateTenantRequest;

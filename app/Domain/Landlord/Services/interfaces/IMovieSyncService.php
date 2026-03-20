@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Landlord\Services\Interfaces;
+/* REPLACED BELOW */
 
 use App\Models\Supplier;
 
