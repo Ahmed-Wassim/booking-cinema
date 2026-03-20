@@ -21,6 +21,12 @@ use App\Models\Tenant\Hall;
 use App\Models\Tenant\HallSection;
 use App\Models\Tenant\PriceTier;
 use App\Models\Tenant\Seat;
+use App\Models\Tenant\Movie;
+use App\Models\Tenant\Showtime;
+use App\Domain\Tenant\Dashboard\Api\Movie\Repositories\Classes\MovieRepository;
+use App\Domain\Tenant\Dashboard\Api\Movie\Repositories\Interfaces\IMovieRepository;
+use App\Domain\Tenant\Dashboard\Api\Showtime\Repositories\Classes\ShowtimeRepository;
+use App\Domain\Tenant\Dashboard\Api\Showtime\Repositories\Interfaces\IShowtimeRepository;
 use App\Providers\AppServiceProvider;
 
 class TenantRepositoriesInjector extends AppServiceProvider
@@ -49,6 +55,14 @@ class TenantRepositoriesInjector extends AppServiceProvider
 
         $this->app->scoped(IUserRepository::class, function () {
             return new UserRepository(new \App\Models\Tenant\User());
+        });
+
+        $this->app->scoped(IMovieRepository::class, function () {
+            return new MovieRepository(new Movie());
+        });
+
+        $this->app->scoped(IShowtimeRepository::class, function () {
+            return new ShowtimeRepository(new Showtime());
         });
     }
 }

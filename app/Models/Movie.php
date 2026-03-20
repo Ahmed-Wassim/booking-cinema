@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Movie extends Model
 {
+    protected $connection = 'central';
+
     protected $fillable = [
         'supplier_id',
         'external_id',
@@ -31,6 +33,6 @@ class Movie extends Model
 
     public function genres()
     {
-        return $this->belongsToMany(Genre::class, 'movie_genre');
+        return $this->belongsToMany(Genre::class , 'movie_genre');
     }
 }

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domain\Landlord\Services\Classes;
 
-use App\Domain\Landlord\MovieSync\Contracts\IGenreSyncService;
-use App\Domain\Landlord\MovieSync\Contracts\IMovieImageService;
 use App\Domain\Landlord\Dashboard\Web\Movie\Repositories\Interfaces\IMovieRepository;
 use App\Domain\Landlord\Dashboard\Web\Supplier\Repositories\Interfaces\ISupplierRepository;
 use App\Domain\Landlord\Dashboard\Web\SupplierSetting\Repositories\Interfaces\ISupplierSettingRepository;
+use App\Domain\Landlord\MovieSync\Contracts\IGenreSyncService;
+use App\Domain\Landlord\MovieSync\Contracts\IMovieImageService;
 use App\Domain\Landlord\Services\Interfaces\IMovieSyncService;
 use App\Domain\Shared\Suppliers\Contracts\MovieSupplier;
 use App\Domain\Shared\Suppliers\Factory\MovieSupplierFactory;
@@ -24,8 +24,7 @@ class MovieSyncService implements IMovieSyncService
         protected IGenreSyncService $genreSyncService,
         protected IMovieRepository $movieRepository,
         protected IMovieImageService $movieImageService
-    ) {
-    }
+    ) {}
 
     public function syncFromTmdb(): void
     {
@@ -46,10 +45,11 @@ class MovieSyncService implements IMovieSyncService
     public function syncBySupplierKey(string $supplierKey): void
     {
         $supplier = $this->supplierRepository->findByKey($supplierKey);
-        if (!$supplier instanceof Supplier) {
+        if (! $supplier instanceof Supplier) {
             Log::warning('Movie sync failed: supplier not found', [
                 'supplier_key' => $supplierKey,
             ]);
+
             return;
         }
         $supplier->load('setting');
@@ -78,11 +78,12 @@ class MovieSyncService implements IMovieSyncService
     {
         $setting = $this->supplierSettingRepository->getBySupplierId((int) $supplier->id);
 
-        if (!$setting || !($setting->settings['api_key'] ?? $setting->getApiKey())) {
+        if (! $setting || ! ($setting->settings['api_key'] ?? $setting->getApiKey())) {
             Log::warning('Movie sync failed: supplier has no API key', [
                 'supplier_key' => $supplier->key,
-                'supplier_id'  => $supplier->id,
+                'supplier_id' => $supplier->id,
             ]);
+
             return null;
         }
 
@@ -109,13 +110,13 @@ class MovieSyncService implements IMovieSyncService
                             (int) $supplier->id,
                             $movieDTO->id,
                             [
-                                'title'         => $movieDTO->title,
-                                'overview'      => $movieDTO->overview,
-                                'poster_path'   => $movieDTO->posterPath,
+                                'title' => $movieDTO->title,
+                                'overview' => $movieDTO->overview,
+                                'poster_path' => $movieDTO->posterPath,
                                 'backdrop_path' => $movieDTO->backdropPath,
-                                'release_date'  => $movieDTO->releaseDate,
-                                'runtime'       => null,
-                                'language'      => $movieDTO->language,
+                                'release_date' => $movieDTO->releaseDate,
+                                'runtime' => null,
+                                'language' => $movieDTO->language,
                             ]
                         );
 
@@ -124,7 +125,7 @@ class MovieSyncService implements IMovieSyncService
                         $details = $provider->fetchMovieDetails((string) $movieDTO->id);
                         if ($details !== null) {
                             $movie->update([
-                                'runtime'  => $details->runtime,
+                                'runtime' => $details->runtime,
                                 'language' => $details->language ?? $movie->language,
                             ]);
                         }
@@ -133,11 +134,11 @@ class MovieSyncService implements IMovieSyncService
                     });
                 } catch (\Throwable $e) {
                     Log::error('Movie sync failed for single movie', [
-                        'supplier'     => $supplier->key,
-                        'external_id'  => $movieDTO->id,
-                        'movie_title'  => $movieDTO->title,
-                        'error'        => $e->getMessage(),
-                        'trace'        => $e->getTraceAsString(),
+                        'supplier' => $supplier->key,
+                        'external_id' => $movieDTO->id,
+                        'movie_title' => $movieDTO->title,
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
                     ]);
                 }
             }
