@@ -6,7 +6,7 @@ namespace App\Domain\Tenant\Dashboard\Api\Branch\Services\Classes;
 
 use App\Domain\Tenant\Dashboard\Api\Branch\Repositories\Interfaces\IBranchRepository;
 use App\Domain\Tenant\Dashboard\Api\Branch\Services\Interfaces\IBranchService;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 class BranchService implements IBranchService
@@ -15,9 +15,9 @@ class BranchService implements IBranchService
         protected IBranchRepository $branchRepository
     ) {}
 
-    public function listAllBranches(): Collection|array
+    public function listAllBranches(): LengthAwarePaginator
     {
-        return $this->branchRepository->listAllBy();
+        return $this->branchRepository->retrieve();
     }
 
     public function storeBranch(array $data): Model

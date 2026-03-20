@@ -6,7 +6,7 @@ namespace App\Domain\Tenant\Dashboard\Api\Hall\Services\Classes;
 
 use App\Domain\Tenant\Dashboard\Api\Hall\Repositories\Interfaces\IHallRepository;
 use App\Domain\Tenant\Dashboard\Api\Hall\Services\Interfaces\IHallService;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 class HallService implements IHallService
@@ -15,9 +15,9 @@ class HallService implements IHallService
         protected IHallRepository $hallRepository
     ) {}
 
-    public function listAllHalls(): Collection|array
+    public function listAllHalls(): LengthAwarePaginator
     {
-        return $this->hallRepository->listAllBy(relations: ['branch']);
+        return $this->hallRepository->retrieve();
     }
 
     public function storeHall(array $data): Model

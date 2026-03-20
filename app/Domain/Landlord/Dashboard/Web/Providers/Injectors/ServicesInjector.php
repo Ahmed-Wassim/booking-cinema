@@ -6,9 +6,7 @@ namespace App\Domain\Landlord\Dashboard\Web\Providers\Injectors;
 
 use App\Domain\Landlord\Billing\Payment\Services\SubscriptionPaymentService;
 use App\Domain\Landlord\MovieSync\Contracts\IGenreSyncService;
-use App\Domain\Landlord\MovieSync\Contracts\IMovieImageService;
 use App\Domain\Landlord\MovieSync\Services\GenreSyncService;
-use App\Domain\Landlord\MovieSync\Services\MovieImageService;
 use App\Domain\Landlord\Services\Classes\MovieSyncService;
 use App\Domain\Landlord\Dashboard\Web\Plan\Services\Classes\PlanService;
 use App\Domain\Landlord\Dashboard\Web\RegistrationRequest\Services\Classes\RegistrationRequestService;
@@ -33,7 +31,6 @@ class ServicesInjector extends AppServiceProvider
         // bind the new subscription payment service in place of the old one
         $this->app->scoped(IPaymentService::class, SubscriptionPaymentService::class);
         $this->app->scoped(IGenreSyncService::class, GenreSyncService::class);
-        $this->app->scoped(IMovieImageService::class, MovieImageService::class);
         $this->app->scoped(IMovieSyncService::class, MovieSyncService::class);
     }
 }

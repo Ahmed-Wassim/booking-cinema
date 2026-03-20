@@ -6,57 +6,66 @@ namespace App\Domain\Shared\Suppliers\Providers\TMDB;
 
 use App\Domain\Shared\Suppliers\Contracts\MovieSupplier;
 use App\Domain\Shared\Suppliers\DTOs\GenreDTO;
-use App\Domain\Shared\Suppliers\DTOs\MovieDetailsDTO;
 use App\Domain\Shared\Suppliers\DTOs\MovieDTO;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class TMDBMovieSupplier implements MovieSupplier
 {
-    private const IMAGE_SIZE_POSTER = 'w500';
-    private const IMAGE_SIZE_BACKDROP = 'w780';
-    private const ENDPOINTS = ['movie/now_playing', 'movie/popular', 'movie/upcoming'];
+    public const ENDPOINTS = [
+        'movie/now_playing',
+        'movie/upcoming',
+        'movie/popular',
+    ];
 
     public function __construct(
         protected string $apiKey,
         protected string $baseUrl,
-        protected string $imageBaseUrl = 'https://image.tmdb.org/t/p'
     ) {
         $this->baseUrl = rtrim($baseUrl, '/');
-        $this->imageBaseUrl = rtrim($imageBaseUrl, '/');
     }
 
-    public function fetchMovies(int $page = 1): array
+    /**
+     * Build the full URL for a given TMDB endpoint.
+     * Used by Http::pool in MovieSyncService to fire parallel requests.
+     */
+    public function endpointUrl(string $endpoint): string
     {
-        $all = [];
-        $seenIds = [];
+        return "{$this->baseUrl}/{$endpoint}";
+    }
 
-        foreach (self::ENDPOINTS as $endpoint) {
-            $response = Http::get("{$this->baseUrl}/{$endpoint}", [
-                'api_key' => $this->apiKey,
-                'page'    => $page,
+    /**
+     * Expose the API key so Http::pool can attach it as a query param.
+     */
+    public function getApiKey(): string
+    {
+        return $this->apiKey;
+    }
+
+    /**
+     * Fetch a single page from a single endpoint.
+     * Aggregation and parallelism are handled by the caller (MovieSyncService).
+     */
+    public function fetchMovies(string $endpoint, int $page = 1): array
+    {
+        $response = Http::get("{$this->baseUrl}/{$endpoint}", [
+            'api_key' => $this->apiKey,
+            'page' => $page,
+        ]);
+
+        if (! $response->successful()) {
+            Log::warning('TMDB fetchMovies failed', [
+                'endpoint' => $endpoint,
+                'page' => $page,
+                'status' => $response->status(),
             ]);
-            if (!$response->successful()) {
-                Log::warning('Movie supplier fetch movies failed', [
-                    'supplier'  => 'tmdb',
-                    'endpoint'  => $endpoint,
-                    'page'      => $page,
-                    'status'    => $response->status(),
-                ]);
-                continue;
-            }
-            $data = $response->json();
-            $results = $data['results'] ?? [];
-            foreach ($results as $item) {
-                $id = (int) ($item['id'] ?? 0);
-                if ($id && !isset($seenIds[$id])) {
-                    $seenIds[$id] = true;
-                    $all[] = MovieDTO::fromArray($item);
-                }
-            }
+
+            return [];
         }
 
-        return $all;
+        $results = $response->json('results', []);
+
+        return array_map(fn (array $item) => MovieDTO::fromArray($item), $results);
     }
 
     public function fetchGenres(): array
@@ -64,51 +73,18 @@ class TMDBMovieSupplier implements MovieSupplier
         $response = Http::get("{$this->baseUrl}/genre/movie/list", [
             'api_key' => $this->apiKey,
         ]);
-        if (!$response->successful()) {
-            Log::error('Movie supplier fetch genres failed', [
-                'supplier' => 'tmdb',
-                'status'  => $response->status(),
-                'body'    => $response->body(),
+
+        if (! $response->successful()) {
+            Log::error('TMDB fetchGenres failed', [
+                'status' => $response->status(),
+                'body' => $response->body(),
             ]);
+
             return [];
         }
-        $data = $response->json();
-        $genres = $data['genres'] ?? [];
+
+        $genres = $response->json('genres', []);
+
         return array_map(fn (array $g) => GenreDTO::fromArray($g), $genres);
-    }
-
-    public function fetchMovieDetails(string $externalId): ?MovieDetailsDTO
-    {
-        $response = Http::get("{$this->baseUrl}/movie/{$externalId}", [
-            'api_key' => $this->apiKey,
-        ]);
-        if (!$response->successful()) {
-            Log::debug('Movie supplier fetch details failed', [
-                'supplier'    => 'tmdb',
-                'external_id' => $externalId,
-                'status'     => $response->status(),
-            ]);
-            return null;
-        }
-        $data = $response->json();
-        return MovieDetailsDTO::fromArray($data);
-    }
-
-    public function posterUrl(?string $posterPath): ?string
-    {
-        if ($posterPath === null || $posterPath === '') {
-            return null;
-        }
-        $path = ltrim($posterPath, '/');
-        return $this->imageBaseUrl . '/' . self::IMAGE_SIZE_POSTER . '/' . $path;
-    }
-
-    public function backdropUrl(?string $backdropPath): ?string
-    {
-        if ($backdropPath === null || $backdropPath === '') {
-            return null;
-        }
-        $path = ltrim($backdropPath, '/');
-        return $this->imageBaseUrl . '/' . self::IMAGE_SIZE_BACKDROP . '/' . $path;
     }
 }

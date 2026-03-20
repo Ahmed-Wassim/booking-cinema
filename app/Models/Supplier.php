@@ -2,10 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\Shared\ActiveTrait;
+use App\Traits\Shared\CreatedAtRangeTrait;
+use App\Traits\Shared\FilterTrait;
+use App\Traits\Shared\SearchTrait;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Supplier extends Model
 {
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
+
     protected $fillable = [
         'key',
         'name',

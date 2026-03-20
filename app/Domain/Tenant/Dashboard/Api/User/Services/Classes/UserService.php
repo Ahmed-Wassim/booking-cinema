@@ -6,8 +6,8 @@ namespace App\Domain\Tenant\Dashboard\Api\User\Services\Classes;
 
 use App\Domain\Tenant\Dashboard\Api\User\Repositories\Interfaces\IUserRepository;
 use App\Domain\Tenant\Dashboard\Api\User\Services\Interfaces\IUserService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -16,9 +16,9 @@ class UserService implements IUserService
 {
     public function __construct(private IUserRepository $userRepository) {}
 
-    public function listAllUsers(): Collection
+    public function listAllUsers(): LengthAwarePaginator
     {
-        return $this->userRepository->listAllBy([]);
+        return $this->userRepository->retrieve();
     }
 
     public function storeUser(array $data): Model
@@ -37,7 +37,7 @@ class UserService implements IUserService
             return $user;
         } catch (\Exception $e) {
             DB::rollBack();
-            throw ValidationException::withMessages(['error' => 'Failed to create user: ' . $e->getMessage()]);
+            throw ValidationException::withMessages(['error' => 'Failed to create user: '.$e->getMessage()]);
         }
     }
 
@@ -64,7 +64,7 @@ class UserService implements IUserService
             return $user;
         } catch (\Exception $e) {
             DB::rollBack();
-            throw ValidationException::withMessages(['error' => 'Failed to update user: ' . $e->getMessage()]);
+            throw ValidationException::withMessages(['error' => 'Failed to update user: '.$e->getMessage()]);
         }
     }
 
@@ -76,7 +76,7 @@ class UserService implements IUserService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            throw ValidationException::withMessages(['error' => 'Failed to delete user: ' . $e->getMessage()]);
+            throw ValidationException::withMessages(['error' => 'Failed to delete user: '.$e->getMessage()]);
         }
     }
 }

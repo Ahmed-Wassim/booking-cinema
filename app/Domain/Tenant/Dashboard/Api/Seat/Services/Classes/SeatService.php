@@ -6,7 +6,7 @@ namespace App\Domain\Tenant\Dashboard\Api\Seat\Services\Classes;
 
 use App\Domain\Tenant\Dashboard\Api\Seat\Repositories\Interfaces\ISeatRepository;
 use App\Domain\Tenant\Dashboard\Api\Seat\Services\Interfaces\ISeatService;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 class SeatService implements ISeatService
@@ -15,9 +15,9 @@ class SeatService implements ISeatService
         protected ISeatRepository $seatRepository
     ) {}
 
-    public function listAllSeats(): Collection|array
+    public function listAllSeats(): LengthAwarePaginator
     {
-        return $this->seatRepository->listAllBy(relations: ['hall', 'section', 'priceTier']);
+        return $this->seatRepository->retrieve();
     }
 
     public function storeSeat(array $data): Model

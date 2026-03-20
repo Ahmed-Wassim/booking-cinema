@@ -6,7 +6,7 @@ namespace App\Domain\Tenant\Dashboard\Api\HallSection\Services\Classes;
 
 use App\Domain\Tenant\Dashboard\Api\HallSection\Repositories\Interfaces\IHallSectionRepository;
 use App\Domain\Tenant\Dashboard\Api\HallSection\Services\Interfaces\IHallSectionService;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 class HallSectionService implements IHallSectionService
@@ -15,9 +15,9 @@ class HallSectionService implements IHallSectionService
         protected IHallSectionRepository $hallSectionRepository
     ) {}
 
-    public function listAllHallSections(): Collection|array
+    public function listAllHallSections(): LengthAwarePaginator
     {
-        return $this->hallSectionRepository->listAllBy(relations: ['hall']);
+        return $this->hallSectionRepository->retrieve();
     }
 
     public function storeHallSection(array $data): Model
