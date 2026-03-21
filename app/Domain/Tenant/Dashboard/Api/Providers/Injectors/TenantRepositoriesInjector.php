@@ -27,6 +27,9 @@ use App\Domain\Tenant\Dashboard\Api\Movie\Repositories\Classes\MovieRepository;
 use App\Domain\Tenant\Dashboard\Api\Movie\Repositories\Interfaces\IMovieRepository;
 use App\Domain\Tenant\Dashboard\Api\Showtime\Repositories\Classes\ShowtimeRepository;
 use App\Domain\Tenant\Dashboard\Api\Showtime\Repositories\Interfaces\IShowtimeRepository;
+use App\Domain\Tenant\Dashboard\Api\ShowtimeSeat\Repositories\Classes\ShowtimeSeatRepository;
+use App\Domain\Tenant\Dashboard\Api\ShowtimeSeat\Repositories\Interfaces\IShowtimeSeatRepository;
+use App\Models\Tenant\ShowtimeSeat;
 use App\Providers\AppServiceProvider;
 
 class TenantRepositoriesInjector extends AppServiceProvider
@@ -63,6 +66,10 @@ class TenantRepositoriesInjector extends AppServiceProvider
 
         $this->app->scoped(IShowtimeRepository::class, function () {
             return new ShowtimeRepository(new Showtime());
+        });
+
+        $this->app->scoped(IShowtimeSeatRepository::class, function () {
+            return new ShowtimeSeatRepository(new ShowtimeSeat());
         });
     }
 }

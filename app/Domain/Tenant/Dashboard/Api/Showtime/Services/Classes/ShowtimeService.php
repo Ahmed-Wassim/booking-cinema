@@ -2,18 +2,26 @@
 
 namespace App\Domain\Tenant\Dashboard\Api\Showtime\Services\Classes;
 
+use App\Domain\Tenant\Dashboard\Api\Hall\Repositories\Interfaces\IHallRepository;
+use App\Domain\Tenant\Dashboard\Api\Movie\Repositories\Interfaces\IMovieRepository;
 use App\Domain\Tenant\Dashboard\Api\Showtime\Repositories\Interfaces\IShowtimeRepository;
 use App\Domain\Tenant\Dashboard\Api\Showtime\Services\Interfaces\IShowtimeService;
+use App\Domain\Tenant\Dashboard\Api\ShowtimeSeat\Repositories\Interfaces\IShowtimeSeatRepository;
+use App\Enums\Tenant\ShowtimeSeatStatus;
 use App\Models\Tenant\Movie;
 use App\Models\Tenant\Showtime;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class ShowtimeService implements IShowtimeService
 {
     public function __construct(
-        protected IShowtimeRepository $showtimeRepository
+        protected IShowtimeRepository $showtimeRepository,
+        protected IShowtimeSeatRepository $showtimeSeatRepository,
+        protected IMovieRepository $movieRepository,
+        protected IHallRepository $hallRepository
     ) {}
 
     public function createShowtime(array $data): Showtime
@@ -23,7 +31,7 @@ class ShowtimeService implements IShowtimeService
         $startTime = $data['start_time'];
         $priceTierId = $data['price_tier_id'] ?? null;
 
-        $tenantMovie = Movie::find($tenantMovieId);
+        $tenantMovie = $this->movieRepository->find($tenantMovieId);
 
         if (! $tenantMovie) {
             throw new Exception('Movie not found in the tenant catalog.');
@@ -37,14 +45,42 @@ class ShowtimeService implements IShowtimeService
         $runtime = $tenantMovie->runtime ?? 120; // fallback to 120 min if unknown
         $endTime = $start->copy()->addMinutes($runtime);
 
-        return $this->showtimeRepository->create([
-            'movie_id' => $tenantMovie->id,
-            'hall_id' => $hallId,
-            'start_time' => $start,
-            'end_time' => $endTime,
-            'price_tier_id' => $priceTierId,
-            'status' => 'active',
-        ]);
+        DB::beginTransaction();
+        try {
+            $showtime = $this->showtimeRepository->create([
+                'movie_id' => $tenantMovie->id,
+                'hall_id' => $hallId,
+                'start_time' => $start,
+                'end_time' => $endTime,
+                'price_tier_id' => $priceTierId,
+                'status' => 'active',
+            ]);
+
+            $hall = $this->hallRepository->first(['id' => $hallId], ['seats']);
+            if ($hall && $hall->seats->isNotEmpty()) {
+                $seatsData = [];
+                $now = now();
+
+                foreach ($hall->seats as $seat) {
+                    $seatsData[] = [
+                        'showtime_id' => $showtime->id,
+                        'seat_id' => $seat->id,
+                        'status' => ShowtimeSeatStatus::AVAILABLE->value,
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ];
+                }
+
+                $this->showtimeSeatRepository->createMany($seatsData);
+            }
+
+            DB::commit();
+
+            return $showtime;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     public function listAllShowtimes(): LengthAwarePaginator
@@ -72,5 +108,54 @@ class ShowtimeService implements IShowtimeService
         $this->showtimeRepository->delete(['id' => $id]);
 
         return true;
+    }
+
+    public function reserveSeats(int $showtimeId, array $seatIds): array
+    {
+        DB::beginTransaction();
+        try {
+            $seats = $this->showtimeSeatRepository->prepareQuery(
+                conditions: ['showtime_id' => $showtimeId]
+            )->whereIn('seat_id', $seatIds)
+                ->lockForUpdate()
+                ->get();
+
+            if ($seats->count() !== count($seatIds)) {
+                throw new Exception('One or more selected seats do not exist for this showtime.');
+            }
+
+            foreach ($seats as $seat) {
+                if ($seat->status !== ShowtimeSeatStatus::AVAILABLE->value) {
+                    // Overwrite if reserved and expired
+                    if ($seat->status === ShowtimeSeatStatus::RESERVED->value && $seat->reserved_until && $seat->reserved_until->isPast()) {
+                        continue;
+                    }
+                    throw new Exception("Seat {$seat->seat_id} is already {$seat->status}.");
+                }
+            }
+
+            $reservedUntil = now()->addMinutes(10);
+
+            $this->showtimeSeatRepository->updateWhereIn(
+                data: [
+                    'status' => ShowtimeSeatStatus::RESERVED->value,
+                    'reserved_until' => $reservedUntil,
+                ],
+                ids: $seatIds,
+                selectedColumn: 'seat_id',
+                conditions: ['showtime_id' => $showtimeId]
+            );
+
+            DB::commit();
+
+            return [
+                'status' => 'success',
+                'message' => 'Seats reserved successfully.',
+                'reserved_until' => $reservedUntil,
+            ];
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 }
