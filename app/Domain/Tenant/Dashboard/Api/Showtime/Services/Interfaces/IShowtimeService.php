@@ -28,4 +28,13 @@ interface IShowtimeService
      * Delete a Showtime.
      */
     public function deleteShowtime(int $id): bool;
+
+    /**
+     * Reserve seats for a showtime for a specified duration (e.g., 10 minutes).
+     *
+     * @param int $showtimeId
+     * @param array $seatIds
+     * @return array
+     */
+    public function reserveSeats(int $showtimeId, array $seatIds): array;
 }

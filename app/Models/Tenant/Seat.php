@@ -54,4 +54,9 @@ class Seat extends Model
     {
         return $this->belongsTo(PriceTier::class);
     }
+
+    public function showtimeSeats()
+    {
+        return $this->hasMany(ShowtimeSeat::class);
+    }
 }
