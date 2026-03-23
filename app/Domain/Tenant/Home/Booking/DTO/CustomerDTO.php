@@ -12,12 +12,14 @@ class CustomerDTO extends DataTransferObject
 
     public string $email;
 
-    public ?string $phoneCountryCode = null;
+    public ?string $phone_country_code;
 
-    public ?string $phone = null;
+    public ?string $phone;
 
     public static function fromRequest(array $data): self
     {
+        // dd($data);
+
         return new self([
             'name' => $data['name'],
             'email' => $data['email'],
