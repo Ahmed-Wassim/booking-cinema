@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Tenant\Home;
 
-use App\Domain\Tenant\Home\CoreBooking\DTO\BookingDTO;
-use App\Domain\Tenant\Home\CoreBooking\Services\Interfaces\IBookingService;
+use App\Domain\Tenant\Home\Booking\DTO\BookingDTO;
+use App\Domain\Tenant\Home\Booking\Services\Interfaces\IBookingService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Home\CreateBookingRequest;
 use App\Http\Resources\Tenant\Home\BookingResource;
@@ -26,7 +26,7 @@ class BookingController extends Controller
 
         try {
             $booking = $this->bookingService->createBooking($data);
-            
+
             // Reload with relations for the resource
             $booking = $this->bookingService->findBooking($booking->id);
 

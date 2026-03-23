@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Tenant\Home\CoreBooking\Enums;
+namespace App\Domain\Tenant\Home\Booking\Enums;
 
 enum BookingStatus: string
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Landlord\MovieSync\Contracts;
+namespace App\Domain\Landlord\MovieSync\Interfaces;
 
 use App\Domain\Shared\Suppliers\Contracts\MovieSupplier;
 use App\Models\Supplier;

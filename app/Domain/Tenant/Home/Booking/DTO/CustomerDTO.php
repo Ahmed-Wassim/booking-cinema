@@ -1,16 +1,19 @@
 <?php
 
-declare(strict_types = 1)
-;
+declare(strict_types=1);
 
-namespace App\Domain\Tenant\Home\CoreBooking\DTO;
+namespace App\Domain\Tenant\Home\Booking\DTO;
+
 use App\Domain\Shared\DTO\DataTransferObject;
 
 class CustomerDTO extends DataTransferObject
 {
     public string $name;
+
     public string $email;
+
     public ?string $phoneCountryCode = null;
+
     public ?string $phone = null;
 
     public static function fromRequest(array $data): self

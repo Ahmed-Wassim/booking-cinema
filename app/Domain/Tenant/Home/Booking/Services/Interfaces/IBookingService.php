@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Tenant\Home\CoreBooking\Services\Interfaces;
+namespace App\Domain\Tenant\Home\Booking\Services\Interfaces;
 
 use App\Models\Tenant\Booking;
 

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Landlord\Services\Classes;
+namespace App\Domain\Landlord\MovieSync\Classes;
 
 use App\Domain\Landlord\Dashboard\Web\Movie\Repositories\Interfaces\IMovieRepository;
 use App\Domain\Landlord\Dashboard\Web\Supplier\Repositories\Interfaces\ISupplierRepository;
 use App\Domain\Landlord\Dashboard\Web\SupplierSetting\Repositories\Interfaces\ISupplierSettingRepository;
-use App\Domain\Landlord\MovieSync\Contracts\IGenreSyncService;
-use App\Domain\Landlord\Services\Interfaces\IMovieSyncService;
+use App\Domain\Landlord\MovieSync\Interfaces\IGenreSyncService;
+use App\Domain\Landlord\MovieSync\Interfaces\IMovieSyncService;
 use App\Domain\Shared\Suppliers\Contracts\MovieSupplier;
 use App\Domain\Shared\Suppliers\Factory\MovieSupplierFactory;
 use App\Domain\Shared\Suppliers\Providers\TMDB\TMDBMovieSupplier;
@@ -81,7 +81,7 @@ class MovieSyncService implements IMovieSyncService
         if (! $setting || ! ($setting->settings['api_key'] ?? $setting->getApiKey())) {
             Log::warning('Movie sync failed: supplier has no API key', [
                 'supplier_key' => $supplier->key,
-                'supplier_id'  => $supplier->id,
+                'supplier_id' => $supplier->id,
             ]);
 
             return null;
@@ -93,7 +93,7 @@ class MovieSyncService implements IMovieSyncService
     private function syncMoviesWithProvider(Supplier $supplier, MovieSupplier $provider): void
     {
         $pagesPerSync = (int) config('moviesync.pages_per_sync', 3);
-        $cacheTtl    = (int) config('moviesync.movie_cache_ttl', 3600);
+        $cacheTtl = (int) config('moviesync.movie_cache_ttl', 3600);
 
         // Only TMDB supports parallel pool fetching; other providers fall back to sequential.
         if (! ($provider instanceof TMDBMovieSupplier)) {
@@ -119,11 +119,11 @@ class MovieSyncService implements IMovieSyncService
 
         foreach ($combos as $index => $combo) {
             $cacheKey = "tmdb:{$combo['endpoint']}:{$combo['page']}";
-            $cached   = Cache::get($cacheKey);
+            $cached = Cache::get($cacheKey);
             if ($cached !== null) {
                 $pagedResults[$index] = $cached;
             } else {
-                $missedCombos[]  = $combo;
+                $missedCombos[] = $combo;
                 $missedIndexes[] = $index;
             }
         }
@@ -143,17 +143,18 @@ class MovieSyncService implements IMovieSyncService
 
             foreach ($responses as $i => $response) {
                 $originalIndex = $missedIndexes[$i];
-                $combo         = $missedCombos[$i];
-                $cacheKey      = "tmdb:{$combo['endpoint']}:{$combo['page']}";
+                $combo = $missedCombos[$i];
+                $cacheKey = "tmdb:{$combo['endpoint']}:{$combo['page']}";
 
                 if ($response instanceof \Throwable || ! $response->successful()) {
                     Log::warning('Movie sync: pool request failed', [
                         'supplier' => $supplier->key,
                         'endpoint' => $combo['endpoint'],
-                        'page'     => $combo['page'],
-                        'status'   => $response instanceof \Throwable ? 0 : $response->status(),
+                        'page' => $combo['page'],
+                        'status' => $response instanceof \Throwable ? 0 : $response->status(),
                     ]);
                     $pagedResults[$originalIndex] = [];
+
                     continue;
                 }
 
@@ -177,8 +178,8 @@ class MovieSyncService implements IMovieSyncService
             ->all();
 
         Log::info('Movie sync: deduplication complete', [
-            'supplier'     => $supplier->key,
-            'raw_count'    => count($allMovies),
+            'supplier' => $supplier->key,
+            'raw_count' => count($allMovies),
             'unique_count' => count($uniqueMovies),
         ]);
 
@@ -190,13 +191,13 @@ class MovieSyncService implements IMovieSyncService
                     (int) $supplier->id,
                     (int) $item['id'],
                     [
-                        'title'         => (string) ($item['title'] ?? ''),
-                        'overview'      => $item['overview'] ?? null,
-                        'poster_path'   => $item['poster_path'] ?? null,
+                        'title' => (string) ($item['title'] ?? ''),
+                        'overview' => $item['overview'] ?? null,
+                        'poster_path' => $item['poster_path'] ?? null,
                         'backdrop_path' => $item['backdrop_path'] ?? null,
-                        'release_date'  => $item['release_date'] ?? null,
-                        'language'      => $item['original_language'] ?? null,
-                        'popularity'    => isset($item['popularity']) ? (float) $item['popularity'] : null,
+                        'release_date' => $item['release_date'] ?? null,
+                        'language' => $item['original_language'] ?? null,
+                        'popularity' => isset($item['popularity']) ? (float) $item['popularity'] : null,
                     ]
                 );
 
@@ -205,10 +206,10 @@ class MovieSyncService implements IMovieSyncService
                 $this->movieRepository->syncGenres($movie, $genreIds);
             } catch (\Throwable $e) {
                 Log::error('Movie sync failed for single movie', [
-                    'supplier'    => $supplier->key,
+                    'supplier' => $supplier->key,
                     'external_id' => $item['id'] ?? null,
-                    'title'       => $item['title'] ?? null,
-                    'error'       => $e->getMessage(),
+                    'title' => $item['title'] ?? null,
+                    'error' => $e->getMessage(),
                 ]);
             }
         }

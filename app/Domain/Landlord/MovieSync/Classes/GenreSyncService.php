@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Landlord\MovieSync\Services;
+namespace App\Domain\Landlord\MovieSync\Classes;
 
-use App\Domain\Landlord\MovieSync\Contracts\IGenreSyncService;
 use App\Domain\Landlord\Dashboard\Web\Genre\Repositories\Interfaces\IGenreRepository;
+use App\Domain\Landlord\MovieSync\Interfaces\IGenreSyncService;
 use App\Domain\Shared\Suppliers\Contracts\MovieSupplier;
 use App\Models\Supplier;
 use Illuminate\Support\Facades\Cache;
@@ -15,8 +15,7 @@ class GenreSyncService implements IGenreSyncService
 {
     public function __construct(
         protected IGenreRepository $genreRepository
-    ) {
-    }
+    ) {}
 
     public function sync(Supplier $supplier, MovieSupplier $provider): void
     {
@@ -31,6 +30,7 @@ class GenreSyncService implements IGenreSyncService
                     'supplier' => $supplier->key,
                     'genre_id' => $genre->id,
                 ]);
+
                 continue;
             }
             $this->genreRepository->updateOrCreateByExternalId($genre->id, ['name' => $genre->name]);
