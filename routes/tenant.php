@@ -15,14 +15,11 @@ use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
-
-
 Route::middleware([
     'api',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
-])->prefix('api')->group(function () {
-
+])->prefix('api/dashboard')->group(function () {
 
     // ----------------------------------------------------------------------
     // Tenant DASHBOARD API (Admin / Authenticated)

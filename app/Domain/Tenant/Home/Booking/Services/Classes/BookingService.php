@@ -29,7 +29,8 @@ class BookingService implements IBookingService
         $showtimeId = $data['showtime_id'];
         $seatIds = $data['seat_ids'];
         $userId = $data['user_id'] ?? null;
-        $customerDTO = CustomerDTO::fromArray($data['customer']);
+        /** @var CustomerDTO $customerDTO */
+        $customerDTO = $data['customer'];
 
         return DB::transaction(function () use ($showtimeId, $seatIds, $userId, $customerDTO) {
             $seats = $this->loadAndValidateSeats($seatIds, $showtimeId);
@@ -74,14 +75,14 @@ class BookingService implements IBookingService
         });
     }
 
-    protected function resolveCustomer(CustomerDTO $dto): Customer
+    protected function resolveCustomer(array $dto): Customer
     {
         $customer = $this->customerRepository->firstOrCreate(
-            ['email' => $dto->email],
+            ['email' => $dto['email']],
             [
-                'name' => $dto->name,
-                'phone_country_code' => $dto->phoneCountryCode,
-                'phone' => $dto->phone,
+                'name' => $dto['name'],
+                'phone_country_code' => $dto['phone_country_code'],
+                'phone' => $dto['phone'],
             ]
         );
 

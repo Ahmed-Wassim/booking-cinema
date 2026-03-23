@@ -27,7 +27,6 @@ class BookingController extends Controller
         try {
             $booking = $this->bookingService->createBooking($data);
 
-            // Reload with relations for the resource
             $booking = $this->bookingService->findBooking($booking->id);
 
             return new BookingResource($booking);
