@@ -7,6 +7,7 @@ use App\Domain\Tenant\Dashboard\Api\Seat\Services\Interfaces\ISeatService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Dashboard\Api\StoreSeatRequest;
 use App\Http\Requests\Tenant\Dashboard\Api\UpdateSeatRequest;
+use App\Http\Resources\Tenant\Dashboard\Api\SeatResource;
 use Illuminate\Http\JsonResponse;
 
 class SeatController extends Controller
@@ -17,29 +18,32 @@ class SeatController extends Controller
 
     public function index(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return \App\Http\Resources\Tenant\Dashboard\Api\SeatResource::collection($this->seatService->listAllSeats());
+        return SeatResource::collection($this->seatService->listAllSeats());
     }
 
-    public function store(StoreSeatRequest $request): \App\Http\Resources\Tenant\Dashboard\Api\SeatResource
+    public function store(StoreSeatRequest $request): SeatResource
     {
         $seat = $this->seatService->storeSeat((array) SeatDTO::fromRequest($request->validated()));
-        return new \App\Http\Resources\Tenant\Dashboard\Api\SeatResource($seat);
+
+        return new SeatResource($seat);
     }
 
-    public function show(string $id): \App\Http\Resources\Tenant\Dashboard\Api\SeatResource
+    public function show(string $id): SeatResource
     {
-        return new \App\Http\Resources\Tenant\Dashboard\Api\SeatResource($this->seatService->editSeat($id));
+        return new SeatResource($this->seatService->editSeat($id));
     }
 
-    public function update(UpdateSeatRequest $request, string $id): \App\Http\Resources\Tenant\Dashboard\Api\SeatResource
+    public function update(UpdateSeatRequest $request, string $id): SeatResource
     {
         $seat = $this->seatService->updateSeat((array) SeatDTO::fromRequest($request->validated()), $id);
-        return new \App\Http\Resources\Tenant\Dashboard\Api\SeatResource($seat);
+
+        return new SeatResource($seat);
     }
 
     public function destroy(string $id): JsonResponse
     {
         $this->seatService->deleteSeat($id);
+
         return response()->json(null, 204);
     }
 }

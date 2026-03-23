@@ -2,27 +2,22 @@
 
 namespace App\Http\Controllers\Tenant\Dashboard\Api;
 
+use App\Domain\Tenant\Dashboard\Api\Movie\DTO\MovieDTO;
 use App\Domain\Tenant\Dashboard\Api\Movie\Services\Interfaces\IMovieService;
 use App\Http\Controllers\Controller;
-use App\Models\Tenant\Movie;
 use App\Http\Requests\Tenant\Dashboard\Api\StoreMovieRequest;
 use App\Http\Requests\Tenant\Dashboard\Api\UpdateMovieRequest;
-use App\Http\Resources\Tenant\Dashboard\Api\MovieResource;
 use App\Http\Resources\Tenant\Dashboard\Api\LandlordMovieResource;
-use App\Domain\Tenant\Dashboard\Api\Movie\DTO\MovieDTO;
+use App\Http\Resources\Tenant\Dashboard\Api\MovieResource;
+use App\Models\Tenant\Movie;
 
 class MovieController extends Controller
 {
-    public function __construct(protected
-        IMovieService $movieService
-        )
-    {
-    }
+    public function __construct(protected IMovieService $movieService
+    ) {}
 
     public function index()
     {
-        // Scenario 1: Tenant Dashboard -> Movies Page
-        // Use: TenantMovie::all(); -> fast, no external call
         $movies = $this->movieService->listAllMovies();
 
         return MovieResource::collection($movies);
@@ -31,15 +26,14 @@ class MovieController extends Controller
     public function store(StoreMovieRequest $request)
     {
         try {
-            $data = (array)MovieDTO::fromRequest($request->validated());
+            $data = (array) MovieDTO::fromRequest($request->validated());
             $tenantMovie = $this->movieService->addMovieToTenant($data);
 
             return (new MovieResource($tenantMovie))
                 ->additional(['message' => 'Movie added to tenant successfully']);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 400);
         }
     }
@@ -47,7 +41,7 @@ class MovieController extends Controller
     public function landlordMovies()
     {
         $movies = $this->movieService->getLandlordMovies();
-        
+
         return LandlordMovieResource::collection($movies);
     }
 
@@ -55,22 +49,17 @@ class MovieController extends Controller
     {
         $movie = Movie::findOrFail($id);
 
-        // Scenario 3: Movie Details Page
-        // Needs overview, cast, genres etc from Landlord.
-        // We append the deeply cached landlordMovie relationship if we want, or just return the tenant movie 
-        // and let the frontend query the landlord DB directly, or pass it here.
-        // For now we'll load the full info via the method.
         $landlordDetails = $movie->landlordMovie();
 
         return (new MovieResource($movie))
             ->additional([
-            'landlord_details' => $landlordDetails
-        ]);
+                'landlord_details' => $landlordDetails,
+            ]);
     }
 
     public function update(UpdateMovieRequest $request, string $id)
     {
-        $data = (array)MovieDTO::fromRequest($request->validated());
+        $data = (array) MovieDTO::fromRequest($request->validated());
         $movie = $this->movieService->updateMovie($id, $data);
 
         return (new MovieResource($movie))
