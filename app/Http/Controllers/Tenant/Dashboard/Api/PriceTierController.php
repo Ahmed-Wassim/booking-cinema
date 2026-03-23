@@ -7,6 +7,7 @@ use App\Domain\Tenant\Dashboard\Api\PriceTier\Services\Interfaces\IPriceTierServ
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Dashboard\Api\StorePriceTierRequest;
 use App\Http\Requests\Tenant\Dashboard\Api\UpdatePriceTierRequest;
+use App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource;
 use Illuminate\Http\JsonResponse;
 
 class PriceTierController extends Controller
@@ -17,29 +18,32 @@ class PriceTierController extends Controller
 
     public function index(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource::collection($this->priceTierService->listAllPriceTiers());
+        return PriceTierResource::collection($this->priceTierService->listAllPriceTiers());
     }
 
-    public function store(StorePriceTierRequest $request): \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource
+    public function store(StorePriceTierRequest $request): PriceTierResource
     {
         $priceTier = $this->priceTierService->storePriceTier((array) PriceTierDTO::fromRequest($request->validated()));
-        return new \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource($priceTier);
+
+        return new PriceTierResource($priceTier);
     }
 
-    public function show(string $id): \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource
+    public function show(string $id): PriceTierResource
     {
-        return new \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource($this->priceTierService->editPriceTier($id));
+        return new PriceTierResource($this->priceTierService->editPriceTier($id));
     }
 
-    public function update(UpdatePriceTierRequest $request, string $id): \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource
+    public function update(UpdatePriceTierRequest $request, string $id): PriceTierResource
     {
         $priceTier = $this->priceTierService->updatePriceTier((array) PriceTierDTO::fromRequest($request->validated()), $id);
-        return new \App\Http\Resources\Tenant\Dashboard\Api\PriceTierResource($priceTier);
+
+        return new PriceTierResource($priceTier);
     }
 
     public function destroy(string $id): JsonResponse
     {
         $this->priceTierService->deletePriceTier($id);
+
         return response()->json(null, 204);
     }
 }

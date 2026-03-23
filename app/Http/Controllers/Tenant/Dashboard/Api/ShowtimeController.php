@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Tenant\Dashboard\Api;
 
+use App\Domain\Tenant\Dashboard\Api\Showtime\DTO\ShowtimeDTO;
 use App\Domain\Tenant\Dashboard\Api\Showtime\Services\Interfaces\IShowtimeService;
 use App\Http\Controllers\Controller;
-use App\Models\Tenant\Showtime;
-use Illuminate\Http\Request;
 use App\Http\Requests\Tenant\Dashboard\Api\StoreShowtimeRequest;
 use App\Http\Requests\Tenant\Dashboard\Api\UpdateShowtimeRequest;
 use App\Http\Resources\Tenant\Dashboard\Api\ShowtimeResource;
-use App\Domain\Tenant\Dashboard\Api\Showtime\DTO\ShowtimeDTO;
+use App\Models\Tenant\Showtime;
 
 class ShowtimeController extends Controller
 {
@@ -19,11 +18,6 @@ class ShowtimeController extends Controller
 
     public function index()
     {
-        // Scenario 2: Showtime List Page
-        // You show: Movie title, Poster, Time, Hall
-        // Since the prompt explicitly says: $showtimes = Showtime::with('tenantMovie')->get(); 
-        // We're using relationships named 'movie'.
-        
         $showtimes = $this->showtimeService->listAllShowtimes();
 
         return ShowtimeResource::collection($showtimes);
@@ -39,7 +33,7 @@ class ShowtimeController extends Controller
                 ->additional(['message' => 'Showtime created successfully']);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 400);
         }
     }
@@ -47,7 +41,7 @@ class ShowtimeController extends Controller
     public function show(string $id)
     {
         $showtime = Showtime::with(['movie', 'hall', 'priceTier'])->findOrFail($id);
-        
+
         return new ShowtimeResource($showtime);
     }
 
@@ -63,7 +57,7 @@ class ShowtimeController extends Controller
     public function destroy(string $id)
     {
         $this->showtimeService->deleteShowtime($id);
-        
+
         return response()->json(null, 204);
     }
 }
