@@ -1,7 +1,6 @@
 <?php
 
-namespace App\Domain\Landlord\Services\Interfaces;
-
+namespace App\Domain\Landlord\MovieSync\Interfaces;
 
 use App\Models\Supplier;
 

@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Tenant\Home;
 
-use App\Domain\Tenant\Home\CoreBooking\Services\Interfaces\IBookingService;
+use App\Domain\Tenant\Home\Booking\Enums\BookingStatus;
+use App\Domain\Tenant\Home\Booking\Services\Interfaces\IBookingService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\Home\BookingConfirmationResource;
-use App\Domain\Tenant\Home\CoreBooking\Enums\BookingStatus;
-use Illuminate\Http\JsonResponse;
 
 class BookingConfirmationController extends Controller
 {

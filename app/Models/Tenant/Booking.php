@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Domain\Tenant\Home\Booking\Enums\BookingStatus;
 use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
@@ -10,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use App\Domain\Tenant\Home\CoreBooking\Enums\BookingStatus;
 
 class Booking extends Model
 {
@@ -26,8 +26,8 @@ class Booking extends Model
 
     protected $casts = [
         'total_price' => 'decimal:2',
-        'expires_at'  => 'datetime',
-        'status'      => BookingStatus::class,
+        'expires_at' => 'datetime',
+        'status' => BookingStatus::class,
     ];
 
     public function user(): BelongsTo

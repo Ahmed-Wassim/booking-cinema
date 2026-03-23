@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domain\Tenant\Checkout\Payment\Services\Classes;
 
-use App\Domain\Tenant\Checkout\Payment\Services\Interfaces\IOrderPaymentService;
-use App\Domain\Tenant\Home\CoreBooking\Repositories\Interfaces\IBookingRepository;
-use App\Domain\Tenant\Checkout\Payment\Repositories\Interfaces\IPaymentRepository;
-use App\Domain\Tenant\Home\CoreBooking\Enums\BookingStatus;
 use App\Domain\Shared\Payments\Manager\PaymentManager;
+use App\Domain\Tenant\Checkout\Payment\Repositories\Interfaces\IPaymentRepository;
+use App\Domain\Tenant\Checkout\Payment\Services\Interfaces\IOrderPaymentService;
+use App\Domain\Tenant\Home\Booking\Enums\BookingStatus;
+use App\Domain\Tenant\Home\Booking\Repositories\Interfaces\IBookingRepository;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -35,11 +35,11 @@ class OrderPaymentService implements IOrderPaymentService
 
         // Save pending payment record to associate it with cartId
         $payment = $this->paymentRepository->create([
-            'booking_id'      => $booking->id,
-            'amount'          => $booking->total_price,
-            'currency'        => 'AED',
-            'status'          => 'pending',
-            'gateway'         => 'paytabs',
+            'booking_id' => $booking->id,
+            'amount' => $booking->total_price,
+            'currency' => 'AED',
+            'status' => 'pending',
+            'gateway' => 'paytabs',
             'transaction_ref' => $cartId, // Using transaction_ref as our cart_id until callback provides actual ref
         ]);
 
@@ -52,19 +52,19 @@ class OrderPaymentService implements IOrderPaymentService
         }
 
         $gatewayResponse = $this->paymentManager->initiate([
-            'merchant'     => 'paytabs',
-            'amount'       => (float) $booking->total_price,
-            'cart_id'      => $cartId,
-            'description'  => "Booking #{$booking->id} for movie: {$booking->showtime->movie->title}",
-            'tenant_name'  => $booking->customer?->name ?? 'Guest',
+            'merchant' => 'paytabs',
+            'amount' => (float) $booking->total_price,
+            'cart_id' => $cartId,
+            'description' => "Booking #{$booking->id} for movie: {$booking->showtime->movie->title}",
+            'tenant_name' => $booking->customer?->name ?? 'Guest',
             'tenant_email' => $booking->customer?->email ?? 'guest@example.com',
             'callback_url' => url('/api/checkout/callback'),
-            'return_url'   => url("/booking/{$booking->id}/success")
+            'return_url' => url("/booking/{$booking->id}/success"),
         ]);
 
         return [
             'redirect_url' => $gatewayResponse->redirectUrl,
-            'payment_id'   => $payment->id,
+            'payment_id' => $payment->id,
         ];
     }
 
@@ -72,7 +72,8 @@ class OrderPaymentService implements IOrderPaymentService
     {
         try {
             Log::info('Tenant order payment callback received', $data);
-        } catch (\Throwable $e) {}
+        } catch (\Throwable $e) {
+        }
 
         $cartId = $data['cart_id'] ?? null;
         if (! $cartId) {
@@ -89,12 +90,12 @@ class OrderPaymentService implements IOrderPaymentService
         $isSuccess = $response->isSuccessful;
 
         $newStatus = $isSuccess ? 'success' : 'failed';
-        $tranRef   = $data['tran_ref'] ?? $cartId;
+        $tranRef = $data['tran_ref'] ?? $cartId;
 
         $this->paymentRepository->updateWhere([
-            'status'          => $newStatus,
+            'status' => $newStatus,
             'transaction_ref' => $tranRef,
-            'payload'         => $data,
+            'payload' => $data,
         ], ['id' => $payment->id]);
 
         if ($isSuccess) {

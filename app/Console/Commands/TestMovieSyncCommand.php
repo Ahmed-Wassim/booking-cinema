@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Domain\Landlord\Dashboard\Web\Supplier\Repositories\Interfaces\ISupplierRepository;
-use App\Domain\Landlord\Services\Interfaces\IMovieSyncService;
+use App\Domain\Landlord\MovieSync\Interfaces\IMovieSyncService;
 use App\Models\Genre;
 use App\Models\Movie;
 use App\Models\Supplier;
@@ -19,13 +19,14 @@ class TestMovieSyncCommand extends Command
     public function handle(IMovieSyncService $syncService, ISupplierRepository $supplierRepo): int
     {
         $supplier = $supplierRepo->findByKey('tmdb');
-        if (!$supplier instanceof Supplier) {
+        if (! $supplier instanceof Supplier) {
             $this->error('TMDB supplier not found. Run: php artisan db:seed --class=SupplierSeeder');
+
             return self::FAILURE;
         }
 
         $supplier->load('setting');
-        if (!$supplier->setting || !($supplier->setting->settings['api_key'] ?? null)) {
+        if (! $supplier->setting || ! ($supplier->setting->settings['api_key'] ?? null)) {
             $this->warn('TMDB_API_KEY not set in .env - sync will exit early. Set it to test full sync.');
         }
 
@@ -35,10 +36,10 @@ class TestMovieSyncCommand extends Command
             $this->info('Syncing genres only...');
             $syncService->syncGenres($supplier);
             $duration = microtime(true) - $start;
-            $this->info('Genres count: ' . Genre::count());
+            $this->info('Genres count: '.Genre::count());
             $this->info(sprintf('Sync completed in %.2f seconds.', $duration));
 
-Log::channel('time')->info('Movie sync (genres-only) completed.', [
+            Log::channel('time')->info('Movie sync (genres-only) completed.', [
                 'supplier' => $supplier->key,
                 'duration_seconds' => $duration,
             ]);
@@ -50,7 +51,7 @@ Log::channel('time')->info('Movie sync (genres-only) completed.', [
         $syncService->sync($supplier);
         $duration = microtime(true) - $start;
 
-        $this->info('Genres: ' . Genre::count() . ', Movies: ' . Movie::count());
+        $this->info('Genres: '.Genre::count().', Movies: '.Movie::count());
         $this->info(sprintf('Sync completed in %.2f seconds.', $duration));
 
         Log::channel('time')->info('Movie sync (full) completed.', [
