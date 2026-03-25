@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant\Dashboard\Api;
 use App\Domain\Tenant\Dashboard\Api\Seat\DTO\SeatDTO;
 use App\Domain\Tenant\Dashboard\Api\Seat\Services\Interfaces\ISeatService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tenant\Dashboard\Api\BulkStoreSeatRequest;
 use App\Http\Requests\Tenant\Dashboard\Api\StoreSeatRequest;
 use App\Http\Requests\Tenant\Dashboard\Api\UpdateSeatRequest;
 use App\Http\Resources\Tenant\Dashboard\Api\SeatResource;
@@ -26,6 +27,14 @@ class SeatController extends Controller
         $seat = $this->seatService->storeSeat((array) SeatDTO::fromRequest($request->validated()));
 
         return new SeatResource($seat);
+    }
+
+    public function bulkStore(BulkStoreSeatRequest $request): JsonResponse
+    {
+        $seatsToInsert = \App\Domain\Tenant\Dashboard\Api\Seat\DTO\SeatsDTO::fromRequest($request->validated('seats'))->toArray();
+        $this->seatService->bulkStoreSeats($seatsToInsert);
+
+        return response()->json(['message' => 'Seats created successfully'], 201);
     }
 
     public function show(string $id): SeatResource

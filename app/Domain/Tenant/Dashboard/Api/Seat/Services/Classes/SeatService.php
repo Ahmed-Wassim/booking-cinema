@@ -15,14 +15,19 @@ class SeatService implements ISeatService
         protected ISeatRepository $seatRepository
     ) {}
 
-    public function listAllSeats(): LengthAwarePaginator
+    public function listAllSeats()
     {
-        return $this->seatRepository->retrieve();
+        return $this->seatRepository->listAllBy();
     }
 
     public function storeSeat(array $data): Model
     {
         return $this->seatRepository->create($data);
+    }
+
+    public function bulkStoreSeats(array $data): bool
+    {
+        return $this->seatRepository->createMany($data);
     }
 
     public function editSeat(string|int $id): Model
