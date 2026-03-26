@@ -43,29 +43,30 @@ class BookingService implements IBookingService
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            throw $e;                    // Re-throw so controller can handle the error
+            throw $e;
         }
     }
 
     public function confirmBookingPayment(int $bookingId): Booking
     {
-        return DB::transaction(function () use ($bookingId) {
-            $booking = $this->bookingRepository->firstOrFail([
-                'id' => $bookingId,
-            ]);
+        DB::beginTransaction();
+        $booking = $this->bookingRepository->firstOrFail([
+            'id' => $bookingId,
+        ]);
 
-            if ($booking->status !== BookingStatus::PENDING) {
-                throw new \Exception('Invalid booking state');
-            }
+        if ($booking->status !== BookingStatus::PENDING) {
+            throw new \Exception('Invalid booking state');
+        }
 
-            $booking->update([
-                'status' => BookingStatus::PAID->value,
-            ]);
+        $booking->update([
+            'status' => BookingStatus::PAID->value,
+        ]);
 
-            event(new BookingConfirmed($booking));
+        event(new BookingConfirmed($booking));
 
-            return $booking;
-        });
+        DB::commit();
+
+        return $booking;
     }
 
     public function findBooking(int $id): Booking
