@@ -10,7 +10,7 @@ class TicketService
 {
     public function generateQrCode(string $qrCodeContent, int $size = 400, int $margin = 2): string
     {
-        return QrCode::format('png')
+        return (string) QrCode::format('svg')
             ->size($size)
             ->margin($margin)
             ->generate($qrCodeContent);

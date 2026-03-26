@@ -14,7 +14,7 @@
     @php
         $qrImage = app(\App\Domain\Tenant\Home\Booking\Services\Classes\TicketService::class)->generateQrCode($ticket->qr_code);
     @endphp
-    <img src="data:image/png;base64,{{ base64_encode($qrImage) }}" 
+    <img src="data:image/svg+xml;base64,{{ base64_encode($qrImage) }}" 
          alt="QR Code" 
          width="300" 
          style="border: 2px solid #000; padding: 10px; background: #fff;">
