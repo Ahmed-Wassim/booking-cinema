@@ -17,6 +17,7 @@ class Booking extends Model
     use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
 
     protected $fillable = [
+        'customer_id',
         'user_id',
         'showtime_id',
         'total_price',

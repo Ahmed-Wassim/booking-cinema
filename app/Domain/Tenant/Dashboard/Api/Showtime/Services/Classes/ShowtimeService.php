@@ -116,7 +116,7 @@ class ShowtimeService implements IShowtimeService
         try {
             $seats = $this->showtimeSeatRepository->prepareQuery(
                 conditions: ['showtime_id' => $showtimeId]
-            )->whereIn('seat_id', $seatIds)
+            )->whereIn('id', $seatIds)
                 ->lockForUpdate()
                 ->get();
 
@@ -142,7 +142,7 @@ class ShowtimeService implements IShowtimeService
                     'reserved_until' => $reservedUntil,
                 ],
                 ids: $seatIds,
-                selectedColumn: 'seat_id',
+                selectedColumn: 'id',
                 conditions: ['showtime_id' => $showtimeId]
             );
 
