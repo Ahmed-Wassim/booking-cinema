@@ -13,22 +13,20 @@ class ShowtimeSeatResource extends JsonResource
     {
         return [
             'id'             => $this->id,
+            'seat_id'        => $this->seat?->id,
             'showtime_id'    => $this->showtime_id,
             'status'         => $this->status,         // available | reserved | booked
             'reserved_until' => $this->reserved_until,
             'price'          => $this->price,
-            'seat'           => [
-                'id'         => $this->seat?->id,
-                'row'        => $this->seat?->row,
-                'number'     => $this->seat?->number,
-                'pos_x'      => $this->seat?->pos_x,
-                'pos_y'      => $this->seat?->pos_y,
-                'rotation'   => $this->seat?->rotation,
-                'width'      => $this->seat?->width,
-                'height'     => $this->seat?->height,
-                'shape'      => $this->seat?->shape,
-                'sort_order' => $this->seat?->sort_order,
-            ],
+            'row'            => $this->seat?->row,
+            'number'         => $this->seat?->number,
+            'pos_x'          => $this->seat?->pos_x,
+            'pos_y'          => $this->seat?->pos_y,
+            'rotation'       => $this->seat?->rotation,
+            'width'          => $this->seat?->width,
+            'height'         => $this->seat?->height,
+            'shape'          => $this->seat?->shape,
+            'sort_order'     => $this->seat?->sort_order,
         ];
     }
 }

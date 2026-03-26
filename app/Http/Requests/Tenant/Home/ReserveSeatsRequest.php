@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1)
+;
 
 namespace App\Http\Requests\Tenant\Home;
 
@@ -17,8 +18,8 @@ class ReserveSeatsRequest extends FormRequest
     {
         return [
             'showtime_id' => ['required', 'integer', 'exists:showtimes,id'],
-            'seat_ids'    => ['required', 'array',   'min:1'],
-            'seat_ids.*'  => ['integer',  'exists:seats,id'],
+            'seat_ids' => ['required', 'array', 'min:1'],
+            'seat_ids.*' => ['integer', 'exists:showtime_seats,id'],
         ];
     }
 }

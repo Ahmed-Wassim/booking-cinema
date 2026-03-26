@@ -26,31 +26,36 @@ class BookingService implements IBookingService
 
     public function createBooking(array $data): Booking
     {
-        $showtimeId = $data['showtime_id'];
-        $seatIds = $data['seat_ids'];
-        $userId = $data['user_id'] ?? null;
-        /** @var CustomerDTO $customerDTO */
-        $customerDTO = $data['customer'];
+         
+        DB::beginTransaction();
+            $showtimeId = $data['showtime_id'];
+            $seatIds = $data['seat_ids'];
+            $userId = $data['user_id'] ?? null;
+            $customerDTO = $data['customer'];
 
-        return DB::transaction(function () use ($showtimeId, $seatIds, $userId, $customerDTO) {
             $seats = $this->loadAndValidateSeats($seatIds, $showtimeId);
             $totalPrice = $this->calculateTotalPrice($seats);
             $customer = $this->resolveCustomer($customerDTO);
 
-            /** @var Booking $booking */
-            $booking = $this->bookingRepository->create([
-                'customer_id' => $customer->id,
-                'user_id' => $userId,
-                'showtime_id' => $showtimeId,
-                'total_price' => $totalPrice,
-                'status' => BookingStatus::PENDING->value,
-                'expires_at' => now()->addMinutes(10),
-            ]);
+            $booking = $this->storeBooking($customer->id, $showtimeId, $totalPrice, $userId);
 
             $this->attachSeatsToBooking($booking, $seats);
 
+            DB::commit();
+
             return $booking;
-        });
+    }
+
+    protected function storeBooking(int|string $customerId, int|string $showtimeId, float $totalPrice, int|string|null $userId = null): Booking
+    {
+        return $this->bookingRepository->create([
+            'customer_id' => $customerId,
+            'user_id' => $userId,
+            'showtime_id' => $showtimeId,
+            'total_price' => $totalPrice,
+            'status' => BookingStatus::PENDING->value,
+            'expires_at' => now()->addMinutes(10),
+        ]);
     }
 
     protected function loadAndValidateSeats(array $seatIds, int $showtimeId): Collection
@@ -75,14 +80,14 @@ class BookingService implements IBookingService
         });
     }
 
-    protected function resolveCustomer(array $dto): Customer
+    protected function resolveCustomer(CustomerDTO $customerDTO): Customer
     {
         $customer = $this->customerRepository->firstOrCreate(
-            ['email' => $dto['email']],
+            ['email' => $customerDTO->email],
             [
-                'name' => $dto['name'],
-                'phone_country_code' => $dto['phone_country_code'],
-                'phone' => $dto['phone'],
+                'name' => $customerDTO->name,
+                'phone_country_code' => $customerDTO->phone_country_code,
+                'phone' => $customerDTO->phone,
             ]
         );
 
