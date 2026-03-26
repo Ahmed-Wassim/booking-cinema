@@ -1,0 +1,87 @@
+<?php
+
+namespace App\Domain\Landlord\Dashboard\Web\Plan\Services\Classes;
+
+use App\Domain\Landlord\Dashboard\Web\Plan\Repositories\Interfaces\IPlanRepository;
+use App\Domain\Landlord\Dashboard\Web\Plan\Services\Interfaces\IPlanService;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
+class PlanService implements IPlanService
+{
+    public function __construct(
+        protected IPlanRepository $planRepository
+    ) {}
+
+    public function listAllPlans(): Collection|array
+    {
+        return $this->planRepository->listAllBy(relations: ['features']);
+    }
+
+    public function storePlan(array $data): Model
+    {
+        DB::beginTransaction();
+        $plan = $this->planRepository->create([
+            'name' => $data['name'],
+            'description' => $data['description'] ?? null,
+            'price' => $data['price'],
+            'billing_interval' => $data['billing_interval'],
+        ]);
+
+        if (isset($data['features']) && is_array($data['features'])) {
+            foreach ($data['features'] as $featureData) {
+                $plan->features()->create([
+                    'feature_key' => $featureData['feature_key'],
+                    'feature_value' => $featureData['feature_value'],
+                ]);
+            }
+        }
+
+        DB::commit();
+
+        return $plan;
+    }
+
+    public function editPlan(string|int $id): Model
+    {
+        return $this->planRepository->firstOrFail(
+            conditions: ['id' => (int) $id],
+            relations: ['features']
+        );
+    }
+
+    public function updatePlan(array $data, string|int $id): Model
+    {
+        DB::beginTransaction();
+        $plan = $this->planRepository->update([
+            'name' => $data['name'],
+            'description' => $data['description'] ?? null,
+            'price' => $data['price'],
+            'billing_interval' => $data['billing_interval'],
+        ], ['id' => $id]);
+
+        // Sync features
+        $plan->features()->delete();
+        if (isset($data['features']) && is_array($data['features'])) {
+            foreach ($data['features'] as $featureData) {
+                $plan->features()->create([
+                    'feature_key' => $featureData['feature_key'],
+                    'feature_value' => $featureData['feature_value'],
+                ]);
+            }
+        }
+        DB::commit();
+
+        return $plan;
+    }
+
+    public function deletePlan(string|int $id): bool
+    {
+        DB::beginTransaction();
+        $this->planRepository->delete(['id' => $id]);
+        DB::commit();
+
+        return true;
+    }
+}

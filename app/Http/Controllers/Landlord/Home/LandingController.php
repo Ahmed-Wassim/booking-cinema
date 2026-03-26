@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Landlord\Home;
 
-use App\Domain\Landlord\Services\Interfaces\IPlanService;
+use App\Domain\Landlord\Dashboard\Web\Plan\Services\Interfaces\IPlanService;
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
 

@@ -127,6 +127,13 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'time' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/time.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
         'PayTabs' => [
             'driver' => 'single',
             'path' => storage_path('logs/PayTabs.log'),

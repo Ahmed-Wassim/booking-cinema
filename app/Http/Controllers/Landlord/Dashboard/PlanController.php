@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Landlord\Dashboard;
 
-use App\Domain\Landlord\DTO\PlanDTO;
-use App\Domain\Landlord\Services\Interfaces\IPlanService;
+use App\Domain\Landlord\Dashboard\Web\Plan\DTO\PlanDTO;
+use App\Domain\Landlord\Dashboard\Web\Plan\Services\Interfaces\IPlanService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Landlord\StorePlanRequest;
 use App\Http\Requests\Landlord\UpdatePlanRequest;

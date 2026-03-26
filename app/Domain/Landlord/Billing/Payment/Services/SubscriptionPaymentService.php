@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Domain\Landlord\Billing\Payment\Services;
 
 use App\Domain\Landlord\Enums\PaymentStatusEnum;
-use App\Domain\Landlord\Repositories\Interfaces\IPaymentRepository;
-use App\Domain\Landlord\Repositories\Interfaces\ISubscriptionRepository;
-use App\Domain\Landlord\Services\Interfaces\IPaymentService;
+use App\Domain\Landlord\Dashboard\Web\Payment\Repositories\Interfaces\IPaymentRepository;
+use App\Domain\Landlord\Dashboard\Web\Plan\Repositories\Interfaces\IPlanRepository;
+use App\Domain\Landlord\Dashboard\Web\Subscription\Repositories\Interfaces\ISubscriptionRepository;
+use App\Domain\Landlord\Dashboard\Web\RegistrationRequest\Repositories\Interfaces\IRegistrationRequestRepository;
+use App\Domain\Landlord\Dashboard\Web\Payment\Services\Interfaces\IPaymentService;
 use App\Domain\Shared\Payments\Manager\PaymentManager;
-use App\Models\Plan;
-use App\Models\RegistrationRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Subscription Payment Service
@@ -25,7 +26,9 @@ class SubscriptionPaymentService implements IPaymentService
 {
     public function __construct(
         protected IPaymentRepository $paymentRepository,
+        protected IPlanRepository $planRepository,
         protected ISubscriptionRepository $subscriptionRepository,
+        protected IRegistrationRequestRepository $registrationRequestRepository,
         protected PaymentManager $paymentManager
     ) {}
 
@@ -110,9 +113,13 @@ class SubscriptionPaymentService implements IPaymentService
     /**
      * Resolve the plan object from data.
      */
-    private function resolvePlan(array $data): Plan
+    private function resolvePlan(array $data): Model
     {
-        return $data['plan'] ?? Plan::findOrFail($data['planId']);
+        if (isset($data['plan']) && is_object($data['plan']) && isset($data['plan']->id)) {
+            return $this->planRepository->findOrFail((int) $data['plan']->id);
+        }
+
+        return $this->planRepository->findOrFail((int) $data['planId']);
     }
 
     /**
@@ -129,17 +136,20 @@ class SubscriptionPaymentService implements IPaymentService
     /**
      * Update registration request with plan if registration ID is provided.
      */
-    private function updateRegistrationRequest(array $data, Plan $plan): void
+    private function updateRegistrationRequest(array $data, Model $plan): void
     {
         if (isset($data['registrationId'])) {
-            RegistrationRequest::where('id', $data['registrationId'])->update(['plan_id' => $plan->id]);
+            $this->registrationRequestRepository->updateWhere(
+                ['plan_id' => $plan->id],
+                ['id' => $data['registrationId']]
+            );
         }
     }
 
     /**
      * Create a pending payment record.
      */
-    private function createPendingPayment(array $data, Plan $plan, string $cartId): object
+    private function createPendingPayment(array $data, Model $plan, string $cartId): object
     {
         return $this->paymentRepository->create([
             'registration_request_id' => $data['registrationId'] ?? null,
@@ -180,7 +190,7 @@ class SubscriptionPaymentService implements IPaymentService
     /**
      * Initiate payment with the gateway.
      */
-    private function initiateGatewayPayment(object $payment, Plan $plan, array $tenantDetails, array $urls): object
+    private function initiateGatewayPayment(object $payment, Model $plan, array $tenantDetails, array $urls): object
     {
         return $this->paymentManager->initiate([
             'merchant' => 'paytabs', // TODO: Make configurable

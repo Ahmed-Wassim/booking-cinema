@@ -2,9 +2,9 @@ FROM php:8.3-fpm
 
 # Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
-    git curl unzip libzip-dev libpng-dev libpq-dev supervisor \
+    git curl unzip libzip-dev libpng-dev libpq-dev supervisor libmagickwand-dev \
     && docker-php-ext-install pdo pdo_pgsql pgsql zip gd \
-    && pecl install redis && docker-php-ext-enable redis \
+    && pecl install redis imagick && docker-php-ext-enable redis imagick \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Composer

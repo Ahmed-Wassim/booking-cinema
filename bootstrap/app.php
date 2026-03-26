@@ -36,4 +36,9 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule): void {
+        $schedule->job(\App\Jobs\SyncMoviesJob::class)->everySixHours();
+        $schedule->job(\App\Jobs\ReleaseReservedSeatsJob::class)->everyMinute();
+    })
+    ->create();

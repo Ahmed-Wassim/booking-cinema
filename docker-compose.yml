@@ -61,6 +61,16 @@ services:
       timeout: 5s
       retries: 10
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: cinema_mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"   # SMTP – Laravel sends mail here
+      - "8025:8025"   # Web UI – open http://localhost:8025
+    networks:
+      - cinema
+
 networks:
   cinema:
     driver: bridge
