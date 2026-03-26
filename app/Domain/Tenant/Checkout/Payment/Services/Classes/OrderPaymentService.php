@@ -133,14 +133,34 @@ class OrderPaymentService implements IOrderPaymentService
     {
         $booking = $this->bookingRepository->firstOrFail(
             conditions: ['id' => $bookingId],
-            relations: ['seats.showtimeSeat']
+            relations: ['seats.showtimeSeat.seat', 'customer']
         );
         $booking->update(['status' => BookingStatus::PAID->value]);
 
         foreach ($booking->seats as $bookingSeat) {
             if ($bookingSeat->showtimeSeat) {
                 $bookingSeat->showtimeSeat->update(['status' => 'booked']);
+                
+                $seat = $bookingSeat->showtimeSeat->seat;
+                $seatLabel = $seat ? "{$seat->row}{$seat->number}" : 'N/A';
+                
+                $ticket = \App\Models\Tenant\Ticket::create([
+                    'booking_id'  => $booking->id,
+                    'seat_label'  => $seatLabel,
+                    'seat_id'     => $seat->id ?? null,
+                    'qr_code'     => (string) \Illuminate\Support\Str::uuid(),
+                ]);
+
+                $ticket->ticket_number = 'T-' . str_pad((string)$ticket->id, 8, '0', STR_PAD_LEFT);
+                $ticket->save();
             }
+        }
+
+        $booking->load('tickets');
+
+        if ($booking->customer && $booking->customer->email) {
+            \Illuminate\Support\Facades\Mail::to($booking->customer->email)
+                ->queue(new \App\Mail\Tenant\TicketMail($booking));
         }
     }
 }
