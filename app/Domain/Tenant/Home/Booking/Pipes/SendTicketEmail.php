@@ -13,12 +13,14 @@ class SendTicketEmail
     public function handle(array $data, Closure $next): mixed
     {
         $booking  = $data['booking'];
-        $customer = $data['customer_model'];
+        $customer = $data['customer_model'] ?? $booking->customer;
 
         $booking->setRelation('tickets', $data['tickets']);
 
         if ($customer?->email) {
-            Mail::to($customer->email)->queue(new TicketMail($booking));
+            Mail::to($customer->email)->queue(
+                (new TicketMail($booking, $data['voucher_pdf_path'] ?? null))->afterCommit()
+            );
         }
 
         return $next($data);

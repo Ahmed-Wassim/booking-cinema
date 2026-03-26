@@ -14,6 +14,11 @@ interface IBookingService
     public function createBooking(array $data): Booking;
 
     /**
+     * Confirm a pending booking after payment succeeds.
+     */
+    public function confirmBookingPayment(int $bookingId): Booking;
+
+    /**
      * Retrieve a booking with its relationships (showtime, movie, seats, payment).
      */
     public function findBooking(int $id): Booking;

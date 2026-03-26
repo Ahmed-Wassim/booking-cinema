@@ -14,7 +14,7 @@ interface IOrderPaymentService
 
     /**
      * Handle the callback/webhook from PayTabs.
-     * Marks the booking and seats as paid/booked on success.
+     * Confirms the booking on success.
      * Returns true on successful validation and update.
      */
     public function handleCallback(array $data): bool;

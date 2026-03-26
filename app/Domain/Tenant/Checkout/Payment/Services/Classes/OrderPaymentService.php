@@ -8,14 +8,14 @@ use App\Domain\Shared\Payments\Manager\PaymentManager;
 use App\Domain\Tenant\Checkout\Payment\Repositories\Interfaces\IPaymentRepository;
 use App\Domain\Tenant\Checkout\Payment\Services\Interfaces\IOrderPaymentService;
 use App\Domain\Tenant\Home\Booking\Enums\BookingStatus;
-use App\Domain\Tenant\Home\Booking\Repositories\Interfaces\IBookingRepository;
+use App\Domain\Tenant\Home\Booking\Services\Interfaces\IBookingService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class OrderPaymentService implements IOrderPaymentService
 {
     public function __construct(
-        protected IBookingRepository $bookingRepository,
+        protected IBookingService $bookingService,
         protected IPaymentRepository $paymentRepository,
         protected PaymentManager $paymentManager
     ) {}
@@ -23,7 +23,7 @@ class OrderPaymentService implements IOrderPaymentService
     public function initiatePayment(array $data): array
     {
         $booking = $this->getAndValidateBooking($data['booking_id']);
-        
+
         $cartId = (string) Str::uuid();
         $payment = $this->createPendingPayment($booking, $cartId);
 
@@ -65,10 +65,7 @@ class OrderPaymentService implements IOrderPaymentService
 
     protected function getAndValidateBooking(int|string $bookingId)
     {
-        $booking = $this->bookingRepository->firstOrFail(
-            conditions: ['id' => $bookingId],
-            relations: ['showtime.movie', 'customer']
-        );
+        $booking = $this->bookingService->findBooking((int) $bookingId);
 
         if ($booking->status === BookingStatus::PAID) {
             throw new \InvalidArgumentException('Booking is already paid.');
@@ -99,7 +96,7 @@ class OrderPaymentService implements IOrderPaymentService
             'tenant_name' => $booking->customer?->name ?? 'Guest',
             'tenant_email' => $booking->customer?->email ?? 'guest@example.com',
             'callback_url' => url('/api/checkout/callback'),
-            'return_url' => url("/booking/{$booking->id}/success"),
+            'return_url' => url("/api/booking/{$booking->id}/success"),
         ];
     }
 
@@ -131,11 +128,6 @@ class OrderPaymentService implements IOrderPaymentService
 
     protected function processSuccessfulBooking(int|string $bookingId): void
     {
-        $booking = $this->bookingRepository->firstOrFail(
-            conditions: ['id' => $bookingId],
-            relations: []
-        );
-
-        $booking->update(['status' => BookingStatus::PAID->value]);
+        $this->bookingService->confirmBookingPayment((int) $bookingId);
     }
 }

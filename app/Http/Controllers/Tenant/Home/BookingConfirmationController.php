@@ -16,7 +16,7 @@ class BookingConfirmationController extends Controller
     ) {}
 
     /**
-     * GET /booking/{id}/success
+     * GET /api/booking/{id}/success
      * Return confirmation details for the successful booking.
      */
     public function show(int $id)
@@ -24,7 +24,7 @@ class BookingConfirmationController extends Controller
         try {
             $booking = $this->bookingService->findBooking($id);
 
-            // Security check: only show confirmation if booking is actually paid
+            // Security check: only show confirmation if booking is actually confirmed
             if ($booking->status !== BookingStatus::PAID) {
                 abort(403, 'Booking is not paid.');
             }
