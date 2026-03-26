@@ -41,5 +41,9 @@ Route::middleware([
         Route::get('movies/landlord', [MovieController::class, 'landlordMovies']);
         Route::apiResource('movies', MovieController::class);
         Route::apiResource('showtimes', ShowtimeController::class);
+        
+        // Ticket validation (Staff)
+        Route::post('/tickets/validate', [\App\Http\Controllers\Tenant\Dashboard\Api\TicketController::class, 'validate'])
+            ->name('dashboard.tickets.validate');
     });
 });

@@ -133,14 +133,9 @@ class OrderPaymentService implements IOrderPaymentService
     {
         $booking = $this->bookingRepository->firstOrFail(
             conditions: ['id' => $bookingId],
-            relations: ['seats.showtimeSeat']
+            relations: []
         );
-        $booking->update(['status' => BookingStatus::PAID->value]);
 
-        foreach ($booking->seats as $bookingSeat) {
-            if ($bookingSeat->showtimeSeat) {
-                $bookingSeat->showtimeSeat->update(['status' => 'booked']);
-            }
-        }
+        $booking->update(['status' => BookingStatus::PAID->value]);
     }
 }
