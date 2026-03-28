@@ -35,6 +35,7 @@ Route::middleware([
         Route::apiResource('halls', HallController::class);
         Route::apiResource('price-tiers', PriceTierController::class);
         Route::apiResource('hall-sections', HallSectionController::class);
+        Route::post('seats/bulk', [SeatController::class, 'bulkStore']);
         Route::apiResource('seats', SeatController::class);
 
         // Movie & Showtime Routes
