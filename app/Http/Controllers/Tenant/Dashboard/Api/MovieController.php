@@ -30,7 +30,7 @@ class MovieController extends Controller
             $tenantMovie = $this->movieService->addMovieToTenant($data);
 
             return (new MovieResource($tenantMovie))
-                ->additional(['message' => 'Movie added to tenant successfully']);
+                ->additional(['message' => __('tenant.Movie added to tenant successfully')]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -63,7 +63,7 @@ class MovieController extends Controller
         $movie = $this->movieService->updateMovie($id, $data);
 
         return (new MovieResource($movie))
-            ->additional(['message' => 'Movie updated successfully']);
+            ->additional(['message' => __('tenant.Movie updated successfully')]);
     }
 
     public function destroy(string $id)

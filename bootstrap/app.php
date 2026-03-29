@@ -21,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(SetCurrentCurrency::class);
+        $middleware->web(append: [
+            \App\Http\Middleware\SetLandlordLocale::class,
+        ]);
 
         $middleware->validateCsrfTokens(except: [
             'landlord/payment/callback',

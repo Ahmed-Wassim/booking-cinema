@@ -1,17 +1,17 @@
 @extends('landlord.layouts.app')
 
-@section('title', 'Users')
+@section('title', __('landlord.Users'))
 
 @section('page-header')
 @endsection
 
-@section('page-title', 'Users')
-@section('page-subtitle', 'Manage system users')
+@section('page-title', __('landlord.Users'))
+@section('page-subtitle', __('landlord.Manage system users'))
 
 @section('page-actions')
     @can('create', \App\Models\User::class)
     <a href="{{ route('landlord.users.create') }}" class="btn btn-primary">
-        <i class="bi bi-plus-lg me-1"></i> Add User
+        <i class="bi bi-plus-lg me-1"></i> {{ __('landlord.Add User') }}
     </a>
     @endcan
 @endsection
@@ -25,10 +25,10 @@
             <form method="GET" action="{{ route('landlord.users.index') }}" class="row mb-3">
                 <div class="col-md-4">
                     <input type="text" name="search" value="{{ request('search') }}" class="form-control"
-                        placeholder="Search users...">
+                        placeholder="{{ __('landlord.Search users...') }}">
                 </div>
                 <div class="col-md-2">
-                    <button class="btn btn-outline-primary w-100">Search</button>
+                    <button class="btn btn-outline-primary w-100">{{ __('landlord.Search') }}</button>
                 </div>
             </form>
 
@@ -38,10 +38,10 @@
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Created</th>
-                            <th class="text-end">Actions</th>
+                            <th>{{ __('landlord.Name') }}</th>
+                            <th>{{ __('landlord.Email') }}</th>
+                            <th>{{ __('landlord.Created') }}</th>
+                            <th class="text-end">{{ __('landlord.Actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,7 +61,7 @@
 
                                     @can('delete', $user)
                                     <form action="{{ route('landlord.users.destroy', $user->id) }}" method="POST"
-                                        class="d-inline" onsubmit="return confirm('Are you sure?')">
+                                        class="d-inline" onsubmit="return confirm('{{ __('landlord.Are you sure?') }}')">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-danger">
@@ -75,7 +75,7 @@
                         @empty
                             <tr>
                                 <td colspan="5" class="text-center text-muted">
-                                    No users found.
+                                    {{ __('landlord.No users found.') }}
                                 </td>
                             </tr>
                         @endforelse
