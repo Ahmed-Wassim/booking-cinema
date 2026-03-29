@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Policies\Tenant\BookingPolicy;
 use App\Domain\Tenant\Home\Booking\Enums\BookingStatus;
 use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+#[UsePolicy(BookingPolicy::class)]
 class Booking extends Model
 {
     use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;

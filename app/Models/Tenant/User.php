@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Policies\Tenant\UserPolicy;
 use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
@@ -12,13 +13,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
+#[UsePolicy(UserPolicy::class)]
 class User extends Authenticatable
 {
     use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles;
 
     protected $connection = 'tenant';
 

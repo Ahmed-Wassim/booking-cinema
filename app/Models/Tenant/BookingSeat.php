@@ -2,9 +2,11 @@
 
 namespace App\Models\Tenant;
 
+use App\Policies\Tenant\BookingSeatPolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[UsePolicy(BookingSeatPolicy::class)]
 class BookingSeat extends Model
 {
     protected $fillable = [

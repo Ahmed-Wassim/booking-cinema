@@ -2,9 +2,11 @@
 
 namespace App\Models\Tenant;
 
+use App\Policies\Tenant\PaymentPolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[UsePolicy(PaymentPolicy::class)]
 class Payment extends Model
 {
     protected $fillable = [
