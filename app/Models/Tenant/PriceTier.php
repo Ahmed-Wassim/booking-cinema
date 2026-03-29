@@ -19,6 +19,7 @@ class PriceTier extends Model
         'hall_id',
         'name',
         'price',
+        'currency',
         'color',
         'description',
         'is_active',
@@ -26,6 +27,7 @@ class PriceTier extends Model
 
     protected $casts = [
         'price'     => 'decimal:2',
+        'currency' => 'string',
         'is_active' => 'boolean',
     ];
 

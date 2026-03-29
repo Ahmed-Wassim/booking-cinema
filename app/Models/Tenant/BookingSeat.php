@@ -11,10 +11,12 @@ class BookingSeat extends Model
         'booking_id',
         'showtime_seat_id',
         'price',
+        'currency',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'currency' => 'string',
     ];
 
     public function booking(): BelongsTo

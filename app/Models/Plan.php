@@ -6,7 +6,6 @@ use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
 use App\Traits\Shared\SearchTrait;
-
 use Illuminate\Database\Eloquent\Model;
 
 class Plan extends Model
@@ -17,7 +16,12 @@ class Plan extends Model
         'name',
         'description',
         'price',
+        'currency',
         'billing_interval',
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
     ];
 
     public function features()

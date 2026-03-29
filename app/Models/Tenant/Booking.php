@@ -21,12 +21,14 @@ class Booking extends Model
         'user_id',
         'showtime_id',
         'total_price',
+        'currency',
         'status',
         'expires_at',
     ];
 
     protected $casts = [
         'total_price' => 'decimal:2',
+        'currency' => 'string',
         'expires_at' => 'datetime',
         'status' => BookingStatus::class,
     ];

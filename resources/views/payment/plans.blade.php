@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,8 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('home/css/landing.css') }}">
     <style>
@@ -19,20 +21,24 @@
             flex-direction: column;
             align-items: center;
         }
+
         .header-content {
             text-align: center;
             margin-bottom: 60px;
             max-width: 600px;
         }
+
         .header-content h1 {
             font-size: 2.5rem;
             margin-bottom: 16px;
             color: white;
         }
+
         .header-content p {
             color: var(--text-muted);
             font-size: 1.1rem;
         }
+
         .plans-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -41,6 +47,7 @@
             max-width: 1000px;
             justify-content: center;
         }
+
         .plan-card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -54,28 +61,33 @@
             overflow: hidden;
             backdrop-filter: blur(10px);
         }
+
         .plan-card:hover {
             transform: translateY(-5px);
             border-color: var(--accent-primary);
             box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.5);
         }
+
         .plan-name {
             font-size: 1.5rem;
             font-weight: 600;
             color: white;
             margin-bottom: 10px;
         }
+
         .plan-price {
             font-size: 3rem;
             font-weight: 700;
             color: var(--accent-primary);
             margin-bottom: 20px;
         }
+
         .plan-price span {
             font-size: 1rem;
             color: var(--text-muted);
             font-weight: 400;
         }
+
         .plan-features {
             list-style: none;
             padding: 0;
@@ -83,6 +95,7 @@
             text-align: left;
             flex-grow: 1;
         }
+
         .plan-features li {
             padding: 10px 0;
             color: var(--text-primary);
@@ -91,11 +104,13 @@
             align-items: center;
             gap: 10px;
         }
+
         .plan-features li::before {
             content: '✓';
             color: var(--accent-secondary);
             font-weight: bold;
         }
+
         .btn-subscribe {
             width: 100%;
             padding: 14px;
@@ -108,10 +123,12 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
         .btn-subscribe:hover {
             opacity: 0.9;
             transform: scale(1.02);
         }
+
         .alert {
             padding: 16px;
             border-radius: var(--radius-md);
@@ -120,11 +137,13 @@
             max-width: 600px;
             text-align: center;
         }
+
         .alert-error {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.3);
             color: #FCA5A5;
         }
+
         .alert-success {
             background: rgba(16, 185, 129, 0.1);
             border: 1px solid rgba(16, 185, 129, 0.3);
@@ -132,6 +151,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="payment-container">
         <div class="header-content reveal visible">
@@ -151,13 +171,14 @@
                 <div class="plan-card reveal visible" style="transition-delay: {{ $loop->index * 100 }}ms">
                     <h3 class="plan-name">{{ $plan->name }}</h3>
                     <div class="plan-price">
-                        ${{ number_format($plan->price) }}
+                        {{ $currentCurrency->getSymbol() }}{{ number_format($plan->price) }}
                         <span>/ {{ $plan->billing_interval }}</span>
                     </div>
 
                     <ul class="plan-features">
                         @foreach($plan->features as $feature)
-                            <li>{{ ucwords(str_replace('_', ' ', $feature->feature_key->value ?? $feature->feature_key)) }}: {{ $feature->feature_value }}</li>
+                            <li>{{ ucwords(str_replace('_', ' ', $feature->feature_key->value ?? $feature->feature_key)) }}:
+                                {{ $feature->feature_value }}</li>
                         @endforeach
                     </ul>
 
@@ -170,4 +191,5 @@
         </div>
     </div>
 </body>
+
 </html>

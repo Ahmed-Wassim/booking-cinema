@@ -25,6 +25,7 @@ class CreateBookingRecord
             'user_id'     => $userId,
             'showtime_id' => $showtimeId,
             'total_price' => $totalPrice,
+            'currency'    => $this->getRequestCurrency(),
             'status'      => BookingStatus::PENDING->value,
             'expires_at'  => now()->addMinutes(10),
         ]);
@@ -33,6 +34,7 @@ class CreateBookingRecord
             'booking_id'       => $booking->id,
             'showtime_seat_id' => $seat->id,
             'price'            => $seat->seat?->priceTier?->price ?? 0,
+            'currency'         => $this->getRequestCurrency(),
             'created_at'       => now(),
             'updated_at'       => now(),
         ])->toArray();
@@ -42,5 +44,10 @@ class CreateBookingRecord
         $data['booking'] = $booking;
 
         return $next($data);
+    }
+
+    private function getRequestCurrency(): string
+    {
+        return app(\App\Domain\Shared\Currency\Services\CurrentCurrencyService::class)->get();
     }
 }

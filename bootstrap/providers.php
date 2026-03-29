@@ -6,5 +6,6 @@ return [
     App\Domain\Landlord\Dashboard\Web\Providers\AppServiceProvider::class,
     App\Domain\Tenant\Dashboard\Api\Providers\TenantAppServiceProvider::class,
     App\Domain\Tenant\Home\Providers\HomeAppServiceProvider::class,
+    App\Domain\Shared\ExchangeRate\Providers\AppServiceProvider::class,
     // Paytabscom\Laravel_paytabs\PaypageServiceProvider::class,
 ];

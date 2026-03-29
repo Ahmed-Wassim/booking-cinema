@@ -20,11 +20,13 @@ class ShowtimeSeat extends Model
         'status',
         'reserved_until',
         'price',
+        'currency',
     ];
 
     protected $casts = [
         'reserved_until' => 'datetime',
         'price' => 'decimal:2',
+        'currency' => 'string',
     ];
 
     public function showtime(): BelongsTo

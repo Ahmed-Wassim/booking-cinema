@@ -56,7 +56,7 @@ class PaymentController extends Controller
                     'tenant_email' => $registrationRequest->email,
                     'plan_id' => $plan->id,
                     'amount' => $plan->price,
-                    'currency' => config('paytabs.currency', 'EGP'),
+                    'currency' => $plan->currency ?? config('paytabs.currency', 'EGP'),
                     'return_url' => route('landlord.payment.success'),
                     'callback_url' => route('landlord.payment.callback'),
                 ])
