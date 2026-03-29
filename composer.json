@@ -15,6 +15,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "paytabscom/laravel_paytabs": "^1.10",
+        "propaganistas/laravel-phone": "^6.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-pdf": "^2.4",
         "spatie/laravel-permission": "^6.21",
