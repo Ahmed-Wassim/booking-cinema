@@ -12,10 +12,13 @@ use App\Http\Controllers\Landlord\Dashboard\SupplierController;
 use App\Http\Controllers\Landlord\Dashboard\TenantController;
 use App\Http\Controllers\Landlord\Dashboard\UserController;
 use App\Http\Controllers\Landlord\Home\LandingRegisterController;
+use App\Http\Controllers\Landlord\LocaleController;
 use App\Http\Controllers\Landlord\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::domain(env('LANDLORD_DOMAIN'))->group(function () {
+    // Language Switcher
+    Route::get('lang/{locale}', [LocaleController::class, 'switchLang'])->name('lang.switch');
     // Central registration is handled in web.php
     Route::get('/register', [LandingRegisterController::class, 'create'])
         ->middleware('guest')

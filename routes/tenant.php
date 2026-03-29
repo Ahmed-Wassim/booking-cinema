@@ -12,6 +12,7 @@ use App\Http\Controllers\Tenant\Dashboard\Api\SeatController;
 use App\Http\Controllers\Tenant\Dashboard\Api\ShowtimeController;
 use App\Http\Controllers\Tenant\Dashboard\Api\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\Tenant\SetTenantLocale;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -19,6 +20,7 @@ Route::middleware([
     'api',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
+    SetTenantLocale::class,
 ])->prefix('api/dashboard')->group(function () {
 
     // ----------------------------------------------------------------------

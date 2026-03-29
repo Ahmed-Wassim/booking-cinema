@@ -5,7 +5,7 @@
 
     <nav aria-label="breadcrumb" class="d-none d-md-flex">
         <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">{{ __('landlord.Home') }}</a></li>
             @yield('breadcrumb')
         </ol>
     </nav>
@@ -19,7 +19,7 @@
             <span class="input-group-text bg-transparent border-end-0">
                 <i class="bi bi-search text-muted"></i>
             </span>
-            <input type="text" class="form-control border-start-0 ps-0" placeholder="Search..." id="globalSearch">
+            <input type="text" class="form-control border-start-0 ps-0" placeholder="{{ __('landlord.Search...') }}" id="globalSearch">
         </div>
     </div>
 
@@ -32,21 +32,24 @@
 
         <div class="dropdown-menu dropdown-menu-end notification-dropdown shadow-lg">
             <div class="dropdown-header d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 fw-semibold">Notifications</h6>
-                <a href="#" class="text-primary small">Mark all read</a>
+                <h6 class="mb-0 fw-semibold">{{ __('landlord.Notifications') }}</h6>
+                <a href="#" class="text-primary small">{{ __('landlord.Mark all read') }}</a>
             </div>
 
             <div class="notification-list">
-                @include('landlord.components.notification-item', ['icon' => 'bi-person-plus-fill', 'iconBg' => 'bg-primary', 'title' => 'New user registered', 'time' => '2 min ago'])
-                @include('landlord.components.notification-item', ['icon' => 'bi-cart-fill', 'iconBg' => 'bg-success', 'title' => 'New order #1042 placed', 'time' => '15 min ago'])
-                @include('landlord.components.notification-item', ['icon' => 'bi-exclamation-triangle-fill', 'iconBg' => 'bg-warning', 'title' => 'Server CPU usage high', 'time' => '1 hr ago'])
+                @include('landlord.components.notification-item', ['icon' => 'bi-person-plus-fill', 'iconBg' => 'bg-primary', 'title' => __('landlord.New user registered'), 'time' => __('landlord.2 min ago')])
+                @include('landlord.components.notification-item', ['icon' => 'bi-cart-fill', 'iconBg' => 'bg-success', 'title' => __('landlord.New order #1042 placed'), 'time' => __('landlord.15 min ago')])
+                @include('landlord.components.notification-item', ['icon' => 'bi-exclamation-triangle-fill', 'iconBg' => 'bg-warning', 'title' => __('landlord.Server CPU usage high'), 'time' => __('landlord.1 hr ago')])
             </div>
 
             <div class="dropdown-footer p-2">
-                <a href="#" class="btn btn-sm btn-light w-100">View all notifications</a>
+                <a href="#" class="btn btn-sm btn-light w-100">{{ __('landlord.View all notifications') }}</a>
             </div>
         </div>
     </div>
+
+    {{-- Language Switcher --}}
+    @include('landlord.layouts.partials.language-switcher')
 
     {{-- Theme Toggle --}}
     <button class="topbar-btn" id="themeToggle">
@@ -72,8 +75,8 @@
                 <hr class="dropdown-divider">
             </li>
 
-            <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
-            <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>{{ __('landlord.Profile') }}</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>{{ __('landlord.Settings') }}</a></li>
 
             <li>
                 <hr class="dropdown-divider">
@@ -83,7 +86,7 @@
                 <form method="POST" action="{{ route('landlord.logout') }}">
                     @csrf
                     <button type="submit" class="dropdown-item text-danger">
-                        <i class="bi bi-box-arrow-right me-2"></i>Logout
+                        <i class="bi bi-box-arrow-right me-2"></i>{{ __('landlord.Logout') }}
                     </button>
                 </form>
             </li>
