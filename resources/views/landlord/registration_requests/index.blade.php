@@ -77,6 +77,7 @@
                                     <td class="text-center">
                                         @if($request->status === \App\Domain\Landlord\Enums\RegistrationRequestStatusEnum::PENDING)
                                             <div class="d-flex justify-content-center gap-2">
+                                                @can('update', $request)
                                                 <form action="{{ route('landlord.registration-requests.approve', $request) }}"
                                                     method="POST">
                                                     @csrf
@@ -96,6 +97,7 @@
                                                         <i class="bi bi-x-circle"></i> Reject
                                                     </button>
                                                 </form>
+                                                @endcan
                                             </div>
                                         @else
                                             <span class="text-muted fst-italic">Processed</span>

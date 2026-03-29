@@ -20,6 +20,7 @@
             </a>
         </li>
 
+        @can('viewAny', \App\Models\User::class)
         <li class="nav-item">
             <a href="#usersMenu"
                 class="nav-link has-submenu {{ request()->routeIs('landlord.users.*') ? 'active' : '' }}"
@@ -33,20 +34,26 @@
                 <ul class="submenu">
                     <li><a href="{{ route('landlord.users.index') }}"
                             class="{{ request()->routeIs('landlord.users.index') ? 'active' : '' }}">List Users</a></li>
+                    @can('create', \App\Models\User::class)
                     <li><a href="{{ route('landlord.users.create') }}"
                             class="{{ request()->routeIs('landlord.users.create') ? 'active' : '' }}">Create User</a>
                     </li>
+                    @endcan
                 </ul>
             </div>
         </li>
+        @endcan
 
+        @can('viewAny', \App\Models\RegistrationRequest::class)
         <li class="nav-item">
             <a href="{{ route('landlord.registration-requests.index') }}" class="nav-link {{ request()->routeIs('landlord.registration-requests.*') ? 'active' : '' }}">
                 <i class="bi bi-person-lines-fill nav-icon"></i>
                 <span>Registration Requests</span>
             </a>
         </li>
+        @endcan
 
+        @can('viewAny', \App\Models\Tenant::class)
         <li class="nav-item">
             <a href="#tenantsMenu"
                 class="nav-link has-submenu {{ request()->routeIs('landlord.tenants.*') ? 'active' : '' }}"
@@ -61,14 +68,18 @@
                     <li><a href="{{ route('landlord.tenants.index') }}"
                             class="{{ request()->routeIs('landlord.tenants.index') ? 'active' : '' }}">List Tenants</a>
                     </li>
+                    @can('create', \App\Models\Tenant::class)
                     <li><a href="{{ route('landlord.tenants.create') }}"
                             class="{{ request()->routeIs('landlord.tenants.create') ? 'active' : '' }}">Create
                             Tenant</a></li>
+                    @endcan
                 </ul>
             </div>
         </li>
+        @endcan
 
 
+        @can('viewAny', \App\Models\Plan::class)
         <li class="nav-item">
             <a href="#plansMenu"
                 class="nav-link has-submenu {{ request()->routeIs('landlord.plans.*') ? 'active' : '' }}"
@@ -83,19 +94,24 @@
                     <li><a href="{{ route('landlord.plans.index') }}"
                             class="{{ request()->routeIs('landlord.plans.index') ? 'active' : '' }}">List Plans</a>
                     </li>
+                    @can('create', \App\Models\Plan::class)
                     <li><a href="{{ route('landlord.plans.create') }}"
                             class="{{ request()->routeIs('landlord.plans.create') ? 'active' : '' }}">Create
                             Plan</a></li>
+                    @endcan
                 </ul>
             </div>
         </li>
+        @endcan
 
+        @can('viewAny', \App\Models\Payment::class)
         <li class="nav-item">
             <a href="{{ route('landlord.payments.index') }}" class="nav-link {{ request()->routeIs('landlord.payments.*') ? 'active' : '' }}">
                 <i class="bi bi-wallet2 nav-icon"></i>
                 <span>Payments</span>
             </a>
         </li>
+        @endcan
     </ul>
 </nav>
 

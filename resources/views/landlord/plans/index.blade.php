@@ -6,9 +6,11 @@
 @section('page-subtitle', 'Manage subscription plans and tier limits')
 
 @section('page-actions')
+    @can('create', \App\Models\Plan::class)
     <a href="{{ route('landlord.plans.create') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Add Plan
     </a>
+    @endcan
 @endsection
 
 @section('content')
@@ -37,10 +39,13 @@
                                 <td>{{ $currentCurrency->getSymbol() }}{{ number_format($plan->price, 2) }}</td>
                                 <td><span class="badge bg-secondary text-capitalize">{{ $plan->billing_interval }}</span></td>
                                 <td class="text-end">
+                                    @can('update', $plan)
                                     <a href="{{ route('landlord.plans.edit', $plan->id) }}" class="btn btn-sm btn-warning">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
+                                    @endcan
 
+                                    @can('delete', $plan)
                                     <form action="{{ route('landlord.plans.destroy', $plan->id) }}" method="POST"
                                         class="d-inline"
                                         onsubmit="return confirm('Are you sure you want to delete this plan?')">
@@ -50,6 +55,7 @@
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
+                                    @endcan
                                 </td>
                             </tr>
                         @empty

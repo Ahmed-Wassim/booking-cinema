@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Tenant;
 
-use App\Models\User;
+use App\Models\Tenant\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
@@ -15,11 +15,11 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        $permissions = Permission::all();
+        $permissions = Permission::where('guard_name', 'tenant')->get();
 
         $tenantAdminRole = Role::firstOrCreate([
             'name' => 'admin',
-            'guard_name' => 'web',
+            'guard_name' => 'tenant',
         ]);
 
         $tenantAdminRole->syncPermissions($permissions);

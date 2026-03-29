@@ -7,8 +7,7 @@ use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
 use App\Traits\Shared\SearchTrait;
-
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,10 +20,10 @@ class User extends Authenticatable
     use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     protected $connection = 'tenant';
-
+    protected $guard_name = 'tenant';
 
     /**
      * The attributes that are mass assignable.
@@ -46,8 +45,6 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-
-
 
     /**
      * Get the attributes that should be cast.
