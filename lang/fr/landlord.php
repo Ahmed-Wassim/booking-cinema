@@ -49,4 +49,6 @@ return [
     "Unknown Plan" => "Plan inconnu",
     "None" => "Aucun",
     "No tenants found." => "Aucun locataire trouvé.",
+    "Language" => "Langue",
+    "Select Language" => "Choisir la langue",
 ];

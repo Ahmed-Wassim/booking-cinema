@@ -1,5 +1,10 @@
+@php
+    $locale = app()->getLocale();
+    $isRtl  = in_array($locale, ['ar']);
+    $dir    = $isRtl ? 'rtl' : 'ltr';
+@endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', $locale) }}" dir="{{ $dir }}">
 
 <head>
     <meta charset="utf-8">
@@ -7,16 +12,27 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('app.name', 'Dashboard'))</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    {{-- Bootstrap CSS (swap to RTL build when Arabic is active) --}}
+    @if ($isRtl)
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    @else
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    @endif
 
-    <link href="{{ asset('landlord/css/dashboard.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    {{-- Arabic: use a proper Arabic UI font --}}
+    @if ($isRtl)
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    @else
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    @endif
+
+    <link href="{{ asset('landlord/css/dashboard.css') }}?v={{ filemtime(public_path('landlord/css/dashboard.css')) }}" rel="stylesheet">
     @stack('styles')
 </head>
 
-<body>
+<body class="{{ $isRtl ? 'rtl' : '' }}">
 
     {{-- SIDEBAR --}}
     <div class="sidebar" id="sidebar">

@@ -49,4 +49,6 @@ return [
     "Unknown Plan" => "خطة غير معروفة",
     "None" => "لا يوجد",
     "No tenants found." => "لا يوجد مستأجرين.",
+    "Language" => "اللغة",
+    "Select Language" => "اختر اللغة",
 ];
