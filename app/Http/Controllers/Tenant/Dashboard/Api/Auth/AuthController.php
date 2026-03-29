@@ -26,6 +26,7 @@ class AuthController extends Controller
         return response()->json([
             'user' => new UserResource($user),
             'token' => $token,
+            'abilities' => $user->getAllPermissions()->pluck('name'),
         ], 201);
     }
 
@@ -44,6 +45,7 @@ class AuthController extends Controller
         return response()->json([
             'user' => new UserResource($user),
             'token' => $token,
+            'abilities' => $user->getAllPermissions()->pluck('name'),
         ]);
     }
 
