@@ -9,9 +9,11 @@
 @section('page-subtitle', 'Manage system tenants')
 
 @section('page-actions')
+    @can('create', \App\Models\Tenant::class)
     <a href="{{ route('landlord.tenants.create') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Add Tenant
     </a>
+    @endcan
 @endsection
 
 @section('content')
@@ -61,10 +63,13 @@
                                 </td>
                                 <td class="text-end">
 
+                                    @can('update', $tenant)
                                     <a href="{{ route('landlord.tenants.edit', $tenant->id) }}" class="btn btn-sm btn-warning">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
+                                    @endcan
 
+                                    @can('delete', $tenant)
                                     <form action="{{ route('landlord.tenants.destroy', $tenant->id) }}" method="POST"
                                         class="d-inline" onsubmit="return confirm('Are you sure?')">
                                         @csrf
@@ -73,6 +78,7 @@
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
+                                    @endcan
 
                                 </td>
                             </tr>

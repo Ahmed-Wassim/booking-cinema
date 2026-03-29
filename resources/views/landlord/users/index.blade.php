@@ -9,9 +9,11 @@
 @section('page-subtitle', 'Manage system users')
 
 @section('page-actions')
+    @can('create', \App\Models\User::class)
     <a href="{{ route('landlord.users.create') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Add User
     </a>
+    @endcan
 @endsection
 
 @section('content')
@@ -51,10 +53,13 @@
                                 <td>{{ $user->created_at->format('Y-m-d') }}</td>
                                 <td class="text-end">
 
+                                    @can('update', $user)
                                     <a href="{{ route('landlord.users.edit', $user->id) }}" class="btn btn-sm btn-warning">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
+                                    @endcan
 
+                                    @can('delete', $user)
                                     <form action="{{ route('landlord.users.destroy', $user->id) }}" method="POST"
                                         class="d-inline" onsubmit="return confirm('Are you sure?')">
                                         @csrf
@@ -63,6 +68,7 @@
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
+                                    @endcan
 
                                 </td>
                             </tr>
