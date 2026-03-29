@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use App\Policies\Tenant\BookingPolicy;
 use App\Domain\Tenant\Home\Booking\Enums\BookingStatus;
 use App\Traits\Shared\ActiveTrait;

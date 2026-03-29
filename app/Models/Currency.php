@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use App\Policies\CurrencyPolicy;
 use Illuminate\Database\Eloquent\Model;
 
