@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Policies\SubscriptionPolicy;
 use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
@@ -9,6 +10,7 @@ use App\Traits\Shared\SearchTrait;
 
 use Illuminate\Database\Eloquent\Model;
 
+#[UsePolicy(SubscriptionPolicy::class)]
 class Subscription extends Model
 {
     use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;

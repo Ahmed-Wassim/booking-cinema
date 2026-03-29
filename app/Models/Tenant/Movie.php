@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Policies\Tenant\MoviePolicy;
 use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Cache;
 
+#[UsePolicy(MoviePolicy::class)]
 class Movie extends Model
 {
     use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;

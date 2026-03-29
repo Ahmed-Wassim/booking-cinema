@@ -2,9 +2,11 @@
 
 namespace App\Models\Tenant;
 
+use App\Policies\Tenant\CustomerPolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[UsePolicy(CustomerPolicy::class)]
 class Customer extends Model
 {
     protected $fillable = [

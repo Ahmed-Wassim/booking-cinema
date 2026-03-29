@@ -17,6 +17,7 @@
         "paytabscom/laravel_paytabs": "^1.10",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-pdf": "^2.4",
+        "spatie/laravel-permission": "^6.21",
         "stancl/tenancy": "^3.9"
     },
     "require-dev": {
@@ -35,7 +36,11 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Domain/Shared/Helper/Helper.php",
+            "app/Domain/Shared/Repositories/Classes/AbstractRepository.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

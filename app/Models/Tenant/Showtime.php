@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Policies\Tenant\ShowtimePolicy;
 use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
@@ -10,6 +11,7 @@ use App\Traits\Shared\SearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[UsePolicy(ShowtimePolicy::class)]
 class Showtime extends Model
 {
     use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;

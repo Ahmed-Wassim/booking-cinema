@@ -2,9 +2,11 @@
 
 namespace App\Models\Tenant;
 
+use App\Policies\Tenant\TicketPolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[UsePolicy(TicketPolicy::class)]
 class Ticket extends Model
 {
     use HasFactory;

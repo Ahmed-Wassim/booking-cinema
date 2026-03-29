@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Policies\PlanPolicy;
 use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
 use App\Traits\Shared\SearchTrait;
 use Illuminate\Database\Eloquent\Model;
 
+#[UsePolicy(PlanPolicy::class)]
 class Plan extends Model
 {
     use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;

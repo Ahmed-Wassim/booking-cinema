@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Policies\UserPolicy;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
@@ -11,11 +12,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
+#[UsePolicy(UserPolicy::class)]
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use ActiveTrait, CreatedAtRangeTrait, FilterTrait,  HasApiTokens, HasFactory, Notifiable, SearchTrait;
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait,  HasApiTokens, HasFactory, HasRoles, Notifiable, SearchTrait;
 
     protected $connection = 'central';
 
