@@ -25,6 +25,7 @@ class StorePriceTierRequest extends FormRequest
             'hall_id'     => ['required', 'integer', 'exists:halls,id'],
             'name'        => ['required', 'string', 'max:255'],
             'price'       => ['required', 'numeric', 'min:0'],
+            'currency'    => ['required', 'string', 'exists:currencies,code'],
             'color'       => ['required', 'string', 'regex:/^#[a-fA-F0-9]{6}$/'],
             'description' => ['nullable', 'string'],
             'is_active'   => ['sometimes', 'boolean'],

@@ -34,11 +34,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
                                     <div class="fw-semibold">{{ $plan->name }}</div>
-                                    <div class="small text-muted text-truncate" style="max-width: 250px;">
-                                        {{ $plan->description }}
-                                    </div>
-                                </td>
-                                <td>${{ number_format($plan->price, 2) }}</td>
+                                <td>{{ $currentCurrency->getSymbol() }}{{ number_format($plan->price, 2) }}</td>
                                 <td><span class="badge bg-secondary text-capitalize">{{ $plan->billing_interval }}</span></td>
                                 <td class="text-end">
                                     <a href="{{ route('landlord.plans.edit', $plan->id) }}" class="btn btn-sm btn-warning">

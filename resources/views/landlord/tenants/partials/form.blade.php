@@ -43,7 +43,8 @@
             <option value="" disabled {{ !$currentPlanId ? 'selected' : '' }}>Select a Plan</option>
             @foreach($plans ?? [] as $plan)
                 <option value="{{ $plan->id }}" {{ old('plan_id', $currentPlanId) == $plan->id ? 'selected' : '' }}>
-                    {{ $plan->name }} - ${{ number_format($plan->price, 2) }}/{{ ucfirst($plan->billing_interval) }}
+                    {{ $plan->name }} -
+                    {{ $currentCurrency->getSymbol() }}{{ number_format($plan->price, 2) }}/{{ ucfirst($plan->billing_interval) }}
                 </option>
             @endforeach
         </select>

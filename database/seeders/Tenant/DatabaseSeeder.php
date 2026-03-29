@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Tenant;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -10,15 +10,12 @@ class DatabaseSeeder extends Seeder
     use WithoutModelEvents;
 
     /**
-     * Seed the central/landlord database.
+     * Seed the tenant's database.
      */
     public function run(): void
     {
         $this->call([
-            AdminSeeder::class,
             CurrencySeeder::class,
-            PlanSeeder::class,
-            SupplierSeeder::class,
         ]);
     }
 }

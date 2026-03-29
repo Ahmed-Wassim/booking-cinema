@@ -25,6 +25,7 @@ class StorePlanRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
+            'currency' => ['required', 'string', 'exists:currencies,code'],
             'billing_interval' => ['required', 'string', 'in:monthly,yearly'],
             'features' => ['nullable', 'array'],
             'features.*.feature_key' => ['required', 'string', \Illuminate\Validation\Rule::enum(\App\Domain\Landlord\Enums\FeatureKeyEnum::class)],
