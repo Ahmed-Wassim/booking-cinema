@@ -21,7 +21,7 @@ class HomeSeatService implements IHomeSeatService
     {
         return collect($this->seatRepository->listAllBy(
             conditions: ['showtime_id' => $showtimeId],
-            relations:  ['seat'],
+            relations:  ['seat.priceTier', 'showtime.priceTier'],
         ));
     }
 }

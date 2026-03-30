@@ -17,7 +17,8 @@ class ShowtimeSeatResource extends JsonResource
             'showtime_id'    => $this->showtime_id,
             'status'         => $this->status,         // available | reserved | booked
             'reserved_until' => $this->reserved_until,
-            'price'          => $this->price,
+            'price'          => $this->price ?? $this->seat?->priceTier?->price,
+            'currency'       => $this->currency ?? $this->seat?->priceTier?->currency,
             'row'            => $this->seat?->row,
             'number'         => $this->seat?->number,
             'pos_x'          => $this->seat?->pos_x,

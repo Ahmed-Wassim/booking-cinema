@@ -97,7 +97,7 @@ class OrderPaymentService implements IOrderPaymentService
             'tenant_name' => $booking->customer?->name ?? 'Guest',
             'tenant_email' => $booking->customer?->email ?? 'guest@example.com',
             'callback_url' => url('/api/checkout/callback'),
-            'return_url' => url("/api/booking/{$booking->id}/success"),
+            'return_url' => config('app.frontend_url') . "/booking/{$booking->id}/success",
         ];
     }
 
