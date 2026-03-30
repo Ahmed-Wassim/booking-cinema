@@ -71,6 +71,8 @@ class BookingService implements IBookingService
 
     public function findBooking(int $id): Booking
     {
+
+
         return $this->bookingRepository->firstOrFail(
             conditions: ['id' => $id],
             relations: [
