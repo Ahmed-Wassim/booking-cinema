@@ -31,7 +31,9 @@ class MovieService implements IMovieService
 
         return $this->movieRepository->create([
             'movie_id' => $landlordMovie->id,
-            'title' => $landlordMovie->title,
+            'title' => [
+                config('app.fallback_locale', 'en') => $landlordMovie->title,
+            ],
             'poster' => TmdbImageUrl::poster($landlordMovie->poster_path),
             'runtime' => $landlordMovie->runtime,
             'status' => 'active',

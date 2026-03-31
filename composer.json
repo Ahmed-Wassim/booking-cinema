@@ -20,6 +20,7 @@
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-pdf": "^2.4",
         "spatie/laravel-permission": "^6.21",
+        "spatie/laravel-translatable": "^6.13",
         "stancl/tenancy": "^3.9"
     },
     "require-dev": {

@@ -11,6 +11,7 @@ use App\Http\Controllers\Tenant\Home\ReserveSeatsController;
 use App\Http\Controllers\Tenant\Home\BookingController;
 use App\Http\Controllers\Tenant\Home\CheckoutPaymentController;
 use App\Http\Controllers\Tenant\Home\PaymentCallbackController;
+use App\Http\Middleware\Tenant\SetTenantLocale;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -20,6 +21,7 @@ Route::middleware([
     'api',
     InitializeTenancyByDomain::class ,
     PreventAccessFromCentralDomains::class ,
+    SetTenantLocale::class,
 ])->prefix('api')->group(function () {
     Route::get('/', [HomeController::class , 'index']);
     Route::get('/movies/{id}', [MovieDetailsController::class , 'show']);

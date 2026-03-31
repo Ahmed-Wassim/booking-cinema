@@ -8,8 +8,6 @@ use App\Domain\Tenant\Dashboard\Api\Branch\Services\Classes\BranchService;
 use App\Domain\Tenant\Dashboard\Api\Branch\Services\Interfaces\IBranchService;
 use App\Domain\Tenant\Dashboard\Api\Hall\Services\Classes\HallService;
 use App\Domain\Tenant\Dashboard\Api\Hall\Services\Interfaces\IHallService;
-use App\Domain\Tenant\Dashboard\Api\HallSection\Services\Classes\HallSectionService;
-use App\Domain\Tenant\Dashboard\Api\HallSection\Services\Interfaces\IHallSectionService;
 use App\Domain\Tenant\Dashboard\Api\Movie\Services\Classes\MovieService;
 use App\Domain\Tenant\Dashboard\Api\Movie\Services\Interfaces\IMovieService;
 use App\Domain\Tenant\Dashboard\Api\PriceTier\Services\Classes\PriceTierService;
@@ -29,7 +27,6 @@ class TenantServicesInjector extends AppServiceProvider
         $this->app->scoped(IBranchService::class, BranchService::class);
         $this->app->scoped(IHallService::class, HallService::class);
         $this->app->scoped(IPriceTierService::class, PriceTierService::class);
-        $this->app->scoped(IHallSectionService::class, HallSectionService::class);
         $this->app->scoped(ISeatService::class, SeatService::class);
         $this->app->scoped(IUserService::class, UserService::class);
         $this->app->scoped(IMovieService::class, MovieService::class);

@@ -17,17 +17,41 @@ class SetTenantLocale
      */
     public function handle(Request $request, Closure $next)
     {
-        $locale = $request->header('Accept-Language') ?? $request->header('X-Locale');
-        
-        if ($locale) {
-            $supportedLocales = ['en', 'ar', 'fr'];
-            $primaryLocale = substr($locale, 0, 2);
-            
-            if (in_array($primaryLocale, $supportedLocales)) {
-                App::setLocale($primaryLocale);
+        $supportedLocales = array_keys(config('laravellocalization.supportedLocales', []));
+        $fallbackLocale = config('app.fallback_locale', 'en');
+        $locale = $this->resolveLocaleFromRequest($request, $supportedLocales);
+
+        App::setLocale($locale ?: $fallbackLocale);
+
+        return $next($request);
+    }
+
+    private function resolveLocaleFromRequest(Request $request, array $supportedLocales): ?string
+    {
+        $explicitLocale = $request->header('X-Locale');
+
+        if ($explicitLocale) {
+            $normalizedLocale = strtolower(substr($explicitLocale, 0, 2));
+
+            if (in_array($normalizedLocale, $supportedLocales, true)) {
+                return $normalizedLocale;
             }
         }
 
-        return $next($request);
+        $acceptLanguage = $request->header('Accept-Language');
+
+        if (! $acceptLanguage) {
+            return null;
+        }
+
+        foreach (explode(',', $acceptLanguage) as $acceptedLocale) {
+            $normalizedLocale = strtolower(substr(trim($acceptedLocale), 0, 2));
+
+            if (in_array($normalizedLocale, $supportedLocales, true)) {
+                return $normalizedLocale;
+            }
+        }
+
+        return null;
     }
 }

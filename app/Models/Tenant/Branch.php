@@ -8,14 +8,20 @@ use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
 use App\Traits\Shared\SearchTrait;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Translatable\HasTranslations;
 
 #[UsePolicy(BranchPolicy::class)]
 class Branch extends Model
 {
-    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, HasTranslations, SearchTrait;
+
+    public array $translatable = [
+        'name',
+        'city',
+        'address',
+    ];
 
     protected $fillable = [
         'name',

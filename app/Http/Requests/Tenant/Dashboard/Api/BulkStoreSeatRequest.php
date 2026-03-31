@@ -24,7 +24,6 @@ class BulkStoreSeatRequest extends FormRequest
         return [
             'seats'                 => ['required', 'array', 'min:1'],
             'seats.*.hall_id'       => ['required', 'integer', 'exists:halls,id'],
-            'seats.*.section_id'    => ['nullable', 'integer', 'exists:hall_sections,id'],
             'seats.*.price_tier_id' => ['nullable', 'integer', 'exists:price_tiers,id'],
             'seats.*.row'           => ['required', 'string', 'max:10'],
             'seats.*.number'        => ['required', 'string', 'max:10'],
