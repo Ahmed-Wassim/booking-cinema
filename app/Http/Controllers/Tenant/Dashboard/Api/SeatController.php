@@ -9,6 +9,7 @@ use App\Http\Requests\Tenant\Dashboard\Api\BulkStoreSeatRequest;
 use App\Http\Requests\Tenant\Dashboard\Api\StoreSeatRequest;
 use App\Http\Requests\Tenant\Dashboard\Api\UpdateSeatRequest;
 use App\Http\Resources\Tenant\Dashboard\Api\SeatResource;
+use App\Models\Tenant\Hall;
 use Illuminate\Http\JsonResponse;
 
 class SeatController extends Controller
@@ -29,12 +30,12 @@ class SeatController extends Controller
         return new SeatResource($seat);
     }
 
-    public function bulkStore(BulkStoreSeatRequest $request): JsonResponse
+    public function bulkStore(BulkStoreSeatRequest $request, Hall $hall): JsonResponse
     {
         $seatsToInsert = \App\Domain\Tenant\Dashboard\Api\Seat\DTO\SeatsDTO::fromRequest($request->validated('seats'))->toArray();
-        $this->seatService->bulkStoreSeats($seatsToInsert);
+        $this->seatService->bulkStoreSeats($seatsToInsert, $hall->id);
 
-        return response()->json(['message' => 'Seats created successfully'], 201);
+        return response()->json(['message' => 'Seats synced successfully'], 200);
     }
 
     public function show(string $id): SeatResource

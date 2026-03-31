@@ -8,6 +8,7 @@ use App\Domain\Shared\DTO\DataTransferObject;
 
 class SeatDTO extends DataTransferObject
 {
+    public ?int $id;
     public ?int $hall_id;
     public ?int $price_tier_id;
     public ?string $row;
@@ -24,6 +25,7 @@ class SeatDTO extends DataTransferObject
     public static function fromRequest(array $data): self
     {
         return new self([
+            'id'            => isset($data['id']) ? (int) $data['id'] : null,
             'hall_id'       => isset($data['hall_id']) ? (int)$data['hall_id'] : null,
             'price_tier_id' => isset($data['price_tier_id']) ? (int)$data['price_tier_id'] : null,
             'row'           => $data['row'] ?? null,

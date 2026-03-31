@@ -6,6 +6,7 @@ use App\Http\Controllers\Tenant\Dashboard\Api\Auth\AuthController;
 use App\Http\Controllers\Tenant\Dashboard\Api\BranchController;
 use App\Http\Controllers\Tenant\Dashboard\Api\HallController;
 use App\Http\Controllers\Tenant\Dashboard\Api\MovieController;
+use App\Http\Controllers\Tenant\Dashboard\Api\PaymentController;
 use App\Http\Controllers\Tenant\Dashboard\Api\PriceTierController;
 use App\Http\Controllers\Tenant\Dashboard\Api\SeatController;
 use App\Http\Controllers\Tenant\Dashboard\Api\ShowtimeController;
@@ -34,8 +35,9 @@ Route::middleware([
         Route::apiResource('users', UserController::class);
         Route::apiResource('branches', BranchController::class);
         Route::apiResource('halls', HallController::class);
+        Route::post('halls/{hall}/seats/bulk', [SeatController::class, 'bulkStore']);
         Route::apiResource('price-tiers', PriceTierController::class);
-        Route::post('seats/bulk', [SeatController::class, 'bulkStore']);
+        Route::get('payments', [PaymentController::class, 'index']);
         Route::apiResource('seats', SeatController::class);
 
         // Movie & Showtime Routes

@@ -22,19 +22,19 @@ class BulkStoreSeatRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'seats'                 => ['required', 'array', 'min:1'],
-            'seats.*.hall_id'       => ['required', 'integer', 'exists:halls,id'],
+            'seats' => ['required', 'array', 'min:1'],
+            'seats.*.id' => ['nullable', 'integer', 'exists:seats,id'],
             'seats.*.price_tier_id' => ['nullable', 'integer', 'exists:price_tiers,id'],
-            'seats.*.row'           => ['required', 'string', 'max:10'],
-            'seats.*.number'        => ['required', 'string', 'max:10'],
-            'seats.*.pos_x'         => ['required', 'numeric'],
-            'seats.*.pos_y'         => ['required', 'numeric'],
-            'seats.*.rotation'      => ['sometimes', 'numeric'],
-            'seats.*.width'         => ['sometimes', 'numeric'],
-            'seats.*.height'        => ['sometimes', 'numeric'],
-            'seats.*.shape'         => ['sometimes', 'string', \Illuminate\Validation\Rule::in(['rect', 'circle', 'sofa', 'wheelchair'])],
-            'seats.*.sort_order'    => ['sometimes', 'integer'],
-            'seats.*.is_active'     => ['sometimes', 'boolean'],
+            'seats.*.row' => ['required', 'string', 'max:10'],
+            'seats.*.number' => ['required', 'string', 'max:10'],
+            'seats.*.pos_x' => ['required', 'numeric'],
+            'seats.*.pos_y' => ['required', 'numeric'],
+            'seats.*.rotation' => ['sometimes', 'numeric'],
+            'seats.*.width' => ['sometimes', 'numeric'],
+            'seats.*.height' => ['sometimes', 'numeric'],
+            'seats.*.shape' => ['sometimes', 'string', \Illuminate\Validation\Rule::in(['rect', 'square', 'circle', 'sofa', 'wheelchair'])],
+            'seats.*.sort_order' => ['sometimes', 'integer'],
+            'seats.*.is_active' => ['sometimes', 'boolean'],
         ];
     }
 }
