@@ -25,7 +25,6 @@ Route::middleware([
 ])->prefix('api')->group(function () {
     Route::get('/', [HomeController::class , 'index']);
     Route::get('/movies/{id}', [MovieDetailsController::class , 'show']);
-    Route::get('/showtimes/{id}/seats', [SeatSelectionController::class , 'show']);
     Route::get('/booking/{id}/success', [BookingConfirmationController::class , 'show']);
     Route::get('/showtimes/{id}/seats', [SeatSelectionController::class , 'seats']);
     Route::post('/reserve-seats', [ReserveSeatsController::class , 'store']);

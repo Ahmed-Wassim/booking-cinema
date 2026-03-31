@@ -18,14 +18,10 @@ class SeatsDTO
 
     public static function fromRequest(array $data): self
     {
-        $now = now()->toDateTimeString();
         $mappedSeats = [];
 
         foreach ($data as $seatData) {
-            $mapped = (array) SeatDTO::fromRequest($seatData);
-            $mapped['created_at'] = $now;
-            $mapped['updated_at'] = $now;
-            $mappedSeats[] = $mapped;
+            $mappedSeats[] = (array) SeatDTO::fromRequest($seatData);
         }
 
         return new self($mappedSeats);

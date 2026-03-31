@@ -12,7 +12,7 @@ interface ISeatService
 
     public function storeSeat(array $data): Model;
 
-    public function bulkStoreSeats(array $data): bool;
+    public function bulkStoreSeats(array $data, int $hallId): bool;
 
     public function editSeat(string|int $id): Model;
 
