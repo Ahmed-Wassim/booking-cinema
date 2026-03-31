@@ -24,6 +24,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\SetLandlordLocale::class,
         ]);
+        $middleware->redirectGuestsTo(function ($request) {
+            if ($request->is('landlord') || $request->is('landlord/*')) {
+                return route('landlord.login');
+            }
+
+            return route('landlord.login');
+        });
 
         $middleware->validateCsrfTokens(except: [
             'landlord/payment/callback',
