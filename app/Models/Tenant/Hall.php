@@ -8,15 +8,19 @@ use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
 use App\Traits\Shared\SearchTrait;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Translatable\HasTranslations;
 
 #[UsePolicy(HallPolicy::class)]
 class Hall extends Model
 {
-    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, HasTranslations, SearchTrait;
+
+    public array $translatable = [
+        'name',
+    ];
 
     protected $fillable = [
         'branch_id',
@@ -40,11 +44,6 @@ class Hall extends Model
     public function priceTiers(): HasMany
     {
         return $this->hasMany(PriceTier::class);
-    }
-
-    public function sections(): HasMany
-    {
-        return $this->hasMany(HallSection::class);
     }
 
     public function seats(): HasMany

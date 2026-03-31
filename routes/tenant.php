@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Http\Controllers\Tenant\Dashboard\Api\Auth\AuthController;
 use App\Http\Controllers\Tenant\Dashboard\Api\BranchController;
 use App\Http\Controllers\Tenant\Dashboard\Api\HallController;
-use App\Http\Controllers\Tenant\Dashboard\Api\HallSectionController;
 use App\Http\Controllers\Tenant\Dashboard\Api\MovieController;
 use App\Http\Controllers\Tenant\Dashboard\Api\PriceTierController;
 use App\Http\Controllers\Tenant\Dashboard\Api\SeatController;
@@ -36,7 +35,6 @@ Route::middleware([
         Route::apiResource('branches', BranchController::class);
         Route::apiResource('halls', HallController::class);
         Route::apiResource('price-tiers', PriceTierController::class);
-        Route::apiResource('hall-sections', HallSectionController::class);
         Route::post('seats/bulk', [SeatController::class, 'bulkStore']);
         Route::apiResource('seats', SeatController::class);
 

@@ -17,7 +17,6 @@ class SeatResource extends JsonResource
         return [
             'id' => $this->id,
             'hall_id' => $this->hall_id,
-            'section_id' => $this->section_id,
             'price_tier' => $this->whenLoaded('priceTier') ? new PriceTierResource($this->priceTier) : null,
             'row' => $this->row,
             'number' => $this->number,

@@ -19,7 +19,6 @@ class Seat extends Model
 
     protected $fillable = [
         'hall_id',
-        'section_id',
         'price_tier_id',
         'row',
         'number',
@@ -46,11 +45,6 @@ class Seat extends Model
     public function hall(): BelongsTo
     {
         return $this->belongsTo(Hall::class);
-    }
-
-    public function section(): BelongsTo
-    {
-        return $this->belongsTo(HallSection::class, 'section_id');
     }
 
     public function priceTier(): BelongsTo

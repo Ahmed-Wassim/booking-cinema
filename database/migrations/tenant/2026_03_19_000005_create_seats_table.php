@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('seats', function (Blueprint $table) {
             $table->id();
             $table->foreignId('hall_id')->constrained('halls')->cascadeOnDelete();
-            $table->foreignId('section_id')->nullable()->constrained('hall_sections')->nullOnDelete();
             $table->foreignId('price_tier_id')->nullable()->constrained('price_tiers')->nullOnDelete();
             $table->string('row', 10);
             $table->string('number', 10);

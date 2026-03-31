@@ -8,8 +8,6 @@ use App\Domain\Tenant\Dashboard\Api\Branch\Repositories\Classes\BranchRepository
 use App\Domain\Tenant\Dashboard\Api\Branch\Repositories\Interfaces\IBranchRepository;
 use App\Domain\Tenant\Dashboard\Api\Hall\Repositories\Classes\HallRepository;
 use App\Domain\Tenant\Dashboard\Api\Hall\Repositories\Interfaces\IHallRepository;
-use App\Domain\Tenant\Dashboard\Api\HallSection\Repositories\Classes\HallSectionRepository;
-use App\Domain\Tenant\Dashboard\Api\HallSection\Repositories\Interfaces\IHallSectionRepository;
 use App\Domain\Tenant\Dashboard\Api\PriceTier\Repositories\Classes\PriceTierRepository;
 use App\Domain\Tenant\Dashboard\Api\PriceTier\Repositories\Interfaces\IPriceTierRepository;
 use App\Domain\Tenant\Dashboard\Api\Seat\Repositories\Classes\SeatRepository;
@@ -18,10 +16,9 @@ use App\Domain\Tenant\Dashboard\Api\User\Repositories\Classes\UserRepository;
 use App\Domain\Tenant\Dashboard\Api\User\Repositories\Interfaces\IUserRepository;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Hall;
-use App\Models\Tenant\HallSection;
+use App\Models\Tenant\Movie;
 use App\Models\Tenant\PriceTier;
 use App\Models\Tenant\Seat;
-use App\Models\Tenant\Movie;
 use App\Models\Tenant\Showtime;
 use App\Domain\Tenant\Dashboard\Api\Movie\Repositories\Classes\MovieRepository;
 use App\Domain\Tenant\Dashboard\Api\Movie\Repositories\Interfaces\IMovieRepository;
@@ -46,10 +43,6 @@ class TenantRepositoriesInjector extends AppServiceProvider
 
         $this->app->scoped(IPriceTierRepository::class, function () {
             return new PriceTierRepository(new PriceTier());
-        });
-
-        $this->app->scoped(IHallSectionRepository::class, function () {
-            return new HallSectionRepository(new HallSection());
         });
 
         $this->app->scoped(ISeatRepository::class, function () {
