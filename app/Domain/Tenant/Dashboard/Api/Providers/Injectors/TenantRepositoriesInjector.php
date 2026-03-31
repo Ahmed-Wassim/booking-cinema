@@ -10,6 +10,8 @@ use App\Domain\Tenant\Dashboard\Api\Hall\Repositories\Classes\HallRepository;
 use App\Domain\Tenant\Dashboard\Api\Hall\Repositories\Interfaces\IHallRepository;
 use App\Domain\Tenant\Dashboard\Api\PriceTier\Repositories\Classes\PriceTierRepository;
 use App\Domain\Tenant\Dashboard\Api\PriceTier\Repositories\Interfaces\IPriceTierRepository;
+use App\Domain\Tenant\Dashboard\Api\Payment\Repositories\Classes\PaymentRepository;
+use App\Domain\Tenant\Dashboard\Api\Payment\Repositories\Interfaces\IPaymentRepository;
 use App\Domain\Tenant\Dashboard\Api\Seat\Repositories\Classes\SeatRepository;
 use App\Domain\Tenant\Dashboard\Api\Seat\Repositories\Interfaces\ISeatRepository;
 use App\Domain\Tenant\Dashboard\Api\User\Repositories\Classes\UserRepository;
@@ -17,6 +19,7 @@ use App\Domain\Tenant\Dashboard\Api\User\Repositories\Interfaces\IUserRepository
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Hall;
 use App\Models\Tenant\Movie;
+use App\Models\Tenant\Payment;
 use App\Models\Tenant\PriceTier;
 use App\Models\Tenant\Seat;
 use App\Models\Tenant\Showtime;
@@ -55,6 +58,10 @@ class TenantRepositoriesInjector extends AppServiceProvider
 
         $this->app->scoped(IMovieRepository::class, function () {
             return new MovieRepository(new Movie());
+        });
+
+        $this->app->scoped(IPaymentRepository::class, function () {
+            return new PaymentRepository(new Payment());
         });
 
         $this->app->scoped(IShowtimeRepository::class, function () {
