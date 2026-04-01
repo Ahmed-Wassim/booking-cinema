@@ -16,6 +16,8 @@ class BookingDTO extends DataTransferObject
 
     public CustomerDTO $customer;
 
+    public ?string $coupon_code;
+
     public static function fromRequest(array $data): self
     {
         return new self([
@@ -23,6 +25,7 @@ class BookingDTO extends DataTransferObject
             'seat_ids' => (array) $data['seat_ids'],
             'user_id' => isset($data['user_id']) ? (int) $data['user_id'] : null,
             'customer' => CustomerDTO::fromRequest($data['customer']),
+            'coupon_code' => $data['coupon_code'] ?? null,
         ]);
     }
 }

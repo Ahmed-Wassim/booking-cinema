@@ -32,6 +32,8 @@ class BookingService implements IBookingService
                 ->through([
                     CheckSeatAvailability::class,
                     ReserveSeats::class,
+                    \App\Domain\Tenant\Home\Booking\Pipes\ApplyShowtimeOffer::class,
+                    \App\Domain\Tenant\Home\Booking\Pipes\ApplyDiscount::class,
                     ResolveCustomer::class,
                     CreateBookingRecord::class,
                 ])

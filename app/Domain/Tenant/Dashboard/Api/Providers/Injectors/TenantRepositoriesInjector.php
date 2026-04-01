@@ -40,6 +40,10 @@ class TenantRepositoriesInjector extends AppServiceProvider
             return new BranchRepository(new Branch());
         });
 
+        $this->app->scoped(\App\Domain\Tenant\Dashboard\Api\Discount\Repositories\Interfaces\IDiscountRepository::class, function () {
+            return new \App\Domain\Tenant\Dashboard\Api\Discount\Repositories\Classes\DiscountRepository(new \App\Models\Tenant\Discount());
+        });
+
         $this->app->scoped(IHallRepository::class, function () {
             return new HallRepository(new Hall());
         });

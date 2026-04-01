@@ -20,6 +20,7 @@ class CreateBookingRequest extends FormRequest
             'showtime_id' => ['required', 'integer', 'exists:showtimes,id'],
             'seat_ids' => ['required', 'array',   'min:1'],
             'seat_ids.*' => ['integer',  'exists:showtime_seats,id'],
+            'coupon_code' => ['nullable', 'string', 'max:50'],
             'user_id' => ['nullable', 'integer', 'exists:users,id'],
             'customer' => ['required', 'array'],
             'customer.name' => ['required', 'string', 'max:255'],

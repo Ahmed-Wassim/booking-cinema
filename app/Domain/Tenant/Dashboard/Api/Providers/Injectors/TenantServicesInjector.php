@@ -27,6 +27,7 @@ class TenantServicesInjector extends AppServiceProvider
     public function boot(): void
     {
         $this->app->scoped(IBranchService::class, BranchService::class);
+        $this->app->scoped(\App\Domain\Tenant\Dashboard\Api\Discount\Services\Interfaces\IDiscountService::class, \App\Domain\Tenant\Dashboard\Api\Discount\Services\Classes\DiscountService::class);
         $this->app->scoped(IHallService::class, HallService::class);
         $this->app->scoped(IPriceTierService::class, PriceTierService::class);
         $this->app->scoped(ISeatService::class, SeatService::class);

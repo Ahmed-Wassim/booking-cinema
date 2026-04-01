@@ -24,12 +24,7 @@ class SeatSelectionController extends Controller
         $firstSeat = $seats->first();
 
         return ShowtimeSeatResource::collection($seats)->additional([
-            'price' => $firstSeat?->seat?->priceTier?->price
-                ?? $firstSeat?->showtime?->priceTier?->price
-                ?? $firstSeat?->price,
-            'currency' => $firstSeat?->seat?->priceTier?->currency
-                ?? $firstSeat?->showtime?->priceTier?->currency
-                ?? $firstSeat?->currency,
+            'offer_percentage' => $firstSeat?->showtime?->offer_percentage,
         ]);
     }
 
@@ -43,12 +38,7 @@ class SeatSelectionController extends Controller
         $firstSeat = $seats->first();
 
         return ShowtimeSeatResource::collection($seats)->additional([
-            'price' => $firstSeat?->seat?->priceTier?->price
-                ?? $firstSeat?->showtime?->priceTier?->price
-                ?? $firstSeat?->price,
-            'currency' => $firstSeat?->seat?->priceTier?->currency
-                ?? $firstSeat?->showtime?->priceTier?->currency
-                ?? $firstSeat?->currency,
+            'offer_percentage' => $firstSeat?->showtime?->offer_percentage,
         ]);
     }
 }

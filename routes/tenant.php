@@ -11,6 +11,8 @@ use App\Http\Controllers\Tenant\Dashboard\Api\PriceTierController;
 use App\Http\Controllers\Tenant\Dashboard\Api\SeatController;
 use App\Http\Controllers\Tenant\Dashboard\Api\ShowtimeController;
 use App\Http\Controllers\Tenant\Dashboard\Api\UserController;
+use App\Http\Controllers\Tenant\Dashboard\Api\DiscountController;
+use App\Http\Controllers\Tenant\Dashboard\Api\ShowtimeOfferController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\Tenant\SetTenantLocale;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -40,10 +42,16 @@ Route::middleware([
         Route::get('payments', [PaymentController::class, 'index']);
         Route::apiResource('seats', SeatController::class);
 
+
         // Movie & Showtime Routes
         Route::get('movies/landlord', [MovieController::class, 'landlordMovies']);
         Route::apiResource('movies', MovieController::class);
         Route::apiResource('showtimes', ShowtimeController::class);
+        
+        Route::patch('showtimes/{id}/offer',  [ShowtimeOfferController::class, 'update']);
+        Route::delete('showtimes/{id}/offer', [ShowtimeOfferController::class, 'destroy']);
+        
+        Route::apiResource('discounts', DiscountController::class);
         
         // Ticket validation (Staff)
         Route::post('/tickets/validate', [\App\Http\Controllers\Tenant\Dashboard\Api\TicketController::class, 'validate'])

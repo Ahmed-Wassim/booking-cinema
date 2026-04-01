@@ -22,13 +22,15 @@ class Showtime extends Model
         'hall_id',
         'start_time',
         'end_time',
+        'offer_percentage',
         'price_tier_id',
         'status',
     ];
 
     protected $casts = [
-        'start_time' => 'datetime',
-        'end_time' => 'datetime',
+        'start_time'       => 'datetime',
+        'end_time'         => 'datetime',
+        'offer_percentage' => 'decimal:2',
     ];
 
     public function movie(): BelongsTo
