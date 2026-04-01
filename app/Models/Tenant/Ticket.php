@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use App\Policies\Tenant\TicketPolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 #[UsePolicy(TicketPolicy::class)]
 class Ticket extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = [
         'booking_id',
@@ -34,5 +36,13 @@ class Ticket extends Model
     public function getFullTicketInfoAttribute()
     {
         return "Ticket #{$this->ticket_number} - Seat {$this->seat_label}";
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['used_at', 'ticket_number'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 }

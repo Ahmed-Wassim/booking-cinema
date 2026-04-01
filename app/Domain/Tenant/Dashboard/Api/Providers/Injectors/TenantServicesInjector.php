@@ -20,6 +20,8 @@ use App\Domain\Tenant\Dashboard\Api\Showtime\Services\Classes\ShowtimeService;
 use App\Domain\Tenant\Dashboard\Api\Showtime\Services\Interfaces\IShowtimeService;
 use App\Domain\Tenant\Dashboard\Api\User\Services\Classes\UserService;
 use App\Domain\Tenant\Dashboard\Api\User\Services\Interfaces\IUserService;
+use App\Domain\Tenant\Dashboard\Api\ActivityLog\Services\Classes\ActivityLogService;
+use App\Domain\Tenant\Dashboard\Api\ActivityLog\Services\Interfaces\IActivityLogService;
 use App\Providers\AppServiceProvider;
 
 class TenantServicesInjector extends AppServiceProvider
@@ -35,5 +37,6 @@ class TenantServicesInjector extends AppServiceProvider
         $this->app->scoped(IMovieService::class, MovieService::class);
         $this->app->scoped(IPaymentService::class, PaymentService::class);
         $this->app->scoped(IShowtimeService::class, ShowtimeService::class);
+        $this->app->scoped(IActivityLogService::class, ActivityLogService::class);
     }
 }

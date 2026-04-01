@@ -13,11 +13,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Translatable\HasTranslations;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 #[UsePolicy(MoviePolicy::class)]
 class Movie extends Model
 {
-    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, HasTranslations, SearchTrait;
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, HasTranslations, SearchTrait, LogsActivity;
 
     public array $translatable = [
         'title',
@@ -42,5 +44,13 @@ class Movie extends Model
 
             return LandlordMovie::find($this->movie_id);
         });
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['title', 'status', 'runtime'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 }

@@ -11,11 +11,13 @@ use App\Traits\Shared\SearchTrait;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 #[UsePolicy(SeatPolicy::class)]
 class Seat extends Model
 {
-    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait, LogsActivity;
 
     protected $fillable = [
         'hall_id',
@@ -55,5 +57,13 @@ class Seat extends Model
     public function showtimeSeats()
     {
         return $this->hasMany(ShowtimeSeat::class);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['row', 'number', 'is_active', 'price_tier_id'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 }
