@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Domain\Tenant\Home\Booking\Services\Classes;
 
 use App\Domain\Tenant\Home\Booking\Enums\BookingStatus;
+use App\Domain\Tenant\Home\Booking\Pipes\ApplyDiscount;
+use App\Domain\Tenant\Home\Booking\Pipes\ApplyShowtimeOffer;
 use App\Domain\Tenant\Home\Booking\Pipes\CheckSeatAvailability;
 use App\Domain\Tenant\Home\Booking\Pipes\CreateBookingRecord;
 use App\Domain\Tenant\Home\Booking\Pipes\ReserveSeats;
@@ -32,8 +34,8 @@ class BookingService implements IBookingService
                 ->through([
                     CheckSeatAvailability::class,
                     ReserveSeats::class,
-                    \App\Domain\Tenant\Home\Booking\Pipes\ApplyShowtimeOffer::class,
-                    \App\Domain\Tenant\Home\Booking\Pipes\ApplyDiscount::class,
+                    ApplyShowtimeOffer::class,
+                    ApplyDiscount::class,
                     ResolveCustomer::class,
                     CreateBookingRecord::class,
                 ])
