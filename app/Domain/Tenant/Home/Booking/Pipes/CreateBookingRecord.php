@@ -21,13 +21,16 @@ class CreateBookingRecord
         $userId     = $data['user_id'] ?? null;
 
         $booking = $this->bookingRepository->create([
-            'customer_id' => $customer->id,
-            'user_id'     => $userId,
-            'showtime_id' => $showtimeId,
-            'total_price' => $totalPrice,
-            'currency'    => $this->getRequestCurrency(),
-            'status'      => BookingStatus::PENDING->value,
-            'expires_at'  => now()->addMinutes(10),
+            'customer_id'     => $customer->id,
+            'user_id'         => $userId,
+            'showtime_id'     => $showtimeId,
+            'subtotal'        => $data['subtotal'],
+            'discount_id'     => $data['discount_id'] ?? null,
+            'discount_amount' => $data['discount_amount'] ?? 0,
+            'total_price'     => $totalPrice, // this will be the updated total_price
+            'currency'        => $this->getRequestCurrency(),
+            'status'          => BookingStatus::PENDING->value,
+            'expires_at'      => now()->addMinutes(10),
         ]);
 
         $bookingSeatsData = $seats->map(fn ($seat) => [

@@ -13,9 +13,10 @@ class PublicShowtimeResource extends JsonResource
     {
         return [
             'id'            => $this->id,
-            'start_time'    => $this->start_time,
-            'end_time'      => $this->end_time,
-            'status'        => $this->status,
+            'start_time'       => $this->start_time,
+            'end_time'         => $this->end_time,
+            'offer_percentage' => $this->offer_percentage,
+            'status'           => $this->status,
             'price_tier_id' => $this->price_tier_id,
             'hall'          => [
                 'id'     => $this->hall?->id,

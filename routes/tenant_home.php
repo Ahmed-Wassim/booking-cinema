@@ -11,6 +11,7 @@ use App\Http\Controllers\Tenant\Home\ReserveSeatsController;
 use App\Http\Controllers\Tenant\Home\BookingController;
 use App\Http\Controllers\Tenant\Home\CheckoutPaymentController;
 use App\Http\Controllers\Tenant\Home\PaymentCallbackController;
+use App\Http\Controllers\Tenant\Home\CouponController;
 use App\Http\Middleware\Tenant\SetTenantLocale;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -31,4 +32,5 @@ Route::middleware([
     Route::post('/bookings', [BookingController::class , 'store']);
     Route::post('/checkout/initiate', [CheckoutPaymentController::class , 'store']);
     Route::post('/checkout/callback', [PaymentCallbackController::class , 'handle']);
+    Route::post('/coupons/validate', [CouponController::class, 'validate']);
 });

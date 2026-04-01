@@ -23,6 +23,9 @@ class Booking extends Model
         'customer_id',
         'user_id',
         'showtime_id',
+        'discount_id',
+        'subtotal',
+        'discount_amount',
         'total_price',
         'currency',
         'status',
@@ -30,7 +33,9 @@ class Booking extends Model
     ];
 
     protected $casts = [
-        'total_price' => 'decimal:2',
+        'subtotal'        => 'decimal:2',
+        'discount_amount' => 'decimal:2',
+        'total_price'     => 'decimal:2',
         'currency' => 'string',
         'expires_at' => 'datetime',
         'status' => BookingStatus::class,
@@ -64,5 +69,10 @@ class Booking extends Model
     public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class);
+    }
+
+    public function discount(): BelongsTo
+    {
+        return $this->belongsTo(Discount::class);
     }
 }
