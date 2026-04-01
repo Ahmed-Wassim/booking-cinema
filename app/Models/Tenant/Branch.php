@@ -11,11 +11,13 @@ use App\Traits\Shared\SearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Translatable\HasTranslations;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 #[UsePolicy(BranchPolicy::class)]
 class Branch extends Model
 {
-    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, HasTranslations, SearchTrait;
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, HasTranslations, SearchTrait, LogsActivity;
 
     public array $translatable = [
         'name',
@@ -38,5 +40,13 @@ class Branch extends Model
     public function halls(): HasMany
     {
         return $this->hasMany(Hall::class);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name', 'city', 'address', 'timezone', 'is_active'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 }

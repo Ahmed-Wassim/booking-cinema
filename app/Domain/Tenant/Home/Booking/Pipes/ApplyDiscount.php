@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Tenant\Home\Booking\Pipes;
 
+use App\Domain\Tenant\Shared\Services\ActivityLogger;
 use App\Models\Tenant\Discount;
 use Closure;
 use Exception;
@@ -21,9 +22,21 @@ class ApplyDiscount
         // Lock the row and check max_uses atomically
         $discount = Discount::where('code', $code)
             ->lockForUpdate()
-            ->firstOrFail();
+            ->first();
+
+        if (! $discount) {
+            ActivityLogger::log('coupon_failed', null, [
+                'code' => $code,
+                'reason' => 'not_found',
+            ]);
+            throw new Exception("Coupon '{$code}' is invalid or expired.");
+        }
 
         if (! $discount->isValid()) {
+            ActivityLogger::log('coupon_failed', $discount, [
+                'code' => $code,
+                'reason' => 'invalid_or_expired',
+            ]);
             throw new Exception("Coupon '{$code}' is invalid or expired.");
         }
 
@@ -37,6 +50,10 @@ class ApplyDiscount
             ->increment('used_count');
 
         if ($updated === 0 && $discount->max_uses !== null) {
+            ActivityLogger::log('coupon_failed', $discount, [
+                'code' => $code,
+                'reason' => 'max_uses_reached',
+            ]);
             throw new Exception("Coupon '{$code}' has reached its usage limit.");
         }
 
@@ -50,6 +67,12 @@ class ApplyDiscount
         $data['discount_id']     = $discount->id;
         $data['discount_amount'] = round(((float) ($data['discount_amount'] ?? 0)) + $couponAmount, 2);
         $data['total_price']     = round($currentTotal - $couponAmount, 2);
+
+        ActivityLogger::log('coupon_applied', $discount, [
+            'code' => $code,
+            'discount_amount' => $couponAmount,
+            'subtotal_before_discount' => $currentTotal,
+        ]);
 
         return $next($data);
     }

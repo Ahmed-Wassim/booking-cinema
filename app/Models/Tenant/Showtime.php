@@ -11,11 +11,13 @@ use App\Traits\Shared\SearchTrait;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 #[UsePolicy(ShowtimePolicy::class)]
 class Showtime extends Model
 {
-    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait, LogsActivity;
 
     protected $fillable = [
         'movie_id',
@@ -51,5 +53,13 @@ class Showtime extends Model
     public function showtimeSeats()
     {
         return $this->hasMany(ShowtimeSeat::class);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['start_time', 'end_time', 'offer_percentage', 'status'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 }

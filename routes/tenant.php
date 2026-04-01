@@ -2,19 +2,21 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Tenant\Dashboard\ActivityLogController;
 use App\Http\Controllers\Tenant\Dashboard\Api\Auth\AuthController;
 use App\Http\Controllers\Tenant\Dashboard\Api\BranchController;
+use App\Http\Controllers\Tenant\Dashboard\Api\DiscountController;
 use App\Http\Controllers\Tenant\Dashboard\Api\HallController;
 use App\Http\Controllers\Tenant\Dashboard\Api\MovieController;
 use App\Http\Controllers\Tenant\Dashboard\Api\PaymentController;
 use App\Http\Controllers\Tenant\Dashboard\Api\PriceTierController;
 use App\Http\Controllers\Tenant\Dashboard\Api\SeatController;
 use App\Http\Controllers\Tenant\Dashboard\Api\ShowtimeController;
-use App\Http\Controllers\Tenant\Dashboard\Api\UserController;
-use App\Http\Controllers\Tenant\Dashboard\Api\DiscountController;
 use App\Http\Controllers\Tenant\Dashboard\Api\ShowtimeOfferController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Tenant\Dashboard\Api\TicketController;
+use App\Http\Controllers\Tenant\Dashboard\Api\UserController;
 use App\Http\Middleware\Tenant\SetTenantLocale;
+use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -42,19 +44,21 @@ Route::middleware([
         Route::get('payments', [PaymentController::class, 'index']);
         Route::apiResource('seats', SeatController::class);
 
-
         // Movie & Showtime Routes
         Route::get('movies/landlord', [MovieController::class, 'landlordMovies']);
         Route::apiResource('movies', MovieController::class);
         Route::apiResource('showtimes', ShowtimeController::class);
-        
-        Route::patch('showtimes/{id}/offer',  [ShowtimeOfferController::class, 'update']);
+
+        Route::patch('showtimes/{id}/offer', [ShowtimeOfferController::class, 'update']);
         Route::delete('showtimes/{id}/offer', [ShowtimeOfferController::class, 'destroy']);
-        
+
         Route::apiResource('discounts', DiscountController::class);
-        
+
         // Ticket validation (Staff)
-        Route::post('/tickets/validate', [\App\Http\Controllers\Tenant\Dashboard\Api\TicketController::class, 'validate'])
+        Route::post('/tickets/validate', [TicketController::class, 'validate'])
             ->name('dashboard.tickets.validate');
+
+        // Activity Logs
+        Route::get('activity-logs', [ActivityLogController::class, 'index']);
     });
 });
