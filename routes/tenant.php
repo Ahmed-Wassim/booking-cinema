@@ -17,6 +17,7 @@ use App\Http\Controllers\Tenant\Dashboard\Api\ShowtimeOfferController;
 use App\Http\Controllers\Tenant\Dashboard\Api\TicketController;
 use App\Http\Controllers\Tenant\Dashboard\Api\UserController;
 use App\Http\Middleware\Tenant\SetTenantLocale;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -38,7 +39,7 @@ Route::middleware([
         Route::post('/auth/logout', [AuthController::class, 'logout']);
 
         // Protected: returns authenticated user + tenant context (usable by Go microservice via JWT)
-        Route::get('/me', function (): \Illuminate\Http\JsonResponse {
+        Route::get('/me', function (): JsonResponse {
             /** @var \App\Models\Tenant\User $user */
             $user = auth('tenant')->user();
             return response()->json([
