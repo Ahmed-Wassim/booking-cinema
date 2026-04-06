@@ -11,6 +11,7 @@ use App\Http\Resources\Tenant\Dashboard\Api\UserResource;
 use App\Models\Tenant\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\JWTGuard;
 
 class AuthController extends Controller
 {
@@ -20,12 +21,15 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $user = $this->userService->storeUser((array) UserDTO::fromRequest($request->validated()));
-        $token = $user->createToken($request->device_name ?? 'tenant_token')->plainTextToken;
+        $user  = $this->userService->storeUser((array) UserDTO::fromRequest($request->validated()));
+        /** @var JWTGuard $guard */
+        $guard = auth('tenant');
+        $token = $guard->login($user);
 
         return response()->json([
-            'user' => new UserResource($user),
-            'token' => $token,
+            'user'      => new UserResource($user),
+            'token'     => $token,
+            'tenant_id' => tenant('id'),
             'abilities' => $user->getAllPermissions()->pluck('name'),
         ], 201);
     }
@@ -40,18 +44,23 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $token = $user->createToken($request->device_name ?? 'tenant_token')->plainTextToken;
+        /** @var JWTGuard $guard */
+        $guard = auth('tenant');
+        $token = $guard->login($user);
 
         return response()->json([
-            'user' => new UserResource($user),
-            'token' => $token,
+            'user'      => new UserResource($user),
+            'token'     => $token,
+            'tenant_id' => tenant('id'),
             'abilities' => $user->getAllPermissions()->pluck('name'),
         ]);
     }
 
     public function logout(): JsonResponse
     {
-        request()->user()->currentAccessToken()->delete();
+        /** @var JWTGuard $guard */
+        $guard = auth('tenant');
+        $guard->logout();
 
         return response()->json([
             'message' => __('tenant.Logged out successfully'),

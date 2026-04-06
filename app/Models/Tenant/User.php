@@ -11,18 +11,18 @@ use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 #[UsePolicy(UserPolicy::class)]
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait, LogsActivity;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, HasRoles, Notifiable;
+    use HasFactory, HasRoles, Notifiable;
 
     protected $connection = 'tenant';
     protected $guard_name = 'tenant';
@@ -67,5 +67,24 @@ class User extends Authenticatable
             ->logOnly(['name', 'email'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
+    }
+
+    /**
+     * Get the identifier that will be stored in the JWT subject claim.
+     */
+    public function getJWTIdentifier(): mixed
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return custom claims added to the JWT payload.
+     * tenant_id is resolved from stancl/tenancy context (available inside tenant routes).
+     */
+    public function getJWTCustomClaims(): array
+    {
+        return [
+            'tenant_id' => tenant('id'),
+        ];
     }
 }
