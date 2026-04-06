@@ -38,11 +38,11 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'central_users',
         ],
 
         'tenant' => [
-            'driver' => 'sanctum',
+            'driver' => 'jwt',
             'provider' => 'tenant_users',
         ],
     ],
@@ -75,10 +75,11 @@ return [
             'model' => App\Models\Tenant\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        // Alias required by tymon/jwt-auth package
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Tenant\User::class,
+        ],
     ],
 
     /*

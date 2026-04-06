@@ -33,8 +33,17 @@ Route::middleware([
     Route::post('/auth/register', [AuthController::class, 'register']);
     Route::post('/auth/login', [AuthController::class, 'login']);
 
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth:tenant')->group(function () {
         Route::post('/auth/logout', [AuthController::class, 'logout']);
+
+        // Protected: returns authenticated user + tenant context (usable by Go microservice via JWT)
+        Route::get('/me', function (): \Illuminate\Http\JsonResponse {
+            $user = auth('tenant')->user();
+            return response()->json([
+                'user'      => $user,
+                'tenant_id' => tenant('id'),
+            ]);
+        });
 
         Route::apiResource('users', UserController::class);
         Route::apiResource('branches', BranchController::class);
