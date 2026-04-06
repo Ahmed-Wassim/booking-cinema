@@ -22,6 +22,8 @@ use App\Domain\Tenant\Dashboard\Api\User\Services\Classes\UserService;
 use App\Domain\Tenant\Dashboard\Api\User\Services\Interfaces\IUserService;
 use App\Domain\Tenant\Dashboard\Api\ActivityLog\Services\Classes\ActivityLogService;
 use App\Domain\Tenant\Dashboard\Api\ActivityLog\Services\Interfaces\IActivityLogService;
+use App\Domain\Tenant\Dashboard\Api\Role\Services\Classes\RoleService;
+use App\Domain\Tenant\Dashboard\Api\Role\Services\Interfaces\IRoleService;
 use App\Providers\AppServiceProvider;
 
 class TenantServicesInjector extends AppServiceProvider
@@ -38,5 +40,6 @@ class TenantServicesInjector extends AppServiceProvider
         $this->app->scoped(IPaymentService::class, PaymentService::class);
         $this->app->scoped(IShowtimeService::class, ShowtimeService::class);
         $this->app->scoped(IActivityLogService::class, ActivityLogService::class);
+        $this->app->scoped(IRoleService::class, RoleService::class);
     }
 }

@@ -14,11 +14,13 @@ use Illuminate\Validation\ValidationException;
 
 class UserService implements IUserService
 {
-    public function __construct(private IUserRepository $userRepository) {}
+    public function __construct(private IUserRepository $userRepository)
+    {
+    }
 
     public function listAllUsers(): LengthAwarePaginator
     {
-        return $this->userRepository->retrieve();
+        return $this->userRepository->retrieve(relations: ['roles']);
     }
 
     public function storeUser(array $data): Model
@@ -32,18 +34,22 @@ class UserService implements IUserService
 
             $user = $this->userRepository->create($data);
 
+            if (isset($data['roles'])) {
+                $user->syncRoles($data['roles']);
+            }
+
             DB::commit();
 
             return $user;
         } catch (\Exception $e) {
             DB::rollBack();
-            throw ValidationException::withMessages(['error' => 'Failed to create user: '.$e->getMessage()]);
+            throw ValidationException::withMessages(['error' => 'Failed to create user: ' . $e->getMessage()]);
         }
     }
 
     public function editUser(string $id): Model
     {
-        return $this->userRepository->findOrFail((int) $id);
+        return $this->userRepository->findOrFail((int) $id)->load('roles');
     }
 
     public function updateUser(array $data, string $id): Model
@@ -59,12 +65,16 @@ class UserService implements IUserService
 
             $user = $this->userRepository->update($data, ['id' => $id]);
 
+            if (isset($data['roles'])) {
+                $user->syncRoles($data['roles']);
+            }
+
             DB::commit();
 
             return $user;
         } catch (\Exception $e) {
             DB::rollBack();
-            throw ValidationException::withMessages(['error' => 'Failed to update user: '.$e->getMessage()]);
+            throw ValidationException::withMessages(['error' => 'Failed to update user: ' . $e->getMessage()]);
         }
     }
 
@@ -76,7 +86,7 @@ class UserService implements IUserService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            throw ValidationException::withMessages(['error' => 'Failed to delete user: '.$e->getMessage()]);
+            throw ValidationException::withMessages(['error' => 'Failed to delete user: ' . $e->getMessage()]);
         }
     }
 }

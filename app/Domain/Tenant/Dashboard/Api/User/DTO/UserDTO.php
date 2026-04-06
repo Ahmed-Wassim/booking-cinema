@@ -14,12 +14,15 @@ class UserDTO extends DataTransferObject
 
     public ?string $password = null;
 
+    public array $roles = [];
+
     public static function fromRequest(array $request): self
     {
         return new self([
             'name' => $request['name'],
             'email' => $request['email'],
             'password' => $request['password'] ?? null,
+            'roles' => $request['roles'] ?? [],
         ]);
     }
 }

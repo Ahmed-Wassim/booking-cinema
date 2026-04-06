@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Models\Tenant\Permission;
 use App\Policies\Tenant\UserPolicy;
 use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
@@ -11,9 +12,9 @@ use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 #[UsePolicy(UserPolicy::class)]
@@ -86,5 +87,20 @@ class User extends Authenticatable implements JWTSubject
         return [
             'tenant_id' => tenant('id'),
         ];
+    }
+
+    /**
+     * Get all dynamically aggregated capabilities for the frontend.
+     */
+    public function getFrontendAbilities(): array
+    {
+        $abilities = $this->getAllPermissions()->pluck('name')->toArray();
+
+        if ($this->hasRole('super-admin')) {
+            $allPermissions = Permission::pluck('name')->toArray();
+            $abilities = array_unique(array_merge($abilities, $allPermissions));
+        }
+
+        return $abilities;
     }
 }
