@@ -30,7 +30,7 @@ class AuthController extends Controller
             'user'      => new UserResource($user),
             'token'     => $token,
             'tenant_id' => tenant('id'),
-            'abilities' => $user->getAllPermissions()->pluck('name'),
+            'abilities' => $user->getFrontendAbilities(),
         ], 201);
     }
 
@@ -52,7 +52,7 @@ class AuthController extends Controller
             'user'      => new UserResource($user),
             'token'     => $token,
             'tenant_id' => tenant('id'),
-            'abilities' => $user->getAllPermissions()->pluck('name'),
+            'abilities' => $user->getFrontendAbilities(),
         ]);
     }
 

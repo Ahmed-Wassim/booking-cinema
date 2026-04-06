@@ -10,6 +10,7 @@ use App\Http\Controllers\Tenant\Dashboard\Api\HallController;
 use App\Http\Controllers\Tenant\Dashboard\Api\MovieController;
 use App\Http\Controllers\Tenant\Dashboard\Api\PaymentController;
 use App\Http\Controllers\Tenant\Dashboard\Api\PriceTierController;
+use App\Http\Controllers\Tenant\Dashboard\Api\RoleController;
 use App\Http\Controllers\Tenant\Dashboard\Api\SeatController;
 use App\Http\Controllers\Tenant\Dashboard\Api\ShowtimeController;
 use App\Http\Controllers\Tenant\Dashboard\Api\ShowtimeOfferController;
@@ -38,10 +39,12 @@ Route::middleware([
 
         // Protected: returns authenticated user + tenant context (usable by Go microservice via JWT)
         Route::get('/me', function (): \Illuminate\Http\JsonResponse {
+            /** @var \App\Models\Tenant\User $user */
             $user = auth('tenant')->user();
             return response()->json([
-                'user'      => $user,
+                'user' => $user,
                 'tenant_id' => tenant('id'),
+                'abilities' => $user->getFrontendAbilities(),
             ]);
         });
 
@@ -60,6 +63,9 @@ Route::middleware([
 
         Route::patch('showtimes/{id}/offer', [ShowtimeOfferController::class, 'update']);
         Route::delete('showtimes/{id}/offer', [ShowtimeOfferController::class, 'destroy']);
+
+        Route::get('permissions', [RoleController::class, 'permissions']);
+        Route::apiResource('roles', RoleController::class);
 
         Route::apiResource('discounts', DiscountController::class);
 
