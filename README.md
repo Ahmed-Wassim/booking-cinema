@@ -1,6 +1,6 @@
 # Cinema
 
-Cinema is a multi-tenant cinema management and booking platform built with Laravel 12 and PHP 8.2+.
+Cinema is a multi-tenant booking SaaS platform for cinemas and event booking, built with Laravel 12 and PHP 8.2+.
 
 It combines three application surfaces in one codebase:
 
@@ -9,6 +9,18 @@ It combines three application surfaces in one codebase:
 - A tenant public booking API for customer-facing movie discovery, seat reservation, checkout, and ticket delivery.
 
 The codebase is not a plain Laravel CRUD app. It uses a domain-oriented structure with service, repository, DTO, and pipeline layers on top of Laravel's routing, Eloquent, events, queues, policies, and middleware.
+
+## Related Repositories
+
+This backend is part of a larger multi-repo system:
+
+- Next.js frontend: https://github.com/Ahmed-Wassim/next-cinema
+- Go sync service: https://github.com/Ahmed-Wassim/go-cinema-sync
+
+Notes:
+
+- The Next.js project is the frontend companion for the tenant-facing experience and is vibe coded.
+- The Go service is the external synchronization service used by this Laravel app when showtime changes are pushed out through `SyncShowtimeToGo`.
 
 ## What The Project Does
 
@@ -76,6 +88,10 @@ Important route file:
 
 - `routes/tenant_home.php`
 
+In the broader system, this API is intended to be consumed by the companion Next.js project:
+
+- https://github.com/Ahmed-Wassim/next-cinema
+
 ## Tech Stack
 
 ### Backend
@@ -113,6 +129,7 @@ Important route file:
 - IMDb supplier abstraction exists in the shared supplier factory.
 - External Go microservice sync on showtime changes.
 - Mail delivery through Laravel mailers; Docker setup includes MailHog.
+- Companion Next.js frontend project for the client-facing app.
 
 ### Documents and media
 
@@ -492,6 +509,10 @@ Whenever a showtime is created, updated, or deleted:
 2. `SyncShowtimeToGo` runs as a queued listener.
 3. The listener posts tenant, branch, and movie identifiers to `GO_SERVICE_URL`.
 
+Related service repository:
+
+- https://github.com/Ahmed-Wassim/go-cinema-sync
+
 ## Authentication, Authorization, And Locale Behavior
 
 ### Guards
@@ -749,6 +770,9 @@ composer test
 ## Notes About The Current Repository State
 
 - The old README described only the landlord panel; this project is broader and includes tenant dashboard and tenant booking APIs as well.
+- The tenant-facing frontend lives in a separate Next.js repository: https://github.com/Ahmed-Wassim/next-cinema
+- That Next.js frontend is vibe coded.
+- Showtime synchronization also depends on a separate Go service repository: https://github.com/Ahmed-Wassim/go-cinema-sync
 - Composer scripts reference `npm install` and `npm run build`, but the current repository snapshot does not include a `package.json`. Frontend assets in this tree are primarily Blade views plus static files in `public/`.
 - The Docker setup is the clearest supported local environment in the current codebase.
 - Several files contain legacy comments or partially evolving abstractions, but the dominant architecture is a domain-layered Laravel monolith with multi-tenant boundaries.
@@ -771,4 +795,3 @@ If you are onboarding into the codebase, these are good entry points:
 - `app/Domain/Landlord/Billing/Payment/Services/SubscriptionPaymentService.php`
 - `app/Domain/Tenant/Checkout/Payment/Services/Classes/OrderPaymentService.php`
 - `app/Domain/Landlord/MovieSync/Classes/MovieSyncService.php`
-
