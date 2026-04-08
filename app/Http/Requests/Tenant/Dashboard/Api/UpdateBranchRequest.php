@@ -25,8 +25,10 @@ class UpdateBranchRequest extends FormRequest
             'name'      => ['required', 'string', 'max:255'],
             'city'      => ['required', 'string', 'max:255'],
             'address'   => ['required', 'string', 'max:1000'],
-            'timezone'  => ['required', 'string', 'timezone'],
+            'timezone'  => ['sometimes', 'string', 'timezone'],
             'is_active' => ['sometimes', 'boolean'],
+            'lat'       => ['nullable', 'numeric', 'between:-90,90'],
+            'lng'       => ['nullable', 'numeric', 'between:-180,180'],
         ];
     }
 }

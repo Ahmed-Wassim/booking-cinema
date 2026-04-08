@@ -27,6 +27,8 @@ class StoreBranchRequest extends FormRequest
             'address'   => ['required', 'string', 'max:1000'],
             'timezone'  => ['required', 'string', 'timezone'],
             'is_active' => ['sometimes', 'boolean'],
+            'lat'       => ['nullable', 'numeric', 'between:-90,90'],
+            'lng'       => ['nullable', 'numeric', 'between:-180,180'],
         ];
     }
 }
