@@ -31,10 +31,14 @@ class Branch extends Model
         'address',
         'timezone',
         'is_active',
+        'lat',
+        'lng',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'lat' => 'decimal:7',
+        'lng' => 'decimal:7',
     ];
 
     public function halls(): HasMany
@@ -45,7 +49,7 @@ class Branch extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['name', 'city', 'address', 'timezone', 'is_active'])
+            ->logOnly(['name', 'city', 'address', 'timezone', 'is_active', 'lat', 'lng'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }
