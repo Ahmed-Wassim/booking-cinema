@@ -15,16 +15,30 @@
         <input type="text" name="name" class="form-control" value="{{ old('name', $plan->name ?? '') }}" required>
     </div>
 
-    <div class="col-md-3 mb-3">
+    <div class="col-md-2 mb-3">
+        <label class="form-label">Currency</label>
+        <select name="currency" class="form-select" required id="currency-select"
+            data-currencies="{{ json_encode(collect($currencies)->keyBy('code')->toArray()) }}">
+            <option value="" disabled {{ !old('currency', $plan->currency ?? null) ? 'selected' : '' }}>Select Currency
+            </option>
+            @foreach($currencies as $currency)
+                <option value="{{ $currency['code'] }}" title="{{ $currency['name'] }}" {{ old('currency', $plan->currency ?? '') === $currency['code'] ? 'selected' : '' }}>
+                    {{ $currency['code'] }} {{ $currency['symbol'] ?? '' }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="col-md-2 mb-3">
         <label class="form-label">Price</label>
         <div class="input-group">
-            <span class="input-group-text">$</span>
+            <span class="input-group-text" id="currency-symbol">$</span>
             <input type="number" step="0.01" min="0" name="price" class="form-control"
                 value="{{ old('price', $plan->price ?? '0.00') }}" required>
         </div>
     </div>
 
-    <div class="col-md-3 mb-3">
+    <div class="col-md-2 mb-3">
         <label class="form-label">Billing Interval</label>
         <select name="billing_interval" class="form-select" required>
             <option value="monthly" {{ old('billing_interval', $plan->billing_interval ?? '') === 'monthly' ? 'selected' : '' }}>Monthly</option>
@@ -90,27 +104,27 @@
 
             // Define dropdown options from enum array
             const optionsHtml = `
-                    @foreach($availableKeys as $enumKey)
-                        <option value="{{ $enumKey->value }}">{{ ucwords(str_replace('_', ' ', $enumKey->value)) }}</option>
-                    @endforeach
-                `;
+                        @foreach($availableKeys as $enumKey)
+                            <option value="{{ $enumKey->value }}">{{ ucwords(str_replace('_', ' ', $enumKey->value)) }}</option>
+                        @endforeach
+                    `;
 
             addBtn.addEventListener('click', function () {
                 const html = `
-                        <div class="row mb-2 feature-row">
-                            <div class="col-md-5">
-                                <select name="features[${featureIndex}][feature_key]" class="form-select" required>
-                                    ${optionsHtml}
-                                </select>
+                            <div class="row mb-2 feature-row">
+                                <div class="col-md-5">
+                                    <select name="features[${featureIndex}][feature_key]" class="form-select" required>
+                                        ${optionsHtml}
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" name="features[${featureIndex}][feature_value]" class="form-control" placeholder="e.g. 5 or unlimited" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-outline-danger w-100 remove-feature-btn"><i class="bi bi-x-lg"></i></button>
+                                </div>
                             </div>
-                            <div class="col-md-5">
-                                <input type="text" name="features[${featureIndex}][feature_value]" class="form-control" placeholder="e.g. 5 or unlimited" required>
-                            </div>
-                            <div class="col-md-2">
-                                <button type="button" class="btn btn-outline-danger w-100 remove-feature-btn"><i class="bi bi-x-lg"></i></button>
-                            </div>
-                        </div>
-                    `;
+                        `;
                 container.insertAdjacentHTML('beforeend', html);
                 featureIndex++;
             });
@@ -125,6 +139,20 @@
                     }
                 }
             });
+
+            // Update currency symbol when currency selection changes
+            const currencySelect = document.getElementById('currency-select');
+            const currencySymbol = document.getElementById('currency-symbol');
+
+            if (currencySelect) {
+                const currenciesData = JSON.parse(currencySelect.dataset.currencies || '{}');
+
+                currencySelect.addEventListener('change', function () {
+                    const currency = currenciesData[this.value];
+                    const symbol = currency?.symbol || this.value;
+                    currencySymbol.textContent = symbol;
+                });
+            }
         });
     </script>
 @endpush

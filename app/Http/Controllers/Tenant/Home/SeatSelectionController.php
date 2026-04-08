@@ -21,8 +21,11 @@ class SeatSelectionController extends Controller
     public function show(int $id)
     {
         $seats = $this->homeSeatService->getSeatsForShowtime($id);
+        $firstSeat = $seats->first();
 
-        return ShowtimeSeatResource::collection($seats);
+        return ShowtimeSeatResource::collection($seats)->additional([
+            'offer_percentage' => $firstSeat?->showtime?->offer_percentage,
+        ]);
     }
 
     /**
@@ -32,7 +35,10 @@ class SeatSelectionController extends Controller
     public function seats(int $id)
     {
         $seats = $this->homeSeatService->getSeatsForShowtime($id);
+        $firstSeat = $seats->first();
 
-        return ShowtimeSeatResource::collection($seats);
+        return ShowtimeSeatResource::collection($seats)->additional([
+            'offer_percentage' => $firstSeat?->showtime?->offer_percentage,
+        ]);
     }
 }

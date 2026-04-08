@@ -238,7 +238,7 @@
                                 <p>{{ Str::limit($plan->description, 60, '...') }}</p>
                             </div>
                             <div class="plan-price">
-                                <span class="currency">$</span>
+                                <span class="currency">{{ $currentCurrency->getSymbol() }}</span>
                                 <span class="amount">{{ number_format($plan->price) }}</span>
                                 <span
                                     class="period">/{{ $plan->billing_interval === 'month' ? 'mo' : ($plan->billing_interval === 'year' ? 'yr' : $plan->billing_interval) }}</span>
@@ -248,7 +248,8 @@
                                     @foreach($plan->features as $feature)
                                         <li><span class="check">✓</span>
                                             @if($feature->feature_key ?? null)
-                                                {{ Str::title(str_replace('_', ' ', $feature->feature_key->value)) }}: {{ $feature->feature_value }}
+                                                {{ Str::title(str_replace('_', ' ', $feature->feature_key->value)) }}:
+                                                {{ $feature->feature_value }}
                                             @else
                                                 {{ $feature->feature_value }}
                                             @endif

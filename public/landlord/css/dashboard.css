@@ -832,3 +832,211 @@ body.sidebar-collapsed .nav-icon { width: auto; }
     .page-header { flex-direction: column; }
     .topbar-search { display: none !important; }
 }
+
+/* ============================================================
+   17. RTL SUPPORT  (Arabic only currently)
+   We use !important on layout-critical properties because the
+   Bootstrap RTL build and base rules share the same specificity.
+   ============================================================ */
+
+/* Arabic font */
+body.rtl {
+    font-family: 'Cairo', 'Segoe UI', sans-serif;
+    letter-spacing: 0;
+}
+
+/* ---- Sidebar: anchor to RIGHT instead of left ---- */
+html[dir="rtl"] .sidebar {
+    left:  auto   !important;
+    right: 0      !important;
+}
+
+/* ---- Main wrapper: mirror the margin to the right ---- */
+html[dir="rtl"] .main-wrapper {
+    margin-left:  0                        !important;
+    margin-right: var(--sidebar-width)     !important;
+    transition:   margin-right .25s ease;
+}
+
+/* ---- Collapsed sidebar (JS adds body.sidebar-collapsed) ---- */
+html[dir="rtl"] body.sidebar-collapsed .main-wrapper {
+    margin-right: var(--sidebar-collapsed-width) !important;
+}
+
+html[dir="rtl"] body.sidebar-collapsed .sidebar {
+    width: var(--sidebar-collapsed-width);
+}
+
+/* ---- Nav active indicator: right border instead of left ---- */
+html[dir="rtl"] .nav-list .nav-link {
+    border-left:  none             !important;
+    border-right: 3px solid transparent;
+}
+
+html[dir="rtl"] .nav-list .nav-link.active {
+    border-right-color: var(--sidebar-active-border) !important;
+}
+
+/* ---- Nav arrow margin flips ---- */
+html[dir="rtl"] .nav-arrow {
+    margin-left: 0    !important;
+    margin-right: auto;
+}
+
+/* ---- Submenu indent mirrors to right ---- */
+html[dir="rtl"] .submenu {
+    padding: 4px 52px 4px 0 !important;
+}
+
+/* ---- Activity feed: connector line on right ---- */
+html[dir="rtl"] .activity-item:not(.last)::before {
+    left:  auto  !important;
+    right: 16px  !important;
+}
+
+/* ---- Breadcrumb separator ---- */
+html[dir="rtl"] .breadcrumb-item + .breadcrumb-item::before {
+    content: "\\";
+    padding-right: 0;
+    padding-left: var(--bs-breadcrumb-item-padding-x, 0.5rem);
+}
+
+/* ---- Mobile RTL: sidebar slides in from the right ---- */
+@media (max-width: 991.98px) {
+    html[dir="rtl"] .sidebar {
+        transform: translateX(100%) !important;
+    }
+    html[dir="rtl"] .sidebar.show {
+        transform: translateX(0) !important;
+    }
+    html[dir="rtl"] .main-wrapper {
+        margin-right: 0 !important;
+    }
+}
+
+/* ============================================================
+   18. LANGUAGE SWITCHER COMPONENT
+   ============================================================ */
+.lang-switcher-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: transparent;
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-family: var(--font-base);
+    transition: background .15s, border-color .15s, box-shadow .15s;
+    white-space: nowrap;
+}
+
+.lang-switcher-btn:hover,
+.lang-switcher-btn[aria-expanded="true"] {
+    background: rgba(99,102,241,.08);
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+}
+
+[data-theme="dark"] .lang-switcher-btn {
+    border-color: #334155;
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .lang-switcher-btn:hover,
+[data-theme="dark"] .lang-switcher-btn[aria-expanded="true"] {
+    background: rgba(99,102,241,.15);
+    border-color: var(--brand-primary);
+}
+
+.lang-flag  { font-size: 16px; line-height: 1; }
+.lang-code  { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.lang-chevron { font-size: 10px; color: var(--text-muted); transition: transform .2s; }
+.lang-switcher-btn[aria-expanded="true"] .lang-chevron { transform: rotate(180deg); }
+
+.rtl-badge,
+.lang-option-dir-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgba(99,102,241,.15);
+    color: var(--brand-primary);
+    letter-spacing: .5px;
+}
+
+/* Dropdown */
+.lang-dropdown {
+    min-width: 190px;
+    padding: 6px 0;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+}
+
+[data-theme="dark"] .lang-dropdown {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.lang-dropdown-header {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 6px 14px 4px;
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    font-size: 13.5px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: background .15s;
+    border-radius: 0;
+}
+
+.lang-option:hover {
+    background: rgba(99,102,241,.07);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .lang-option:hover  { background: rgba(99,102,241,.14); }
+
+.lang-option.active {
+    background: rgba(99,102,241,.1);
+    color: var(--brand-primary);
+    font-weight: 600;
+}
+
+[data-theme="dark"] .lang-option.active  { background: rgba(99,102,241,.2); }
+
+.lang-option-flag { font-size: 18px; line-height: 1; flex-shrink: 0; }
+
+.lang-option-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+}
+
+.lang-option-native {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.lang-option-name   {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.lang-option-check { color: var(--brand-primary); font-size: 15px; flex-shrink: 0; }

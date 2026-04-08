@@ -10,12 +10,15 @@ use App\Domain\Tenant\Home\Booking\Repositories\Classes\BookingRepository;
 use App\Domain\Tenant\Home\Booking\Repositories\Classes\CustomerRepository;
 use App\Domain\Tenant\Home\Booking\Repositories\Interfaces\IBookingRepository;
 use App\Domain\Tenant\Home\Booking\Repositories\Interfaces\ICustomerRepository;
+use App\Domain\Tenant\Home\Coupon\Repositories\Classes\HomeDiscountRepository;
+use App\Domain\Tenant\Home\Coupon\Repositories\Interfaces\IHomeDiscountRepository;
 use App\Domain\Tenant\Home\Seat\Repositories\Classes\HomeSeatRepository;
 use App\Domain\Tenant\Home\Seat\Repositories\Interfaces\IHomeSeatRepository;
 use App\Domain\Tenant\Home\Showtime\Repositories\Classes\HomeShowtimeRepository;
 use App\Domain\Tenant\Home\Showtime\Repositories\Interfaces\IHomeShowtimeRepository;
 use App\Models\Tenant\Booking;
 use App\Models\Tenant\Customer;
+use App\Models\Tenant\Discount;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\Showtime;
 use App\Models\Tenant\ShowtimeSeat;
@@ -31,6 +34,10 @@ class HomeRepositoriesInjector extends AppServiceProvider
 
         $this->app->scoped(IHomeSeatRepository::class, function () {
             return new HomeSeatRepository(new ShowtimeSeat);
+        });
+
+        $this->app->scoped(IHomeDiscountRepository::class, function () {
+            return new HomeDiscountRepository(new Discount);
         });
 
         $this->app->scoped(IBookingRepository::class, function () {

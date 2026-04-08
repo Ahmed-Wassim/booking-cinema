@@ -14,6 +14,8 @@ class PlanDTO extends DataTransferObject
 
     public ?float $price;
 
+    public ?string $currency;
+
     public ?string $billing_interval;
 
     public ?array $features;
@@ -24,6 +26,7 @@ class PlanDTO extends DataTransferObject
             'name' => $data['name'] ?? null,
             'description' => $data['description'] ?? null,
             'price' => isset($data['price']) ? (float) $data['price'] : null,
+            'currency' => $data['currency'] ?? null,
             'billing_interval' => $data['billing_interval'] ?? null,
             'features' => $data['features'] ?? [],
         ]);

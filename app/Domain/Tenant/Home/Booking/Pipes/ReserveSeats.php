@@ -28,9 +28,12 @@ class ReserveSeats
             conditions: ['showtime_id' => $showtimeId]
         );
 
-        $data['total_price'] = (float) $seats->sum(
+        $subtotal = (float) $seats->sum(
             fn ($showtimeSeat) => $showtimeSeat->seat?->priceTier?->price ?? 0
         );
+
+        $data['subtotal']    = $subtotal;
+        $data['total_price'] = $subtotal;
 
         return $next($data);
     }

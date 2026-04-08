@@ -2,19 +2,28 @@
 
 namespace App\Models\Tenant;
 
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use App\Policies\Tenant\MoviePolicy;
 use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
 use App\Traits\Shared\SearchTrait;
-
 use App\Models\Movie as LandlordMovie;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Cache;
+use Spatie\Translatable\HasTranslations;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
+#[UsePolicy(MoviePolicy::class)]
 class Movie extends Model
 {
-    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, HasTranslations, SearchTrait, LogsActivity;
+
+    public array $translatable = [
+        'title',
+    ];
 
     protected $fillable = [
         'movie_id',
@@ -35,5 +44,13 @@ class Movie extends Model
 
             return LandlordMovie::find($this->movie_id);
         });
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['title', 'status', 'runtime'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 }

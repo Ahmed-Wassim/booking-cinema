@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\SetCurrentCurrency;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -19,6 +20,18 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->append(SetCurrentCurrency::class);
+        $middleware->web(append: [
+            \App\Http\Middleware\SetLandlordLocale::class,
+        ]);
+        $middleware->redirectGuestsTo(function ($request) {
+            if ($request->is('landlord') || $request->is('landlord/*')) {
+                return route('landlord.login');
+            }
+
+            return route('landlord.login');
+        });
+
         $middleware->validateCsrfTokens(except: [
             'landlord/payment/callback',
             '/payment/callback',

@@ -2,11 +2,17 @@
 
 namespace App\Models\Tenant;
 
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use App\Policies\Tenant\CustomerPolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
+#[UsePolicy(CustomerPolicy::class)]
 class Customer extends Model
 {
+    use LogsActivity;
     protected $fillable = [
         'name',
         'email',
@@ -22,5 +28,13 @@ class Customer extends Model
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name', 'email', 'phone'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 }

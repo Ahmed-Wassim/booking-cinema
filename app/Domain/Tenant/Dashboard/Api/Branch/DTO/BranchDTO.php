@@ -13,6 +13,8 @@ class BranchDTO extends DataTransferObject
     public ?string $address;
     public ?string $timezone;
     public ?bool $is_active;
+    public ?float $lat;
+    public ?float $lng;
 
     public static function fromRequest(array $data): self
     {
@@ -22,6 +24,8 @@ class BranchDTO extends DataTransferObject
             'address'   => $data['address'] ?? null,
             'timezone'  => $data['timezone'] ?? 'UTC',
             'is_active' => isset($data['is_active']) ? (bool)$data['is_active'] : true,
+            'lat'       => isset($data['lat']) ? (float)$data['lat'] : null,
+            'lng'       => isset($data['lng']) ? (float)$data['lng'] : null,
         ]);
     }
 }

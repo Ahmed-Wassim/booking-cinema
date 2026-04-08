@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Domain\Tenant\Dashboard\Api\Seat\Services\Interfaces;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 interface ISeatService
 {
-    public function listAllSeats(): LengthAwarePaginator;
+    public function listAllSeats();
 
     public function storeSeat(array $data): Model;
+
+    public function bulkStoreSeats(array $data, int $hallId): bool;
 
     public function editSeat(string|int $id): Model;
 

@@ -11,91 +11,105 @@
 </div>
 
 <nav class="sidebar-nav">
-    <div class="nav-section-label">Main</div>
+    <div class="nav-section-label">{{ __('landlord.Main') }}</div>
     <ul class="nav-list">
         <li class="nav-item">
             <a href="#" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <i class="bi bi-grid-1x2-fill nav-icon"></i>
-                <span>Dashboard</span>
+                <span>{{ __('landlord.Dashboard') }}</span>
             </a>
         </li>
 
+        @can('viewAny', \App\Models\User::class)
         <li class="nav-item">
             <a href="#usersMenu"
                 class="nav-link has-submenu {{ request()->routeIs('landlord.users.*') ? 'active' : '' }}"
                 data-bs-toggle="collapse">
                 <i class="bi bi-person-fill nav-icon"></i>
-                <span>Users</span>
+                <span>{{ __('landlord.Users') }}</span>
                 <i class="bi bi-chevron-down nav-arrow"></i>
             </a>
 
             <div class="collapse {{ request()->routeIs('landlord.users.*') ? 'show' : '' }}" id="usersMenu">
                 <ul class="submenu">
                     <li><a href="{{ route('landlord.users.index') }}"
-                            class="{{ request()->routeIs('landlord.users.index') ? 'active' : '' }}">List Users</a></li>
+                            class="{{ request()->routeIs('landlord.users.index') ? 'active' : '' }}">{{ __('landlord.List Users') }}</a></li>
+                    @can('create', \App\Models\User::class)
                     <li><a href="{{ route('landlord.users.create') }}"
-                            class="{{ request()->routeIs('landlord.users.create') ? 'active' : '' }}">Create User</a>
+                            class="{{ request()->routeIs('landlord.users.create') ? 'active' : '' }}">{{ __('landlord.Create User') }}</a>
                     </li>
+                    @endcan
                 </ul>
             </div>
         </li>
+        @endcan
 
+        @can('viewAny', \App\Models\RegistrationRequest::class)
         <li class="nav-item">
             <a href="{{ route('landlord.registration-requests.index') }}" class="nav-link {{ request()->routeIs('landlord.registration-requests.*') ? 'active' : '' }}">
                 <i class="bi bi-person-lines-fill nav-icon"></i>
-                <span>Registration Requests</span>
+                <span>{{ __('landlord.Registration Requests') }}</span>
             </a>
         </li>
+        @endcan
 
+        @can('viewAny', \App\Models\Tenant::class)
         <li class="nav-item">
             <a href="#tenantsMenu"
                 class="nav-link has-submenu {{ request()->routeIs('landlord.tenants.*') ? 'active' : '' }}"
                 data-bs-toggle="collapse">
                 <i class="bi bi-building-fill nav-icon"></i>
-                <span>Tenants</span>
+                <span>{{ __('landlord.Tenants') }}</span>
                 <i class="bi bi-chevron-down nav-arrow"></i>
             </a>
 
             <div class="collapse {{ request()->routeIs('landlord.tenants.*') ? 'show' : '' }}" id="tenantsMenu">
                 <ul class="submenu">
                     <li><a href="{{ route('landlord.tenants.index') }}"
-                            class="{{ request()->routeIs('landlord.tenants.index') ? 'active' : '' }}">List Tenants</a>
+                            class="{{ request()->routeIs('landlord.tenants.index') ? 'active' : '' }}">{{ __('landlord.List Tenants') }}</a>
                     </li>
+                    @can('create', \App\Models\Tenant::class)
                     <li><a href="{{ route('landlord.tenants.create') }}"
-                            class="{{ request()->routeIs('landlord.tenants.create') ? 'active' : '' }}">Create
-                            Tenant</a></li>
+                            class="{{ request()->routeIs('landlord.tenants.create') ? 'active' : '' }}">{{ __('landlord.Create Tenant') }}</a></li>
+                    @endcan
                 </ul>
             </div>
         </li>
+        @endcan
 
 
+        @can('viewAny', \App\Models\Plan::class)
         <li class="nav-item">
             <a href="#plansMenu"
                 class="nav-link has-submenu {{ request()->routeIs('landlord.plans.*') ? 'active' : '' }}"
                 data-bs-toggle="collapse">
                 <i class="bi bi-tags-fill nav-icon"></i>
-                <span>Plans</span>
+                <span>{{ __('landlord.Plans') }}</span>
                 <i class="bi bi-chevron-down nav-arrow"></i>
             </a>
 
             <div class="collapse {{ request()->routeIs('landlord.plans.*') ? 'show' : '' }}" id="plansMenu">
                 <ul class="submenu">
                     <li><a href="{{ route('landlord.plans.index') }}"
-                            class="{{ request()->routeIs('landlord.plans.index') ? 'active' : '' }}">List Plans</a>
+                            class="{{ request()->routeIs('landlord.plans.index') ? 'active' : '' }}">{{ __('landlord.List Plans') }}</a>
                     </li>
+                    @can('create', \App\Models\Plan::class)
                     <li><a href="{{ route('landlord.plans.create') }}"
-                            class="{{ request()->routeIs('landlord.plans.create') ? 'active' : '' }}">Create
-                            Plan</a></li>
+                            class="{{ request()->routeIs('landlord.plans.create') ? 'active' : '' }}">{{ __('landlord.Create Plan') }}</a></li>
+                    @endcan
                 </ul>
             </div>
         </li>
+        @endcan
 
+        @can('viewAny', \App\Models\Payment::class)
         <li class="nav-item">
             <a href="{{ route('landlord.payments.index') }}" class="nav-link {{ request()->routeIs('landlord.payments.*') ? 'active' : '' }}">
                 <i class="bi bi-wallet2 nav-icon"></i>
-                <span>Payments</span>
+                <span>{{ __('landlord.Payments') }}</span>
             </a>
         </li>
+        @endcan
     </ul>
 </nav>
 
@@ -106,7 +120,7 @@
 
         <div class="user-info">
             <div class="user-name">{{ optional(auth()->user())->name ?? 'User Name' }}</div>
-            <div class="user-role">Administrator</div>
+            <div class="user-role">{{ __('landlord.Administrator') }}</div>
         </div>
     </div>
 </div>

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Tenant\Home;
 
-use App\Domain\Tenant\Home\Booking\Enums\BookingStatus;
 use App\Domain\Tenant\Home\Booking\Services\Interfaces\IBookingService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\Home\BookingConfirmationResource;
@@ -23,11 +22,6 @@ class BookingConfirmationController extends Controller
     {
         try {
             $booking = $this->bookingService->findBooking($id);
-
-            // Security check: only show confirmation if booking is actually confirmed
-            if ($booking->status !== BookingStatus::PAID) {
-                abort(403, 'Booking is not paid.');
-            }
 
             return new BookingConfirmationResource($booking);
         } catch (\Exception $e) {

@@ -2,26 +2,31 @@
 
 namespace App\Models\Tenant;
 
+use App\Models\Tenant\Permission;
+use App\Policies\Tenant\UserPolicy;
 use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
 use App\Traits\Shared\SearchTrait;
-
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+#[UsePolicy(UserPolicy::class)]
+class User extends Authenticatable implements JWTSubject
 {
-    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;
+    use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait, LogsActivity;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, HasRoles, Notifiable;
 
     protected $connection = 'tenant';
-
+    protected $guard_name = 'tenant';
 
     /**
      * The attributes that are mass assignable.
@@ -44,8 +49,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-
-
     /**
      * Get the attributes that should be cast.
      *
@@ -57,5 +60,47 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name', 'email'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
+
+    /**
+     * Get the identifier that will be stored in the JWT subject claim.
+     */
+    public function getJWTIdentifier(): mixed
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return custom claims added to the JWT payload.
+     * tenant_id is resolved from stancl/tenancy context (available inside tenant routes).
+     */
+    public function getJWTCustomClaims(): array
+    {
+        return [
+            'tenant_id' => tenant('id'),
+        ];
+    }
+
+    /**
+     * Get all dynamically aggregated capabilities for the frontend.
+     */
+    public function getFrontendAbilities(): array
+    {
+        $abilities = $this->getAllPermissions()->pluck('name')->toArray();
+
+        if ($this->hasRole('super-admin')) {
+            $allPermissions = Permission::pluck('name')->toArray();
+            $abilities = array_unique(array_merge($abilities, $allPermissions));
+        }
+
+        return $abilities;
     }
 }

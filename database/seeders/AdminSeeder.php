@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class AdminSeeder extends Seeder
 {
@@ -13,7 +14,14 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        User::updateOrCreate(
+        // Create the super admin role if it doesn't exist
+        $role = Role::firstOrCreate([
+            'name' => 'super-admin',
+            'guard_name' => 'web',
+        ]);
+
+        // Create or update the admin user
+        $user = User::updateOrCreate(
             ['email' => 'admin@admin.com'],
             [
                 'name' => 'Admin User',
@@ -21,5 +29,8 @@ class AdminSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+        // Assign the super admin role to the admin user
+        $user->assignRole($role);
     }
 }

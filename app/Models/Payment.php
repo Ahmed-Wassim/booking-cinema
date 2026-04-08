@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Domain\Landlord\Enums\PaymentStatusEnum;
+use App\Policies\PaymentPolicy;
 use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
 use App\Traits\Shared\SearchTrait;
-
-use App\Domain\Landlord\Enums\PaymentStatusEnum;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Model;
 
+#[UsePolicy(PaymentPolicy::class)]
 class Payment extends Model
 {
     use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;

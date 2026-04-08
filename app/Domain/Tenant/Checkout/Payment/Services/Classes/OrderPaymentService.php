@@ -78,11 +78,11 @@ class OrderPaymentService implements IOrderPaymentService
     {
         return $this->paymentRepository->create([
             'booking_id' => $booking->id,
-            'amount' => $booking->total_price,
-            'currency' => 'AED',
+            'amount' => (float) $booking->total_price,
+            'currency' => $booking->currency ?? config('paytabs.currency', 'AED'),
             'status' => 'pending',
             'gateway' => 'paytabs',
-            'transaction_ref' => $cartId, // Using transaction_ref as our cart_id until callback provides actual ref
+            'transaction_ref' => $cartId,
         ]);
     }
 
@@ -91,12 +91,13 @@ class OrderPaymentService implements IOrderPaymentService
         return [
             'merchant' => 'paytabs',
             'amount' => (float) $booking->total_price,
+            'currency' => $booking->currency ?? config('paytabs.currency', 'AED'),
             'cart_id' => $cartId,
             'description' => "Booking #{$booking->id} for movie: {$booking->showtime->movie->title}",
             'tenant_name' => $booking->customer?->name ?? 'Guest',
             'tenant_email' => $booking->customer?->email ?? 'guest@example.com',
             'callback_url' => url('/api/checkout/callback'),
-            'return_url' => url("/api/booking/{$booking->id}/success"),
+            'return_url' => config('app.frontend_url') . "/booking/{$booking->id}/success",
         ];
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Landlord\Dashboard;
 
 use App\Domain\Landlord\Dashboard\Web\Plan\DTO\PlanDTO;
 use App\Domain\Landlord\Dashboard\Web\Plan\Services\Interfaces\IPlanService;
+use App\Domain\Shared\Currency\Services\CurrentCurrencyService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Landlord\StorePlanRequest;
 use App\Http\Requests\Landlord\UpdatePlanRequest;
@@ -11,7 +12,8 @@ use App\Http\Requests\Landlord\UpdatePlanRequest;
 class PlanController extends Controller
 {
     public function __construct(
-        protected IPlanService $planService
+        protected IPlanService $planService,
+        protected CurrentCurrencyService $currencyService
     ) {
     }
 
@@ -30,7 +32,9 @@ class PlanController extends Controller
      */
     public function create()
     {
-        return view('landlord.plans.create');
+        $currencies = $this->currencyService->getActiveCurrenciesWithDetails();
+
+        return view('landlord.plans.create', compact('currencies'));
     }
 
     /**
@@ -49,8 +53,9 @@ class PlanController extends Controller
     public function edit(string $id)
     {
         $plan = $this->planService->editPlan($id);
+        $currencies = $this->currencyService->getActiveCurrenciesWithDetails();
 
-        return view('landlord.plans.edit', compact('plan'));
+        return view('landlord.plans.edit', compact('plan', 'currencies'));
     }
 
     /**

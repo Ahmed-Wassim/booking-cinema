@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use App\Policies\PlanFeaturePolicy;
 use App\Traits\Shared\ActiveTrait;
 use App\Traits\Shared\CreatedAtRangeTrait;
 use App\Traits\Shared\FilterTrait;
@@ -9,6 +11,7 @@ use App\Traits\Shared\SearchTrait;
 
 use Illuminate\Database\Eloquent\Model;
 
+#[UsePolicy(PlanFeaturePolicy::class)]
 class PlanFeature extends Model
 {
     use ActiveTrait, CreatedAtRangeTrait, FilterTrait, SearchTrait;

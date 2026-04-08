@@ -23,7 +23,6 @@ class UpdateSeatRequest extends FormRequest
     {
         return [
             'hall_id'       => ['required', 'integer', 'exists:halls,id'],
-            'section_id'    => ['nullable', 'integer', 'exists:hall_sections,id'],
             'price_tier_id' => ['nullable', 'integer', 'exists:price_tiers,id'],
             'row'           => ['required', 'string', 'max:10'],
             'number'        => ['required', 'string', 'max:10'],
